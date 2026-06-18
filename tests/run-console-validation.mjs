@@ -25,16 +25,18 @@ const ptLines = logs.filter((l) => l.startsWith('[PT]'));
 const summary = ptLines.find((l) => /interactive self-check/.test(l));
 const failMarkers = ptLines.filter((l) => /\bFAIL\b/.test(l));
 
-// live shell interaction (behavioral): whoami → identity + colorized output; deploy → horizontal flow arrows
+// live shell interaction (behavioral): whoami → identity + colorized output; deploy → flow arrows.
+// Driven through the hero shell's public window.__heroRun API (the Flux page's only shell).
 const shell = await page.evaluate(() => {
-  const i = document.getElementById('termInput'); if (!i) return null;
-  const send = (cmd) => { i.focus(); i.value = cmd; i.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); };
-  send('whoami'); send('deploy');
-  const body = document.getElementById('termBody');
+  if (typeof window.__heroRun !== 'function') return null;
+  if (window.__abortDemo) window.__abortDemo();          // stop the self-running tour for deterministic output
+  const body = document.getElementById('heroTermBody'); if (!body) return null;
+  body.innerHTML = '';
+  window.__heroRun('whoami'); window.__heroRun('deploy');
   return {
-    text: body ? body.innerText : '',
-    colored: body ? body.querySelectorAll('.a, .c, .g, .m').length : 0,
-    flow: body ? body.querySelectorAll('.flow').length : 0,
+    text: body.innerText,
+    colored: body.querySelectorAll('.a, .c, .g, .m, .d').length,
+    flow: body.querySelectorAll('.flow').length,
   };
 });
 

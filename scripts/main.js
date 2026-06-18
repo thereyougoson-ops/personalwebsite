@@ -253,8 +253,8 @@ function initDagNav(){
 }
 
 function primeHidden(){
-  gsap.set(gsap.utils.toArray('[data-reveal]'), { opacity: 0, y: 22 });
-  gsap.set(gsap.utils.toArray('[data-point]'), { opacity: 0, y: 12 });
+  const rv = gsap.utils.toArray('[data-reveal]'); if (rv.length) gsap.set(rv, { opacity: 0, y: 22 });
+  const pt = gsap.utils.toArray('[data-point]'); if (pt.length) gsap.set(pt, { opacity: 0, y: 12 });   // [data-point] is empty in Flux (pipeline removed) — skip to avoid GSAP empty-target warning
 }
 
 /* =====================  PRELOADER  ===================== */
@@ -401,7 +401,7 @@ function scrambleText(el, opts){
 
 /* "DECRYPTED" hover/focus decode on labelled text in every section — reuses scrambleText */
 function initDecode(){
-  const sel = '.sec__label, .hero__eyebrow, .tool__name, [data-decode]';
+  const sel = '.sec__label, .hero__eyebrow, .tool__name, .fx-eb, [data-decode]';
   document.querySelectorAll(sel).forEach((el) => {
     if (!el.textContent.trim() || el.dataset.noDecode != null) return;
     el.classList.add('decodable');
@@ -1402,47 +1402,45 @@ function makeShell(cfg){
 
   const esc = escapeHtml;   // single source of truth — escapes & < > " (the local 3-char esc dropped the quote)
   const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);   // own-prop only: 'constructor'/'toString' must not resolve up the prototype chain
-  const skillsBlock = () => Object.keys(SKILLS).map((k) =>
-    `<span class="head">${k}</span><span class="row">${SKILLS[k].join('  ·  ')}</span>`).join('');
+  const skillsBlock = () => {
+    const SCOL={'ci/cd & devops':'#5ec8ff','languages':'#5ee6c0','testing':'#b89cff','build & infra':'#f5b642'};
+    return `<div class="sc">`+Object.keys(SKILLS).map((k)=>{
+      const units=SKILLS[k].map((s)=>`<div class="sc-unit"><span class="sc-led led-on"></span><span class="sc-name">${s}<span class="svc">.service</span></span><span class="sc-state st-on">active</span></div>`).join('');
+      return `<div class="sc-group"><div class="sc-gtitle" style="color:${SCOL[k]||'#7c6cff'}">${k}.target</div>${units}</div>`;
+    }).join('')+`</div>`;
+  };
 
   const COMMANDS = {
-    help: () => `available commands:\n` +
-      `  <span class="a">help</span>        this list           <span class="a">ls</span>          list files\n` +
-      `  <span class="a">whoami</span>      who is philip       <span class="a">cat</span> &lt;file&gt;  read a file\n` +
-      `  <span class="a">skills</span>      the stack           <span class="a">git log</span>     career as commits\n` +
-      `  <span class="a">experience</span>  roles               <span class="a">git show</span> &lt;h&gt; expand a role\n` +
-      `  <span class="a">education</span>   school              <span class="a">kubectl</span>     get skills (pods)\n` +
-      `  <span class="a">contact</span>     reach me            <span class="a">top</span>         skill monitor\n` +
-      `  <span class="a">neofetch</span>    system info         <span class="a">theme</span> &lt;env&gt; prod|staging|dev\n` +
-      `  <span class="a">bonjour</span>     🇫🇷                  <span class="a">deploy</span>      run a live deploy\n` +
-      `  <span class="a">hire</span>        reverse job-req     <span class="a">whoami --json</span> raw schema\n` +
-      `  <span class="a">clear</span>       wipe screen\n` +
-      `<span class="d">tip: ↑/↓ history · Tab completes · ⌘K palette · ? shortcuts</span>`,
-    ls: () => Object.keys(FILES).map(f => {
-        if (f.endsWith('.pdf')) return `<a href="assets/philip-toulinov-resume.pdf" target="_blank">${f}</a>`;
-        return `<span class="${f.endsWith('.md') ? 'c' : f.endsWith('.txt') ? 'a' : 'g'}">${f}</span>`;
-      }).join('   '),
+    help: () => {
+      const sec=(label,color)=>`<div class="tui-sec" style="color:${color}">${label}</div>`;
+      const it=(k,name,desc,cmd)=>`<div class="tui-item"${cmd?` data-cmd="${cmd}"`:''}><span class="k">${k}</span><span class="tn">${name}</span><span class="td">${desc}</span></div>`;
+      return `<div class="tui"><div class="tui-head">▌ SELECT A COMMAND</div><div class="tui-body">`+
+        sec('identity','#5ee6c0')+
+        it('1','whoami','who is philip','whoami')+it('2','neofetch','system info','neofetch')+it('3','bonjour','fr greeting','bonjour')+it('4','whoami --json','raw schema','whoami --json')+
+        sec('career','#5ec8ff')+
+        it('5','skills','the stack','skills')+it('6','experience','roles','experience')+it('7','git log','career as commits','git log')+it('8','git show &lt;h&gt;','expand a role','')+it('9','education','school','education')+it('·','kubectl','get skills (pods)','kubectl get skills')+
+        sec('filesystem','#b89cff')+
+        it('·','ls','list files','ls')+it('·','cat &lt;file&gt;','read a file','')+
+        sec('actions','#f5b642')+
+        it('·','hire','reverse job-req','hire')+it('·','contact','reach me','contact')+it('·','deploy','run a live deploy','deploy')+it('·','theme &lt;env&gt;','prod|staging|dev','')+it('·','top','skill monitor','top')+it('·','clear','wipe screen','clear')+
+        `</div><div class="tui-foot"><b>click</b> a row to run · <b>⌘K</b> palette · <b>?</b> shortcuts · <b>Tab</b> completes</div></div>`;
+    },
+    menu: () => COMMANDS.help(),
+    ls: () => { var ff=Object.keys(FILES); return '<div class="tree"><div class="tree-folder">▾ ~/philip/</div>'+ff.map(function(f,i){var last=i===ff.length-1;var cls=f.endsWith('.md')?'c':f.endsWith('.txt')?'a':'g';var nm=f.endsWith('.pdf')?'<a href="assets/philip-toulinov-resume.pdf" target="_blank">'+f+'</a>':'<span class="'+cls+'">'+f+'</span>';return '<div class="tree-leaf"><span class="tree-pipe">'+(last?'└── ':'├── ')+'</span>'+nm+'</div>';}).join('')+'</div>'; },
     'ls -la': () => COMMANDS.ls(),
     pwd: () => `<span class="d">/home/philip/</span><span class="a">stack</span>`,
-    whoami: () => `<span class="a">Philip Toulinov</span> — release &amp; software engineer (<span class="c">San Francisco Bay Area</span>). I automate the parts of shipping that page people at 2am: <span class="g">CI/CD</span>, <span class="g">test automation</span>, <span class="g">cloud-native deploys</span>. Comfortable in a <span class="a">Jenkinsfile</span> and on a <span class="m">5G RF test bench</span>. Bilingual <span class="c">EN/FR</span>.`,
+    whoami: () => { var KV=[['name','Philip Toulinov'],['role','Release & Software Engineer'],['based','San Francisco Bay Area'],['speaks','English · Français · Русский'],['focus','CI/CD · test automation · cloud-native']]; return '<div class="boxes"><div class="box" style="--bc:#7c6cff"><div class="box-top">~/philip · whoami<span class="bn">id card</span></div><div class="box-body"><div class="nf-info">'+KV.map(function(x){return '<div class="kvr"><span class="kvk">'+x[0]+'</span><span class="kvv">'+x[1]+'</span></div>';}).join('')+'</div></div></div></div><span class="row d">I automate the parts of shipping that page people at 2am — comfortable in a <span class="a">Jenkinsfile</span> and on a <span class="m">5G RF test bench</span>.</span>'; },
     skills: skillsBlock, stack: skillsBlock,
-    experience: () => `<span class="head">experience</span>` +
-      `<span class="row">› <span class="a">LendingClub</span>  · Release Engineer · 2021–2024</span>` +
-      `<span class="row">› <span class="a">Tech Mahindra</span> · Software &amp; Device Engineer · 2021</span>` +
-      `<span class="row">› <span class="a">Catalina USA</span>  · SWE Intern · 2020</span>` +
-      `<span class="row d">tip: git show &lt;hash&gt; or cat lendingclub.md for detail.</span>`,
-    education: () => `<span class="head">education</span><span class="row">› B.S. Computer Science — Humboldt State University · 2021</span><span class="row">› Lycée Français La Pérouse — bilingual EN / FR</span>`,
+    experience: () => {
+      var R=[['LendingClub','#7c6cff','Release Engineer','Dec 2021 – Jan 2024','CI/CD pipelines · −30% deploy time · Mabl release gates'],['Tech Mahindra','#5ec8ff','Software & Device Engineer','Sep – Dec 2021','LTE / 5G NR conformance · automated RF test rigs'],['Catalina USA','#5ee6c0','SWE Intern','Jun – Sep 2020','Selenium suites · Jenkins CD · Dockerized envs']];
+      return '<div class="boxes">'+R.map(function(x){return '<div class="box" style="--bc:'+x[1]+'"><div class="box-top">'+x[0]+'<span class="bn">'+x[3]+'</span></div><div class="box-body"><div class="box-row"><b>'+x[2]+'</b><span class="bd">'+x[4]+'</span></div></div></div>';}).join('')+'</div><span class="row d">tip: git show &lt;hash&gt; · or cat lendingclub.md</span>';
+    },
+    education: () => '<div class="boxes"><div class="box" style="--bc:#5ee6c0"><div class="box-top">Humboldt State University<span class="bn">2021</span></div><div class="box-body"><div class="box-row"><b>B.S. Computer Science</b></div></div></div><div class="box" style="--bc:#b89cff"><div class="box-top">Lycée Français La Pérouse<span class="bn">EN · FR · RU</span></div><div class="box-body"><div class="box-row"><b>Bilingual schooling</b></div></div></div></div>',
     contact: () => `<span class="head">contact</span>` +
       `<span class="row">› <a href="mailto:toulinov.philip@yahoo.com">toulinov.philip@yahoo.com</a></span>` +
       `<span class="row">› <a href="tel:+14158237537">+1 (415) 823-7537</a></span>` +
       `<span class="row">› <a href="https://www.linkedin.com/in/ptoulinov" target="_blank" rel="noopener">linkedin.com/in/ptoulinov</a></span>`,
-    neofetch: () => `<span class="a">philip@toulinov</span>\n<span class="d">-----------------</span>\n` +
-      `<span class="a">os</span>        Release Engineer (SF Bay Area)\n` +
-      `<span class="a">uptime</span>    shipping since 2020\n` +
-      `<span class="a">shell</span>     bash · zsh · Jenkinsfile\n` +
-      `<span class="a">kernel</span>    CI/CD · Kubernetes · AWS\n` +
-      `<span class="a">langs</span>     Python · Java · JS · C++ · EN/FR\n` +
-      `<span class="a">status</span>    <span class="g">● available</span>`,
+    neofetch: () => { var L='██████╗ ████████╗\n██╔══██╗╚══██╔══╝\n██████╔╝   ██║\n██╔═══╝    ██║\n██║        ██║\n╚═╝        ╚═╝'; var KV=[['os','Release Engineer · SF Bay Area'],['uptime','shipping since 2020'],['shell','bash · zsh · Jenkinsfile'],['kernel','CI/CD · Kubernetes · AWS'],['langs','Python · Java · JS · C++'],['speaks','English · Français · Русский'],['status','<span class="g">● available</span>']]; return '<div class="nf"><pre class="nf-logo">'+L+'</pre><div class="nf-info">'+KV.map(function(x){return '<div class="kvr"><span class="kvk">'+x[0]+'</span><span class="kvv">'+x[1]+'</span></div>';}).join('')+'</div></div>'; },
     bonjour: () => `<span class="a">Salut</span> — merci d'être passé. Élevé et scolarisé en <span class="c">français</span> à San Francisco. On parle&nbsp;? <a href="mailto:toulinov.philip@yahoo.com">écris-moi</a>.`,
     sudo: () => `<span class="r">nice try.</span> <span class="d">this incident has been logged. 📟</span>`,
     'sudo hire philip': () => `<span class="g">✓</span> escalating privileges… <a href="mailto:toulinov.philip@yahoo.com">toulinov.philip@yahoo.com</a> — let's talk.`,
@@ -1480,9 +1478,7 @@ function makeShell(cfg){
   };
   const gitCmd = (arg) => {
     if (/^log/.test(arg) || arg === ''){
-      return `<span class="head">git log --oneline (career)</span>` + COMMITS.map(c =>
-        `<span class="row"><span class="a">${c.h}</span> <span class="d">(${c.when})</span> ${esc(c.msg)}</span>`).join('') +
-        `<span class="row d">tip: git show ${COMMITS[0].h}</span>`;
+      return '<span class="head">git log --oneline --graph (career)</span><div class="gl">'+COMMITS.map(function(c){return '<div class="gl-row"><span class="gl-g">●</span><span class="gl-h">'+c.h+'</span><span class="gl-m"><span class="gl-w">('+c.when+')</span> '+esc(c.msg)+'</span></div>';}).join('')+'</div><span class="row d">tip: git show '+COMMITS[0].h+'</span>';
     }
     const m = arg.match(/^show\s+([0-9a-f]{3,})/);
     if (m){
@@ -1558,6 +1554,7 @@ function makeShell(cfg){
     else out = `command not found: ${esc(c)} — try <span class="a">help</span>`;
     if (out) print(out);
   };
+  try{ window.__heroRun = run; }catch(e){}
 
   // tab-completion
   const COMPLETIONS = ['help','ls','pwd','whoami','whoami --json','skills','stack','experience','education','contact','hire','neofetch','bonjour','clear','history','date','sudo','exit','deploy',
@@ -1616,24 +1613,11 @@ function makeShell(cfg){
     await dsleep(450);
     // loop the tour continuously until the visitor takes over (types / clicks / taps a chip),
     // wiping between cycles so output never piles up; pauses while off-screen or the tab is hidden.
-    while (!demoAborted){
-      demoTimers = [];   // bound the timer array per cycle (the prior cycle's timers have all fired) — prevents a slow leak in the forever-loop
-      for (const cmd of DEMO){
-        if (demoAborted) break;
-        await waitVisible();
-        if (demoAborted) break;
-        await typeInto(cmd);
-        if (demoAborted) break;
-        await dsleep(340);
-        run(cmd); input.value = '';
-        if (demoAborted) break;
-        await dsleep(/top|git log|kubectl|cat/.test(cmd) ? 1950 : 1250);
-      }
-      if (demoAborted) break;
-      print(cfg.demoEndMsg || `<span class='d'>// looping the tour — type <span class='a'>help</span> to take over ↑</span>`);
-      await dsleep(2400);
-      if (demoAborted) break;
-      bodyEl.innerHTML = '';                       // clear and re-run the sequence — keeps commands running past cycle 1
+    if (!demoAborted){
+      await waitVisible();
+      if (!demoAborted){ await typeInto('help'); }
+      if (!demoAborted){ await dsleep(300); run('help'); input.value = ''; }
+      if (!demoAborted) print(`<span class='d'>// your turn — <span class='a'>click a row</span> above, or type a command · try <span class='a'>whoami</span> · <span class='a'>git log</span> · <span class='a'>skills</span> · <span class='a'>Tab</span> completes</span>`);
     }
     demoOn = false;
     if (hintEl) hintEl.innerHTML = hintOrig;
