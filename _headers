@@ -1,0 +1,32 @@
+# Netlify / Cloudflare Pages cache policy.
+# Vendored libs, fonts and images are content-stable between deploys → cache hard.
+# main.css / main.js change WITHOUT a content hash in the filename, so they must
+# revalidate (add a hashed build step later to make these immutable too).
+
+/vendor/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# The résumé PDFs get replaced in place (no content hash) — keep them revalidating
+# so a new upload reaches returning visitors instead of a year-stale cached copy.
+/assets/philip-toulinov-resume.pdf
+  Cache-Control: public, max-age=3600, must-revalidate
+/assets/philip-toulinov-resume-text.pdf
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/styles/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/scripts/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/*.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+/sitemap.xml
+  Cache-Control: public, max-age=86400
+
+/robots.txt
+  Cache-Control: public, max-age=86400

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" font-family="'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <radialGradient id="g" cx="80%" cy="10%" r="85%">
+      <stop offset="0%" stop-color="#f5b642" stop-opacity="0.18"/>
+      <stop offset="55%" stop-color="#0a0a0c" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="54" height="54" patternUnits="userSpaceOnUse">
+      <path d="M54 0H0V54" fill="none" stroke="#ededf0" stroke-opacity="0.05" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="1200" height="630" fill="#0a0a0c"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <text x="90" y="150" fill="#f5b642" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="25" letter-spacing="2">release engineer · ci/cd · cloud-native · 5g/lte</text>
+  <text x="84" y="320" fill="#ededf0" font-size="150" font-weight="700" letter-spacing="-6">Philip Toulinov</text>
+  <text x="90" y="420" fill="#a6a6b0" font-size="38">I build the pipelines that ship software —</text>
+  <text x="90" y="472" fill="#ffd98a" font-size="38">fast, tested, and boringly reliable.</text>
+  <g transform="translate(90 560)">
+    <circle cx="8" cy="-7" r="7" fill="#5ee6c0"/>
+    <text x="28" y="0" fill="#5ee6c0" font-family="'JetBrains Mono', ui-monospace, monospace" font-size="23">available · San Francisco Bay Area · pipeline: passing</text>
+  </g>
+</svg>

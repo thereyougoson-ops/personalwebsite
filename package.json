@@ -1,0 +1,21 @@
+{
+  "name": "philip-toulinov-portfolio",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Hand-built interactive portfolio — runnable static site with an additive content-hash + minify build.",
+  "scripts": {
+    "serve": "python -m http.server 8099 --bind 127.0.0.1",
+    "build": "node build/build.mjs",
+    "serve:dist": "python -m http.server 8098 --bind 127.0.0.1 --directory dist",
+    "test": "node tests/run-selftest.mjs",
+    "test:console": "node tests/run-console-validation.mjs",
+    "test:axe": "node tests/run-axe.mjs",
+    "test:links": "node tests/run-linkcheck.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
+    "axe-core": "^4.12.1",
+    "esbuild": "^0.24.2",
+    "playwright": "^1.61.0"
+  }
+}

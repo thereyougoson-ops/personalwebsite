@@ -1,0 +1,17 @@
+# Content-hash + minify build (build/build.mjs) emits ./dist.
+# dist/_headers marks the hashed /styles/* and /scripts/* immutable; the custom 404 is ./404.html.
+# The source tree still runs with no build step (`npm run serve`) — the build is purely additive.
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+[build.environment]
+  # pin Node so the build can't regress to a version without top-level await (build/build.mjs)
+  NODE_VERSION = "20"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    X-Frame-Options = "SAMEORIGIN"

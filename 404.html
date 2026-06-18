@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>404 — no such route · Philip Toulinov</title>
+<meta name="robots" content="noindex" />
+<meta name="theme-color" content="#0c0b10" />
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Geist:wght@300..700&family=Geist+Mono:wght@400..600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles/main.css" />
+<style>
+  body{ min-height:100svh; display:grid; place-items:center; padding:2rem; overflow:auto; }
+  .e404{ width:min(640px,94vw); border:1px solid var(--line-2); border-radius:var(--r-lg); background:var(--card); overflow:hidden; box-shadow:0 40px 110px rgba(0,0,0,.5); position:relative; z-index:1; }
+  .e404__bar{ display:flex; align-items:center; gap:8px; padding:11px 15px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.02); }
+  .e404__path{ margin-left:8px; color:var(--text-3); font-size:12px; }
+  .e404__body{ padding:clamp(1.5rem,4vw,2.4rem); font-family:var(--term); font-size:13.5px; line-height:1.9; color:var(--text-2); white-space:pre-wrap; }
+  .e404__code{ font-family:var(--display); font-weight:800; font-size:clamp(3.4rem,13vw,6.5rem); letter-spacing:-.04em; line-height:1; margin:.1rem 0 1.1rem; color:var(--text); }
+  .e404 .g{ color:var(--green); } .e404 .a{ color:var(--accent); } .e404 .r{ color:var(--red); } .e404 .d{ color:var(--text-3); }
+  .e404__home{ display:inline-block; margin-top:1.4rem; color:var(--accent); }
+  .e404__home:hover{ color:var(--accent-soft); }
+</style>
+</head>
+<body>
+  <main class="e404">
+    <div class="e404__bar">
+      <span class="pre__dot"></span><span class="pre__dot"></span><span class="pre__dot"></span>
+      <span class="e404__path mono">philip@portfolio: ~</span>
+    </div>
+    <div class="e404__body">
+      <div class="e404__code">404</div>
+<span class="d">$</span> cd <span id="badpath" class="a">/unknown</span>
+<span class="r">cd: no such file or directory</span>
+<span class="d">$</span> kubectl get pods <span class="d">-l page=requested -n prod</span>
+<span class="d">No resources found — this route was never deployed.</span>
+<span class="d">$</span> <span class="g">git checkout main</span>
+      <a class="e404__home mono" href="/">↳ cd ~ — back to the homepage</a>
+    </div>
+  </main>
+  <script>try{ document.getElementById('badpath').textContent = location.pathname + location.search; }catch(e){}</script>
+</body>
+</html>

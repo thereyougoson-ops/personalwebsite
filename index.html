@@ -1,0 +1,700 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Philip Toulinov — Release &amp; DevOps Engineer</title>
+<meta name="description" content="Philip Toulinov is a release and DevOps engineer in the San Francisco Bay Area who builds CI/CD pipelines, test automation and cloud-native deployments. Cut deploy times ~30% at LendingClub; ran 5G/LTE protocol conformance at Tech Mahindra." />
+<meta name="author" content="Philip Toulinov" />
+<meta name="theme-color" content="#0a0a0c" />
+<link rel="canonical" href="https://philiptoulinov.com/" />
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Philip Toulinov" />
+<meta property="og:url" content="https://philiptoulinov.com/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="Philip Toulinov — Release &amp; DevOps Engineer" />
+<meta property="og:description" content="I build the pipelines that ship software — fast, tested, and boringly reliable. CI/CD, cloud-native deploys, 5G/LTE protocol testing." />
+<meta property="og:image" content="https://philiptoulinov.com/assets/og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:type" content="image/png" />
+<meta property="og:image:alt" content="Philip Toulinov — Release &amp; DevOps Engineer. I build the pipelines that ship software." />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Philip Toulinov — Release &amp; DevOps Engineer" />
+<meta name="twitter:description" content="CI/CD, cloud-native deploys, 5G/LTE conformance. Releases that don't page anyone." />
+<meta name="twitter:image" content="https://philiptoulinov.com/assets/og.png" />
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="assets/favicon.ico" sizes="32x32" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<link rel="manifest" href="site.webmanifest" />
+
+<!-- Type (self-hosted, no runtime CDN): Bricolage Grotesque (display) · Geist + Geist Mono (UI/data) · JetBrains Mono (terminal) -->
+<link rel="stylesheet" href="assets/fonts/fonts.css" />
+
+<link rel="stylesheet" href="styles/main.css" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Philip Toulinov",
+  "jobTitle": "Release & DevOps Engineer",
+  "email": "mailto:toulinov.philip@yahoo.com",
+  "telephone": "+1-415-823-7537",
+  "url": "https://philiptoulinov.com/",
+  "sameAs": ["https://www.linkedin.com/in/ptoulinov"],
+  "knowsLanguage": ["en", "fr"],
+  "alumniOf": [
+    { "@type": "CollegeOrUniversity", "name": "Humboldt State University" },
+    { "@type": "EducationalOrganization", "name": "Lycée Français La Pérouse" }
+  ],
+  "address": { "@type": "PostalAddress", "addressLocality": "San Francisco Bay Area", "addressRegion": "CA", "addressCountry": "US" },
+  "knowsAbout": ["CI/CD", "Release Engineering", "DevOps", "Kubernetes", "AWS", "Terraform", "Test Automation", "5G/LTE Protocol Conformance"]
+}
+</script>
+</head>
+<body class="is-loading">
+
+<!-- ░░ CURSOR-LIT CODE FIELD (varied, scroll-aware background) ░░ -->
+<div class="codefield" id="codefield" aria-hidden="true">
+  <div class="codefield__grid"></div>
+  <pre class="codefield__text codefield__base" id="codeBase"></pre>
+  <pre class="codefield__text codefield__glow" id="codeGlow"></pre>
+</div>
+
+<!-- ░░ DEPLOY PRELOADER ░░ -->
+<div id="preloader" aria-hidden="true">
+  <div class="pre__inner">
+    <div class="pre__bar">
+      <span class="pre__dot"></span><span class="pre__dot"></span><span class="pre__dot"></span>
+      <span class="pre__path">philip@portfolio: ~/deploy</span>
+    </div>
+    <pre class="pre__log" id="preLog"></pre>
+    <div class="pre__progress"><i id="preProgress"></i></div>
+  </div>
+  <button class="pre__skip" id="preSkip" type="button" tabindex="-1">skip&nbsp;→</button>
+</div>
+
+<!-- ░░ CUSTOM CURSOR ░░ -->
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span><span class="cursor__label"></span></div>
+
+<!-- ░░ BUILD / SCROLL PROGRESS ░░ -->
+<div class="buildbar" aria-hidden="true"><i id="buildbar"></i></div>
+
+<!-- screen-reader announcements -->
+<div class="sr-only" id="srLive" aria-live="polite" role="status"></div>
+
+<!-- ░░ COMMAND PALETTE (⌘K) ░░ -->
+<div class="palette" id="palette" aria-hidden="true">
+  <div class="palette__scrim" id="paletteScrim"></div>
+  <div class="palette__box" role="dialog" aria-label="Command palette" aria-modal="true">
+    <div class="palette__top">
+      <span class="palette__chev mono">&gt;</span>
+      <input class="palette__input" id="paletteInput" type="text" placeholder="Type a command or search…" autocomplete="off" spellcheck="false" aria-label="Command palette input" />
+      <kbd class="palette__esc mono">esc</kbd>
+    </div>
+    <ul class="palette__list" id="paletteList" role="listbox"></ul>
+  </div>
+</div>
+
+<!-- ░░ KEYBOARD SHORTCUTS CHEATSHEET (?) ░░ -->
+<div class="sheet" id="sheet" aria-hidden="true">
+  <div class="sheet__scrim" id="sheetScrim"></div>
+  <div class="sheet__box" role="dialog" aria-label="Keyboard shortcuts">
+    <div class="sheet__top mono"><span>keyboard shortcuts</span><kbd>esc</kbd></div>
+    <ul class="sheet__list mono">
+      <li><span class="sheet__keys"><kbd>⌘</kbd><kbd>K</kbd></span><span>command palette</span></li>
+      <li><span class="sheet__keys"><kbd>g</kbd><kbd>p</kbd></span><span>go to pipeline</span></li>
+      <li><span class="sheet__keys"><kbd>g</kbd><kbd>s</kbd></span><span>go to stack / terminal</span></li>
+      <li><span class="sheet__keys"><kbd>g</kbd><kbd>a</kbd></span><span>go to about</span></li>
+      <li><span class="sheet__keys"><kbd>g</kbd><kbd>c</kbd></span><span>go to contact</span></li>
+      <li><span class="sheet__keys"><kbd>g</kbd><kbd>h</kbd></span><span>go to top</span></li>
+      <li><span class="sheet__keys"><kbd>/</kbd></span><span>focus the terminal</span></li>
+      <li><span class="sheet__keys"><kbd>?</kbd></span><span>this cheatsheet</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- ░░ NAV ░░ -->
+<header class="nav" id="nav">
+  <a class="nav__brand" href="#top" data-magnetic data-cursor="home" aria-label="Home">
+    <span class="nav__mark mono">&gt;_</span>
+    <span class="nav__name">Philip&nbsp;Toulinov</span>
+  </a>
+  <nav class="nav__links mono" aria-label="Primary">
+    <a href="#work" data-magnetic><span>01</span>Pipeline</a>
+    <a href="#stack" data-magnetic><span>02</span>Stack</a>
+    <a href="#builds" data-magnetic><span>03</span>Builds</a>
+    <a href="#about" data-magnetic><span>04</span>About</a>
+    <a href="#contact" data-magnetic><span>05</span>Contact</a>
+  </nav>
+  <div class="nav__right">
+    <span class="status mono" title="Open to release-engineering, DevOps &amp; SRE roles"><i></i>available</span>
+    <button class="env-chip" id="envChip" type="button" data-magnetic title="environment — click to switch (prod → staging → dev)"><i></i><span id="envLabel">prod</span></button>
+    <button class="kbtn mono" id="paletteOpen" type="button" aria-label="Open menu and command palette" data-magnetic>
+      <span class="kbtn__keys"><kbd>⌘</kbd><kbd>K</kbd></span>
+      <span class="kbtn__touch" aria-hidden="true"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>Menu</span>
+    </button>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ░░ HERO — the working terminal ░░ -->
+  <section class="hero" id="hero">
+    <div class="hero__wrap">
+      <p class="hero__eyebrow mono" data-reveal>release engineer · ci/cd · cloud-native · 5g/lte</p>
+      <h1 class="hero__title sr-only">Philip Toulinov</h1>
+
+      <div class="hero__term" data-reveal>
+        <div class="hero__termslot" id="heroTermSlot">
+          <div class="terminal heroterm" id="heroTerm">
+            <div class="terminal__bar">
+              <span class="pre__dot"></span><span class="pre__dot"></span><span class="pre__dot"></span>
+              <span class="terminal__path mono">philip@toulinov: ~</span>
+              <span class="terminal__hint mono">type <b>help</b> · or click a chip ↓</span>
+              <button class="heroterm__min mono" id="heroTermMin" type="button" aria-label="Minimise terminal" title="Minimise">
+                <svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M6 18h12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+                <span>minimise</span>
+              </button>
+            </div>
+            <div class="term-chips mono" id="heroTermChips">
+              <button type="button" data-cmd="whoami" data-magnetic>whoami</button>
+              <button type="button" data-cmd="git log" data-magnetic>git log</button>
+              <button type="button" data-cmd="skills" data-magnetic>skills</button>
+              <button type="button" data-cmd="hire" data-magnetic>hire</button>
+              <button type="button" data-cmd="cat resume.pdf" data-magnetic>cat resume.pdf</button>
+              <button type="button" data-cmd="help" data-magnetic>help</button>
+            </div>
+            <div class="heroterm__banner" aria-hidden="true"><pre class="term-banner">██████╗ ██╗  ██╗██╗██╗     ██╗██████╗
+██╔══██╗██║  ██║██║██║     ██║██╔══██╗
+██████╔╝███████║██║██║     ██║██████╔╝
+██╔═══╝ ██╔══██║██║██║     ██║██╔═══╝
+██║     ██║  ██║██║███████╗██║██║
+╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝╚═╝╚═╝
+
+████████╗ ██████╗ ██╗   ██╗██╗     ██╗███╗   ██╗ ██████╗ ██╗   ██╗
+╚══██╔══╝██╔═══██╗██║   ██║██║     ██║████╗  ██║██╔═══██╗██║   ██║
+   ██║   ██║   ██║██║   ██║██║     ██║██╔██╗ ██║██║   ██║██║   ██║
+   ██║   ██║   ██║██║   ██║██║     ██║██║╚██╗██║██║   ██║╚██╗ ██╔╝
+   ██║   ╚██████╔╝╚██████╔╝███████╗██║██║ ╚████║╚██████╔╝ ╚████╔╝
+   ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝   ╚═══╝</pre></div>
+            <div class="terminal__scroll" id="heroTermScroll">
+              <div class="terminal__body mono" id="heroTermBody" role="log" aria-live="off" aria-label="terminal output"></div>
+              <div class="terminal__line mono">
+                <span class="terminal__prompt">philip@toulinov <span class="ok">$</span></span>
+                <input class="terminal__input" id="heroTermInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="terminal command input" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="hero__side">
+          <p class="hero__lede" data-reveal>I build and automate the pipelines that take software from a commit to production — <span class="hl">fast, tested, and boringly reliable.</span></p>
+          <p class="hero__pitch mono" data-reveal>Release / DevOps Engineer · SF Bay Area · open to DevOps &amp; SRE · remote or hybrid</p>
+          <div class="statuspage" id="statuspage">
+            <div class="sp__top mono">
+              <span class="sp__hdr"><i class="sp__dot"></i> all systems operational</span>
+              <span class="sp__win">90-day · <span id="heroClock">--:-- PT</span></span>
+            </div>
+            <ul class="sp__rows">
+              <li class="sp__row"><span class="sp__name mono">pipelines</span><span class="sp__bars" data-deg="1"></span><span class="sp__pct mono ok">100%</span></li>
+              <li class="sp__row"><span class="sp__name mono">availability</span><span class="sp__bars" data-deg="2"></span><span class="sp__pct mono ok">99.9%</span></li>
+              <li class="sp__row"><span class="sp__name mono">response&nbsp;time</span><span class="sp__bars" data-deg="3"></span><span class="sp__pct mono ok">198&nbsp;ms</span></li>
+              <li class="sp__row"><span class="sp__name mono">coffee</span><span class="sp__bars" data-deg="11"></span><span class="sp__pct mono warn">degraded</span></li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+
+      <div class="hero__cta" data-reveal>
+        <a class="btn btn--primary" href="#work" data-magnetic data-cursor="explore">
+          See the pipeline
+          <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <button class="btn btn--ghost mono" id="runDeploy" type="button" data-magnetic data-cursor="run">./deploy --prod</button>
+        <a class="btn btn--ghost" href="#contact" data-magnetic>Get in touch</a>
+        <a class="btn btn--ghost mono" href="assets/philip-toulinov-resume.pdf" download data-magnetic data-cursor="open">résumé ↓</a>
+      </div>
+    </div>
+    <a class="hero__scroll mono" href="#work" aria-label="Scroll to pipeline" data-reveal>
+      <span>scroll</span><i></i>
+    </a>
+  </section>
+
+  <!-- ░░ THESIS — pinned kinetic interstitial (hero → pipeline) ░░ -->
+  <section class="thesis" id="thesis" aria-label="From a commit to production">
+    <div class="thesis__pin">
+      <div class="thesis__beat" data-beat="0">
+        <p class="thesis__line">
+          <span class="tw">Every</span> <span class="tw">career</span> <span class="tw">is</span> <span class="tw">a</span> <span class="tw">commit</span> <span class="tw">history.</span>
+        </p>
+      </div>
+      <div class="thesis__beat" data-beat="1">
+        <p class="thesis__line">Mine compiles <span class="ok">clean</span>.</p>
+      </div>
+      <div class="thesis__beat" data-beat="2">
+        <p class="thesis__line">From a <span class="thesis__am">commit</span> <span class="thesis__arrow">→</span> to <span class="thesis__am">production</span>.</p>
+      </div>
+      <div class="thesis__hud mono" aria-hidden="true">
+        <span class="thesis__bar"><i></i></span>
+        <span class="thesis__pct">0% compiled</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ CENTERPIECE 1 — CAREER PIPELINE (DAG) ░░ -->
+  <section class="pipe" id="work">
+    <div class="sec__head">
+      <p class="sec__label mono" data-reveal>01 — pipeline</p>
+      <h2 class="sec__title" data-reveal>A career, rendered as a deployment.</h2>
+      <p class="sec__sub" data-reveal>Five stages. Each one shipped — scroll to run the pipeline.</p>
+    </div>
+
+    <!-- the DAG strip -->
+    <div class="dag" id="dag" data-reveal>
+      <div class="dag__track" id="dagTrack" aria-hidden="true"></div>
+      <ol class="dag__nodes" id="dagNodes">
+        <li class="dnode" data-node="0"><button type="button" data-magnetic><span class="dnode__pt"></span><span class="dnode__name mono">source</span><span class="dnode__org">Education</span><span class="dnode__st mono">queued</span></button></li>
+        <li class="dnode" data-node="1"><button type="button" data-magnetic><span class="dnode__pt"></span><span class="dnode__name mono">build</span><span class="dnode__org">Catalina USA</span><span class="dnode__st mono">queued</span></button></li>
+        <li class="dnode" data-node="2"><button type="button" data-magnetic><span class="dnode__pt"></span><span class="dnode__name mono">test</span><span class="dnode__org">Tech Mahindra</span><span class="dnode__st mono">queued</span></button></li>
+        <li class="dnode" data-node="3"><button type="button" data-magnetic><span class="dnode__pt"></span><span class="dnode__name mono">deploy</span><span class="dnode__org">LendingClub</span><span class="dnode__st mono">queued</span></button></li>
+        <li class="dnode" data-node="4"><button type="button" data-magnetic><span class="dnode__pt"></span><span class="dnode__name mono">monitor</span><span class="dnode__org">Independent</span><span class="dnode__st mono">queued</span></button></li>
+      </ol>
+    </div>
+
+    <!-- the stage detail cards -->
+    <div class="stages" id="stages">
+
+      <article class="stage" data-stage="0" id="stage-0">
+        <div class="stage__gut mono"><span class="stage__ix">SOURCE</span><span class="stage__line" aria-hidden="true"></span></div>
+        <div class="stage__card">
+          <header class="stage__top">
+            <div><h3 class="stage__role">B.S. Computer Science</h3><p class="stage__org">Humboldt State University <span class="stage__mode">· bilingual EN/FR</span></p></div>
+            <div class="stage__meta mono"><span class="stage__dates">2021</span><span class="chip" data-chip>queued</span></div>
+          </header>
+          <ul class="stage__points">
+            <li data-point>Computer Science degree — the checkout step: where the source came from.</li>
+            <li data-point>Schooled in French at <b>Lycée Français La Pérouse</b>; bilingual English / Français.</li>
+          </ul>
+          <p class="stage__art mono">artifacts: CS fundamentals · EN / FR</p>
+        </div>
+      </article>
+
+      <article class="stage" data-stage="1" id="stage-1">
+        <div class="stage__gut mono"><span class="stage__ix">BUILD</span><span class="stage__line" aria-hidden="true"></span></div>
+        <div class="stage__card">
+          <header class="stage__top">
+            <div><h3 class="stage__role">Software Engineer Intern</h3><p class="stage__org">Catalina USA <span class="stage__mode">· Remote</span></p></div>
+            <div class="stage__meta mono"><span class="stage__dates">Jun — Sep 2020</span><span class="chip" data-chip>queued</span></div>
+          </header>
+          <ul class="stage__points">
+            <li data-point>Built integration, acceptance and regression tests in <b>Selenium WebDriver</b>.</li>
+            <li data-point>Set up and troubleshot Continuous Delivery builds in <b>Jenkins</b>, wired into JIRA.</li>
+            <li data-point>Containerized build environments with <b>Docker</b> so jobs ran on a clean, pinned toolchain.</li>
+          </ul>
+          <p class="stage__art mono">artifacts: Selenium · Jenkins · Docker · JIRA</p>
+          <div class="stage__stack" aria-hidden="true">
+            <span class="slogo" style="--brand:#43B02A"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/selenium.svg) center/contain no-repeat;mask:url(assets/logos/selenium.svg) center/contain no-repeat"></i><span class="slogo__nm">Selenium</span></span>
+            <span class="slogo" style="--brand:#D24939"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/jenkins.svg) center/contain no-repeat;mask:url(assets/logos/jenkins.svg) center/contain no-repeat"></i><span class="slogo__nm">Jenkins</span></span>
+            <span class="slogo" style="--brand:#2496ED"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/docker.svg) center/contain no-repeat;mask:url(assets/logos/docker.svg) center/contain no-repeat"></i><span class="slogo__nm">Docker</span></span>
+            <span class="slogo" style="--brand:#2684FF"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/jira.svg) center/contain no-repeat;mask:url(assets/logos/jira.svg) center/contain no-repeat"></i><span class="slogo__nm">Jira</span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage" data-stage="2" id="stage-2">
+        <div class="stage__gut mono"><span class="stage__ix">TEST</span><span class="stage__line" aria-hidden="true"></span></div>
+        <div class="stage__card">
+          <header class="stage__top">
+            <div><h3 class="stage__role">Software &amp; Device Engineer</h3><p class="stage__org">Tech Mahindra <span class="stage__mode">· On-site</span></p></div>
+            <div class="stage__meta mono"><span class="stage__dates">Sep — Dec 2021</span><span class="chip" data-chip>queued</span></div>
+          </header>
+          <ul class="stage__points">
+            <li data-point>Led LTE / 5G&nbsp;NR protocol and RF&nbsp;RRM conformance on the <b>Keysight E7515B</b> and <b>Anritsu MD8430A</b>.</li>
+            <li data-point>Scripted automated test rigs (<b>Rohde&nbsp;&amp;&nbsp;Schwarz CMW500</b>, <b>Keysight Nemo</b>), cutting manual setup <b data-count data-to="25" data-suffix="%">0%</b>.</li>
+            <li data-point>Debugged firmware on <b>Qualcomm Snapdragon</b> with RTOS tooling and hardware debuggers (Lauterbach Trace32).</li>
+            <li data-point>Ran monthly Git branching &amp; JIRA workflow training for global teams.</li>
+          </ul>
+          <p class="stage__art mono">artifacts: LTE/5G NR · Keysight · Anritsu · R&amp;S CMW500 · Trace32</p>
+          <div class="stage__stack" aria-hidden="true">
+            <span class="slogo" style="--brand:#F05032"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/git.svg) center/contain no-repeat;mask:url(assets/logos/git.svg) center/contain no-repeat"></i><span class="slogo__nm">Git</span></span>
+            <span class="slogo" style="--brand:#2684FF"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/jira.svg) center/contain no-repeat;mask:url(assets/logos/jira.svg) center/contain no-repeat"></i><span class="slogo__nm">Jira</span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage" data-stage="3" id="stage-3">
+        <div class="stage__gut mono"><span class="stage__ix">DEPLOY</span><span class="stage__line" aria-hidden="true"></span></div>
+        <div class="stage__card stage__card--flag">
+          <header class="stage__top">
+            <div><h3 class="stage__role">Release Engineer</h3><p class="stage__org">LendingClub <span class="stage__mode">· Hybrid</span></p></div>
+            <div class="stage__meta mono"><span class="stage__dates">Dec 2021 — Jan 2024</span><span class="chip" data-chip>queued</span></div>
+          </header>
+          <ul class="stage__points">
+            <li data-point>Designed and ran CI/CD pipelines that cut deployment time <b data-count data-to="30" data-suffix="%">0%</b> and tightened the whole dev loop.</li>
+            <li data-point>Added <b>Mabl</b> end-to-end tests as a release gate, so regressions got caught before deploy — not in production.</li>
+            <li data-point>Automated the release process with the teams that owned the services, for reliable, repeatable deploys.</li>
+            <li data-point>Maintained and upgraded the internal <b>GitHub</b> platform for the teams that depended on it.</li>
+            <li data-point>Built monitoring &amp; incident-response automation that shortened time-to-resolution.</li>
+          </ul>
+          <p class="stage__art mono">artifacts: Jenkins · GitHub Actions · Mabl · Kubernetes · AWS</p>
+          <div class="stage__stack" aria-hidden="true">
+            <span class="slogo" style="--brand:#D24939"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/jenkins.svg) center/contain no-repeat;mask:url(assets/logos/jenkins.svg) center/contain no-repeat"></i><span class="slogo__nm">Jenkins</span></span>
+            <span class="slogo" style="--brand:#2088FF"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/githubactions.svg) center/contain no-repeat;mask:url(assets/logos/githubactions.svg) center/contain no-repeat"></i><span class="slogo__nm">GitHub Actions</span></span>
+            <span class="slogo" style="--brand:#326CE5"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/kubernetes.svg) center/contain no-repeat;mask:url(assets/logos/kubernetes.svg) center/contain no-repeat"></i><span class="slogo__nm">Kubernetes</span></span>
+            <span class="slogo" style="--brand:#FF9900"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/amazonwebservices.svg) center/contain no-repeat;mask:url(assets/logos/amazonwebservices.svg) center/contain no-repeat"></i><span class="slogo__nm">AWS</span></span>
+            <span class="slogo" style="--brand:#F05032"><i class="slogo__ico" style="-webkit-mask:url(assets/logos/git.svg) center/contain no-repeat;mask:url(assets/logos/git.svg) center/contain no-repeat"></i><span class="slogo__nm">Git</span></span>
+          </div>
+        </div>
+      </article>
+
+      <article class="stage" data-stage="4" id="stage-4">
+        <div class="stage__gut mono"><span class="stage__ix">MONITOR</span></div>
+        <div class="stage__card stage__card--now">
+          <header class="stage__top">
+            <div><h3 class="stage__role">Independent Engineer &amp; Builder</h3><p class="stage__org">Self-directed <span class="stage__mode">· SF Bay Area · remote / hybrid</span></p></div>
+            <div class="stage__meta mono"><span class="stage__dates">2024 — present</span><span class="chip live" data-chip data-live>monitoring</span></div>
+          </header>
+          <ul class="stage__points">
+            <li data-point>Designing, shipping and operating my own products end to end — see the <a href="#builds">builds</a>.</li>
+            <li data-point>Across trading automation, real-time data, fintech and AI-infra monitoring — built and run solo.</li>
+            <li data-point>Open to release-engineering, DevOps and SRE roles. On-call for the right team.</li>
+          </ul>
+          <p class="stage__art mono"><a href="#contact">→ open an incident: let's talk</a></p>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ░░ OBSERVABILITY STRIP ░░ -->
+  <section class="obs" id="metrics" aria-label="Impact metrics">
+    <div class="obs__wrap">
+      <h2 class="sec__label mono" data-reveal>metrics — last build</h2>
+      <div class="obs__grid">
+        <div class="tile" data-reveal>
+          <span class="tile__k mono">deploy time</span>
+          <span class="tile__v"><b data-count data-to="30" data-prefix="−" data-suffix="%">0</b></span>
+          <canvas class="tile__spark" data-spark="down" width="220" height="48" aria-hidden="true"></canvas>
+          <span class="tile__sub mono">LendingClub · CI/CD</span>
+        </div>
+        <div class="tile" data-reveal>
+          <span class="tile__k mono">rig setup time</span>
+          <span class="tile__v"><b data-count data-to="25" data-prefix="−" data-suffix="%">0</b></span>
+          <canvas class="tile__spark" data-spark="down" width="220" height="48" aria-hidden="true"></canvas>
+          <span class="tile__sub mono">Tech Mahindra · automation</span>
+        </div>
+        <div class="tile" data-reveal>
+          <span class="tile__k mono">shipping since</span>
+          <span class="tile__v"><b data-count data-to="2020">0</b></span>
+          <canvas class="tile__spark" data-spark="up" width="220" height="48" aria-hidden="true"></canvas>
+          <span class="tile__sub mono">first production deploy</span>
+        </div>
+        <div class="tile" data-reveal>
+          <span class="tile__k mono">release status</span>
+          <span class="tile__v ok tile__v--mono"><span class="tdot ping"></span>passing</span>
+          <div class="tile__gauge" aria-hidden="true"><i></i></div>
+          <span class="tile__sub mono">EN / FR · available</span>
+        </div>
+      </div>
+
+      <!-- playable incident — walk an on-call SEV -->
+      <div class="incident" id="incident" data-reveal>
+        <div class="incident__bar mono">
+          <span class="incident__sev">● SEV-2</span>
+          <span class="incident__svc">prod · web</span>
+          <span class="incident__ttl">health checks failing after rollout</span>
+          <span class="incident__timer" id="incTimer">00:00</span>
+        </div>
+        <pre class="incident__log mono" id="incLog" role="log" aria-live="polite" aria-label="incident log" tabindex="0"></pre>
+        <div class="incident__steps">
+          <button type="button" class="incident__btn" data-step="0" data-magnetic>acknowledge</button>
+          <button type="button" class="incident__btn" data-step="1" disabled>investigate</button>
+          <button type="button" class="incident__btn" data-step="2" disabled>rollback</button>
+          <button type="button" class="incident__btn" data-step="3" disabled>resolve</button>
+          <button type="button" class="incident__btn incident__btn--reset" id="incReset" hidden>↻ run it again</button>
+        </div>
+        <div class="incident__result mono" id="incResult" role="status" aria-live="polite" hidden></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ CENTERPIECE 2 — EXPLORABLE TERMINAL (stack) ░░ -->
+  <section class="term-sec" id="stack">
+    <div class="sec__head">
+      <p class="sec__label mono" data-reveal>02 — stack</p>
+      <h2 class="sec__title" data-reveal>It's a real shell. Poke around.</h2>
+      <p class="sec__sub" data-reveal>Try <code>help</code>, <code>git log</code>, <code>kubectl get skills</code>, or <code>top</code>. Tab-completes.</p>
+    </div>
+
+    <div class="terminal" id="terminal" data-reveal>
+      <div class="terminal__bar">
+        <span class="pre__dot"></span><span class="pre__dot"></span><span class="pre__dot"></span>
+        <span class="terminal__path mono">philip@toulinov: ~/stack</span>
+        <span class="terminal__hint mono">type <b>help</b> or click ↓</span>
+      </div>
+      <div class="term-chips mono" id="termChips">
+        <button type="button" data-cmd="help" data-magnetic>help</button>
+        <button type="button" data-cmd="git log" data-magnetic>git log</button>
+        <button type="button" data-cmd="kubectl get skills" data-magnetic>kubectl get skills</button>
+        <button type="button" data-cmd="top" data-magnetic>top</button>
+        <button type="button" data-cmd="cat lendingclub.md" data-magnetic>cat lendingclub.md</button>
+        <button type="button" data-cmd="deploy" data-magnetic>deploy</button>
+      </div>
+      <div class="terminal__scroll" id="termScroll">
+        <div class="terminal__body mono" id="termBody" role="log" aria-live="off" aria-label="terminal output"></div>
+        <div class="terminal__line mono" id="termLine">
+          <span class="terminal__prompt">philip@toulinov <span class="ok">$</span></span>
+          <input class="terminal__input" id="termInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="terminal command input" />
+        </div>
+      </div>
+    </div>
+
+    <!-- ░░ TOOLCHAIN — every logo is a tool from the résumé; lights to its brand colour ░░ -->
+    <div class="toolchain-wrap" data-reveal>
+      <p class="toolchain__label mono">// toolchain — the tools behind the pipeline</p>
+      <ul class="toolchain" id="toolchain" aria-label="Tools and technologies">
+        <li class="tool" style="--brand:#D24939"><span class="tool__ico" style="-webkit-mask:url(assets/logos/jenkins.svg) center/contain no-repeat;mask:url(assets/logos/jenkins.svg) center/contain no-repeat"></span><span class="tool__name mono">Jenkins</span></li>
+        <li class="tool" style="--brand:#2088FF"><span class="tool__ico" style="-webkit-mask:url(assets/logos/githubactions.svg) center/contain no-repeat;mask:url(assets/logos/githubactions.svg) center/contain no-repeat"></span><span class="tool__name mono">GitHub Actions</span></li>
+        <li class="tool" style="--brand:#FC6D26"><span class="tool__ico" style="-webkit-mask:url(assets/logos/gitlab.svg) center/contain no-repeat;mask:url(assets/logos/gitlab.svg) center/contain no-repeat"></span><span class="tool__name mono">GitLab</span></li>
+        <li class="tool" style="--brand:#FF9900"><span class="tool__ico" style="-webkit-mask:url(assets/logos/amazonwebservices.svg) center/contain no-repeat;mask:url(assets/logos/amazonwebservices.svg) center/contain no-repeat"></span><span class="tool__name mono">AWS</span></li>
+        <li class="tool" style="--brand:#326CE5"><span class="tool__ico" style="-webkit-mask:url(assets/logos/kubernetes.svg) center/contain no-repeat;mask:url(assets/logos/kubernetes.svg) center/contain no-repeat"></span><span class="tool__name mono">Kubernetes</span></li>
+        <li class="tool" style="--brand:#2496ED"><span class="tool__ico" style="-webkit-mask:url(assets/logos/docker.svg) center/contain no-repeat;mask:url(assets/logos/docker.svg) center/contain no-repeat"></span><span class="tool__name mono">Docker</span></li>
+        <li class="tool" style="--brand:#844FBA"><span class="tool__ico" style="-webkit-mask:url(assets/logos/terraform.svg) center/contain no-repeat;mask:url(assets/logos/terraform.svg) center/contain no-repeat"></span><span class="tool__name mono">Terraform</span></li>
+        <li class="tool" style="--brand:#F05032"><span class="tool__ico" style="-webkit-mask:url(assets/logos/git.svg) center/contain no-repeat;mask:url(assets/logos/git.svg) center/contain no-repeat"></span><span class="tool__name mono">Git</span></li>
+        <li class="tool" style="--brand:#4B8BBE"><span class="tool__ico" style="-webkit-mask:url(assets/logos/python.svg) center/contain no-repeat;mask:url(assets/logos/python.svg) center/contain no-repeat"></span><span class="tool__name mono">Python</span></li>
+        <li class="tool" style="--brand:#E76F00"><span class="tool__ico" style="-webkit-mask:url(assets/logos/openjdk.svg) center/contain no-repeat;mask:url(assets/logos/openjdk.svg) center/contain no-repeat"></span><span class="tool__name mono">Java</span></li>
+        <li class="tool" style="--brand:#F7DF1E"><span class="tool__ico" style="-webkit-mask:url(assets/logos/javascript.svg) center/contain no-repeat;mask:url(assets/logos/javascript.svg) center/contain no-repeat"></span><span class="tool__name mono">JavaScript</span></li>
+        <li class="tool" style="--brand:#43B02A"><span class="tool__ico" style="-webkit-mask:url(assets/logos/selenium.svg) center/contain no-repeat;mask:url(assets/logos/selenium.svg) center/contain no-repeat"></span><span class="tool__name mono">Selenium</span></li>
+        <li class="tool" style="--brand:#60BFC6"><span class="tool__ico" style="-webkit-mask:url(assets/logos/gradle.svg) center/contain no-repeat;mask:url(assets/logos/gradle.svg) center/contain no-repeat"></span><span class="tool__name mono">Gradle</span></li>
+        <li class="tool" style="--brand:#C71A36"><span class="tool__ico" style="-webkit-mask:url(assets/logos/apachemaven.svg) center/contain no-repeat;mask:url(assets/logos/apachemaven.svg) center/contain no-repeat"></span><span class="tool__name mono">Maven</span></li>
+        <li class="tool" style="--brand:#2684FF"><span class="tool__ico" style="-webkit-mask:url(assets/logos/jira.svg) center/contain no-repeat;mask:url(assets/logos/jira.svg) center/contain no-repeat"></span><span class="tool__name mono">Jira</span></li>
+      </ul>
+    </div>
+
+    <noscript>
+      <ul class="term-fallback">
+        <li>CI/CD &amp; DevOps: Jenkins, GitHub Actions, GitLab CI/CD, Release Engineering, GitOps, Kubernetes, AWS, Cloud-Native</li>
+        <li>Languages: Python, Java, JavaScript, C++ · Testing: Selenium, Mabl, Pytest, JUnit</li>
+        <li>Build &amp; infra: Docker, Terraform, Gradle, Maven, Git, GitHub, GitLab, SQL</li>
+        <li>Education: B.S. Computer Science, Humboldt State University (2021); Lycée Français La Pérouse — bilingual EN/FR</li>
+      </ul>
+    </noscript>
+  </section>
+
+  <!-- ░░ SELECTED BUILDS — homepage teaser → full case studies on projects.html ░░ -->
+  <section class="builds" id="builds">
+    <div class="sec__head">
+      <p class="sec__label mono" data-reveal>03 — builds</p>
+      <h2 class="sec__title" data-reveal>Things I designed &amp; shipped.</h2>
+      <p class="sec__sub" data-reveal>Five products built end to end — beyond the day-job pipelines, each with the engineering behind it. <a href="projects.html">Full case studies →</a></p>
+    </div>
+    <ul class="bd-grid">
+      <li data-reveal><a class="bd-card" href="projects.html#build-sokoloff" data-cursor="open">
+        <span class="bd-card__frame">
+          <picture><source type="image/webp" srcset="assets/projects/sokoloff-640.webp 640w, assets/projects/sokoloff-1280.webp 1280w" sizes="(max-width:760px) 92vw, 380px" />
+          <img src="assets/projects/sokoloff.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="The Anatoly Sokoloff gallery — a scrolling timeline of paintings" /></picture>
+        </span>
+        <span class="bd-card__body">
+          <span class="bd-card__cat mono">Creative PWA</span>
+          <span class="bd-card__title">Anatoly Sokoloff</span>
+          <span class="bd-card__tag">A data-driven artist gallery with an AI cinemagraph pipeline.</span>
+          <span class="bd-card__ops mono"><b>ops</b> offline-first PWA · resumable media pipeline</span>
+          <span class="bd-card__pills mono"><i>React</i><i>PWA</i><i>Python</i><i>Kling AI</i></span>
+          <span class="bd-card__go mono">case study →</span>
+        </span>
+      </a></li>
+      <li data-reveal><a class="bd-card" href="projects.html#build-freqtrade" data-cursor="open">
+        <span class="bd-card__frame">
+          <picture><source type="image/webp" srcset="assets/projects/freqtrade-640.webp 640w, assets/projects/freqtrade-1280.webp 1280w" sizes="(max-width:760px) 92vw, 380px" />
+          <img src="assets/projects/freqtrade.png" width="1440" height="900" loading="lazy" decoding="async" alt="FreqUI trading dashboard in dry-run mode" /></picture>
+        </span>
+        <span class="bd-card__body">
+          <span class="bd-card__cat mono">Algorithmic trading</span>
+          <span class="bd-card__title">Freqtrade · Hyperliquid</span>
+          <span class="bd-card__tag">A Dockerized crypto trading bot on the Hyperliquid DEX.</span>
+          <span class="bd-card__ops mono"><b>ops</b> paper/funded isolation · idempotent operator scripts</span>
+          <span class="bd-card__pills mono"><i>Python</i><i>Docker</i><i>Freqtrade</i></span>
+          <span class="bd-card__go mono">case study →</span>
+        </span>
+      </a></li>
+      <li data-reveal><a class="bd-card" href="projects.html#build-stakeodds" data-cursor="open">
+        <span class="bd-card__frame">
+          <picture><source type="image/webp" srcset="assets/projects/stakeodds-640.webp 640w, assets/projects/stakeodds-1280.webp 1280w" sizes="(max-width:760px) 92vw, 380px" />
+          <img src="assets/projects/stakeodds.png" width="1440" height="900" loading="lazy" decoding="async" alt="The STAKE-ODDS live odds dashboard" /></picture>
+        </span>
+        <span class="bd-card__body">
+          <span class="bd-card__cat mono">Real-time data</span>
+          <span class="bd-card__title">STAKE·ODDS</span>
+          <span class="bd-card__tag">A live odds tracker with a streaming, multi-series dashboard.</span>
+          <span class="bd-card__ops mono"><b>ops</b> self-healing poller · per-feed STALE guard</span>
+          <span class="bd-card__pills mono"><i>Node</i><i>WebSocket</i><i>charts</i></span>
+          <span class="bd-card__go mono">case study →</span>
+        </span>
+      </a></li>
+      <li data-reveal><a class="bd-card" href="projects.html#build-loansy" data-cursor="open">
+        <span class="bd-card__frame">
+          <picture><source type="image/webp" srcset="assets/projects/loansy-admin-640.webp 640w, assets/projects/loansy-admin-1280.webp 1280w" sizes="(max-width:760px) 92vw, 380px" />
+          <img src="assets/projects/loansy-admin.png" width="1440" height="900" loading="lazy" decoding="async" alt="The Loansy Flask admin console" /></picture>
+        </span>
+        <span class="bd-card__body">
+          <span class="bd-card__cat mono">Fintech bot</span>
+          <span class="bd-card__title">Loansy</span>
+          <span class="bd-card__tag">A Telegram crypto-lending platform with a Flask admin console.</span>
+          <span class="bd-card__ops mono"><b>ops</b> loan state machine · infra-isolated tests</span>
+          <span class="bd-card__pills mono"><i>Flask</i><i>Telegram</i><i>SQL</i></span>
+          <span class="bd-card__go mono">case study →</span>
+        </span>
+      </a></li>
+      <li data-reveal><a class="bd-card" href="projects.html#build-claudedown" data-cursor="open">
+        <span class="bd-card__frame">
+          <picture><source type="image/webp" srcset="assets/projects/claudedown-640.webp 640w, assets/projects/claudedown-1280.webp 1280w" sizes="(max-width:760px) 92vw, 380px" />
+          <img src="assets/projects/claudedown.png" width="1440" height="900" loading="lazy" decoding="async" alt="The ClaudeDown AI-infrastructure availability monitor" /></picture>
+        </span>
+        <span class="bd-card__body">
+          <span class="bd-card__cat mono">AI-infra monitor</span>
+          <span class="bd-card__title">ClaudeDown</span>
+          <span class="bd-card__tag">A real-time availability monitor for AI infrastructure.</span>
+          <span class="bd-card__ops mono"><b>ops</b> ETag conditional-GET · tiered Postgres rollups</span>
+          <span class="bd-card__pills mono"><i>Node</i><i>Postgres</i><i>inline SVG</i></span>
+          <span class="bd-card__go mono">case study →</span>
+        </span>
+      </a></li>
+    </ul>
+    <div class="bd-foot" data-reveal>
+      <a class="btn btn--ghost mono" href="projects.html" data-magnetic data-cursor="explore">view all five builds →</a>
+    </div>
+  </section>
+
+  <!-- ░░ ABOUT / whoami — the same person, machine-readable and human-readable ░░ -->
+  <section class="about" id="about">
+    <p class="sec__label mono" data-reveal>04 — whoami</p>
+    <div class="about__grid">
+      <!-- machine version: the profile as a config file -->
+      <div class="profile">
+        <div class="profile__bar">
+          <span class="pre__dot"></span><span class="pre__dot"></span><span class="pre__dot"></span>
+          <span class="profile__path mono">~/philip/whoami.yaml</span>
+          <span class="profile__lang mono">yaml</span>
+        </div>
+        <div class="profile__code mono" aria-label="whoami.yaml">
+          <div class="pln" style="--i:0"><span class="ln">1</span><span class="lc"><span class="k">name</span><span class="p">:</span>    Philip Toulinov</span></div>
+          <div class="pln" style="--i:1"><span class="ln">2</span><span class="lc"><span class="k">role</span><span class="p">:</span>    Release &amp; Software Engineer</span></div>
+          <div class="pln" style="--i:2"><span class="ln">3</span><span class="lc"><span class="k">based</span><span class="p">:</span>   San Francisco Bay Area</span></div>
+          <div class="pln" style="--i:3"><span class="ln">4</span><span class="lc"><span class="k">setup</span><span class="p">:</span>   remote or hybrid</span></div>
+          <div class="pln" style="--i:4"><span class="ln">5</span><span class="lc"><span class="k">langs</span><span class="p">:</span>   <span class="p">[</span>English<span class="p">,</span> Français<span class="p">]</span></span></div>
+          <div class="pln" style="--i:5"><span class="ln">6</span><span class="lc"><span class="k">study</span><span class="p">:</span>   B.S. Computer Science</span></div>
+          <div class="pln" style="--i:6"><span class="ln">7</span><span class="lc"><span class="k">focus</span><span class="p">:</span>   <span class="p">[</span>Release Engineering<span class="p">,</span> DevOps<span class="p">,</span> SRE<span class="p">]</span></span></div>
+          <div class="pln" style="--i:7"><span class="ln">8</span><span class="lc"><span class="k">status</span><span class="p">:</span>  <span class="g">open to work</span>   <span class="c"># available now</span></span></div>
+          <!-- reverse job-req: more fields a recruiter scans for (work authorization, earliest start / notice,
+               on-call preference, comp range) are intentionally omitted until Philip supplies verified values —
+               see FUTURE-IMPROVEMENTS / the `hire` terminal command. Do not infer these. -->
+          <div class="pln pln--cursor" style="--i:8"><span class="ln">9</span><span class="lc"><span class="caret">█</span></span></div>
+        </div>
+      </div>
+
+      <!-- human version: the prose -->
+      <div class="about__read" data-reveal>
+        <p class="about__kr mono">// the human version</p>
+        <h2 class="about__big">I make releases <span class="hl">uneventful</span>.</h2>
+        <p class="about__body">Earlier I worked in LTE/5G device conformance testing, debugging firmware on Snapdragon hardware, then moved into release engineering.</p>
+        <p class="about__body">I own releases end to end — and I'm usually the one tracking down why a deploy broke. I'm also building and shipping my own products — see the <a href="projects.html">builds</a>.</p>
+        <p class="about__statusline mono"><i class="dot-ok ping"></i> open to release-engineering, DevOps &amp; SRE roles</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ░░ CONTACT — the last deploy ░░ -->
+  <section class="contact" id="contact">
+    <p class="sec__label mono" data-reveal>05 — contact</p>
+    <div class="contact__top">
+      <div class="contact__intro">
+        <p class="contact__cmd mono" data-reveal><span class="g">$</span> git remote add <span class="a">you</span></p>
+        <h2 class="contact__big">
+          <span class="line"><span data-word>Let's ship</span></span>
+          <span class="line"><span data-word>your next release.</span></span>
+        </h2>
+        <p class="contact__lede" data-reveal>Open to release-engineering, DevOps and SRE roles. The fastest way to reach me is email.</p>
+        <p class="contact__reach" id="reach" data-reveal></p>
+        <div class="contact__links" data-reveal>
+          <div class="contact__link" data-magnetic>
+            <span class="mono">email</span>
+            <a href="mailto:toulinov.philip@yahoo.com" data-cursor="open"><b>toulinov.philip@yahoo.com</b></a>
+            <button class="copy" type="button" id="copyEmail" data-copy="toulinov.philip@yahoo.com" aria-label="Copy email address">copy</button>
+          </div>
+          <a class="contact__link" href="tel:+14158237537" data-magnetic data-cursor="call">
+            <span class="mono">phone</span><b>+1 (415) 823-7537</b><i class="contact__arrow mono">call ↗</i>
+          </a>
+          <a class="contact__link" href="https://www.linkedin.com/in/ptoulinov" target="_blank" rel="noopener" data-magnetic data-cursor="open">
+            <span class="mono">linkedin</span><b>in/ptoulinov</b><i class="contact__arrow mono">open ↗</i>
+          </a>
+          <a class="contact__link" href="assets/philip-toulinov-resume-text.pdf" download data-magnetic data-cursor="open">
+            <span class="mono">résumé · ATS text</span><b>philip-toulinov-resume-text.pdf</b><i class="contact__arrow mono">download ↓</i>
+          </a>
+          <a class="contact__link" href="assets/philip-toulinov-resume.pdf" download data-magnetic data-cursor="open">
+            <span class="mono">résumé · designed</span><b>philip-toulinov-resume.pdf</b><i class="contact__arrow mono">download ↓</i>
+          </a>
+        </div>
+      </div>
+
+    <div class="commit" id="commit" data-reveal>
+      <div class="commit__bar">
+        <span class="pre__dot"></span><span class="pre__dot"></span><span class="pre__dot"></span>
+        <span class="commit__path mono">philip@contact: ~ — or just commit a message</span>
+      </div>
+      <form class="commit__body mono" id="commitForm" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?sent=1" novalidate>
+        <input type="hidden" name="form-name" value="contact" />
+        <p class="commit__hp" hidden aria-hidden="true"><label>Leave this empty: <input name="bot-field" tabindex="-1" autocomplete="off" /></label></p>
+        <label class="commit__row"><span class="commit__kw">git commit -m</span>
+          <input id="cmSubject" name="subject" type="text" maxlength="90" placeholder="&quot;subject — e.g. release role at Acme&quot;" aria-label="subject" autocomplete="off" />
+        </label>
+        <textarea id="cmBody" name="message" rows="3" placeholder="message body — details, timeline, anything you like" aria-label="message"></textarea>
+        <label class="commit__row"><span class="commit__kw">--author</span>
+          <input id="cmEmail" name="email" type="email" placeholder="you@email.com  (so I can reply)" aria-label="your email" autocomplete="off" />
+        </label>
+        <div class="commit__foot">
+          <button type="submit" class="btn btn--primary mono" id="cmPush" data-magnetic data-cursor="run">git push →</button>
+          <span class="commit__hint mono">sends straight to my inbox · falls back to your mail client</span>
+        </div>
+        <pre class="commit__out mono" id="cmOut" aria-live="polite"></pre>
+      </form>
+    </div>
+    </div>
+  </section>
+</main>
+
+<!-- ░░ HERO-TERMINAL DOCK + EXPAND OVERLAY (body-level, fixed) ░░ -->
+<button class="termdock mono" id="termDock" type="button" aria-expanded="false" aria-controls="heroTerm" aria-label="Open terminal" hidden>
+  <span class="termdock__dots"><i></i><i></i><i></i></span>
+  <span class="termdock__txt">&gt;_ philip@toulinov</span>
+  <span class="termdock__caret" aria-hidden="true">⤢</span>
+</button>
+<div class="termbackdrop" id="termBackdrop" hidden></div>
+<div class="termoverlay" id="termOverlay" role="dialog" aria-modal="true" aria-label="Terminal — philip@toulinov" hidden></div>
+
+<footer class="foot mono">
+  <span>© <span id="footYear">2026</span> Philip Toulinov</span>
+  <span class="foot__build" id="footBuild" title="it's a static site — it's always up. the only real outage is my Wi-Fi.">
+    <i class="ok">●</i> all systems operational · <span id="deployedAgo">shipped today</span> · <span id="sessUptime">session 0s</span>
+  </span>
+  <span class="foot__fr" title="built with care in San Francisco">construit avec soin à San Francisco</span>
+</footer>
+
+<noscript>
+  <style>#preloader,.cursor,.buildbar,.codefield,.palette{display:none!important}body{opacity:1!important;overflow:auto!important;height:auto!important}.is-loading *{opacity:1!important;transform:none!important}</style>
+</noscript>
+
+<!-- hero ASCII banner frames (decorative) — cycled by initBanner(): varied figlet fonts, flowing colours, fun caption -->
+<script type="application/json" id="bannerFrames">[{"key": "name", "art": "██████╗ ██╗  ██╗██╗██╗     ██╗██████╗ \n██╔══██╗██║  ██║██║██║     ██║██╔══██╗\n██████╔╝███████║██║██║     ██║██████╔╝\n██╔═══╝ ██╔══██║██║██║     ██║██╔═══╝ \n██║     ██║  ██║██║███████╗██║██║     \n╚═╝     ╚═╝  ╚═╝╚═╝╚══════╝╚═╝╚═╝     \n                                      \n████████╗ ██████╗ ██╗   ██╗██╗     ██╗███╗   ██╗ ██████╗ ██╗   ██╗\n╚══██╔══╝██╔═══██╗██║   ██║██║     ██║████╗  ██║██╔═══██╗██║   ██║\n   ██║   ██║   ██║██║   ██║██║     ██║██╔██╗ ██║██║   ██║██║   ██║\n   ██║   ██║   ██║██║   ██║██║     ██║██║╚██╗██║██║   ██║╚██╗ ██╔╝\n   ██║   ╚██████╔╝╚██████╔╝███████╗██║██║ ╚████║╚██████╔╝ ╚████╔╝ \n   ╚═╝    ╚═════╝  ╚═════╝ ╚══════╝╚═╝╚═╝  ╚═══╝ ╚═════╝   ╚═══╝  \n                                                                  ", "colors": ["#f5b642", "#ffd98a", "#5ee6c0"], "cap": "> release & devops engineer"}, {"key": "hello", "art": "\n\n\n██╗  ██╗███████╗██╗     ██╗      ██████╗ \n██║  ██║██╔════╝██║     ██║     ██╔═══██╗\n███████║█████╗  ██║     ██║     ██║   ██║\n██╔══██║██╔══╝  ██║     ██║     ██║   ██║\n██║  ██║███████╗███████╗███████╗╚██████╔╝\n╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝ \n                                         \n\n\n\n", "colors": ["#5ee6c0", "#6cc6ff", "#f5b642"], "cap": "hello — glad you stopped by"}, {"key": "bonjour", "art": "\n\n\n██████╗  ██████╗ ███╗   ██╗     ██╗ ██████╗ ██╗   ██╗██████╗ \n██╔══██╗██╔═══██╗████╗  ██║     ██║██╔═══██╗██║   ██║██╔══██╗\n██████╔╝██║   ██║██╔██╗ ██║     ██║██║   ██║██║   ██║██████╔╝\n██╔══██╗██║   ██║██║╚██╗██║██   ██║██║   ██║██║   ██║██╔══██╗\n██████╔╝╚██████╔╝██║ ╚████║╚█████╔╝╚██████╔╝╚██████╔╝██║  ██║\n╚═════╝  ╚═════╝ ╚═╝  ╚═══╝ ╚════╝  ╚═════╝  ╚═════╝ ╚═╝  ╚═╝\n                                                             \n\n\n\n", "colors": ["#6cc6ff", "#b89cff", "#5ee6c0"], "cap": "bonjour — bilingual EN / FR"}, {"key": "shipit", "art": "\n\n\n███████╗██╗  ██╗██╗██████╗     ██╗████████╗\n██╔════╝██║  ██║██║██╔══██╗    ██║╚══██╔══╝\n███████╗███████║██║██████╔╝    ██║   ██║   \n╚════██║██╔══██║██║██╔═══╝     ██║   ██║   \n███████║██║  ██║██║██║         ██║   ██║   \n╚══════╝╚═╝  ╚═╝╚═╝╚═╝         ╚═╝   ╚═╝   \n                                           \n\n\n\n", "colors": ["#e879c4", "#ff8a6b", "#ffd98a"], "cap": "i make releases uneventful"}, {"key": "deploy", "art": "\n\n\n██████╗ ███████╗██████╗ ██╗      ██████╗ ██╗   ██╗\n██╔══██╗██╔════╝██╔══██╗██║     ██╔═══██╗╚██╗ ██╔╝\n██║  ██║█████╗  ██████╔╝██║     ██║   ██║ ╚████╔╝ \n██║  ██║██╔══╝  ██╔═══╝ ██║     ██║   ██║  ╚██╔╝  \n██████╔╝███████╗██║     ███████╗╚██████╔╝   ██║   \n╚═════╝ ╚══════╝╚═╝     ╚══════╝ ╚═════╝    ╚═╝   \n                                                  \n\n\n\n", "colors": ["#6cc6ff", "#b89cff", "#5ee6c0"], "cap": "commit → build → ship"}, {"key": "cicd", "art": "\n\n\n ██████╗██╗        ██╗     ██████╗██████╗ \n██╔════╝██║       ██╔╝    ██╔════╝██╔══██╗\n██║     ██║      ██╔╝     ██║     ██║  ██║\n██║     ██║     ██╔╝      ██║     ██║  ██║\n╚██████╗██║    ██╔╝       ╚██████╗██████╔╝\n ╚═════╝╚═╝    ╚═╝         ╚═════╝╚═════╝ \n                                          \n\n\n\n", "colors": ["#ff8a6b", "#f5b642", "#e879c4"], "cap": "pipelines that don't page anyone"}, {"key": "hireme", "art": "\n\n\n██╗  ██╗██╗██████╗ ███████╗    ███╗   ███╗███████╗██████╗ \n██║  ██║██║██╔══██╗██╔════╝    ████╗ ████║██╔════╝╚════██╗\n███████║██║██████╔╝█████╗      ██╔████╔██║█████╗    ▄███╔╝\n██╔══██║██║██╔══██╗██╔══╝      ██║╚██╔╝██║██╔══╝    ▀▀══╝ \n██║  ██║██║██║  ██║███████╗    ██║ ╚═╝ ██║███████╗  ██╗   \n╚═╝  ╚═╝╚═╝╚═╝  ╚═╝╚══════╝    ╚═╝     ╚═╝╚══════╝  ╚═╝   \n                                                          \n\n\n\n", "colors": ["#b89cff", "#6cc6ff", "#b6e26a"], "cap": "open to release · devops · sre"}, {"key": "opentowork", "art": " ██████╗ ██████╗ ███████╗███╗   ██╗    ████████╗ ██████╗ \n██╔═══██╗██╔══██╗██╔════╝████╗  ██║    ╚══██╔══╝██╔═══██╗\n██║   ██║██████╔╝█████╗  ██╔██╗ ██║       ██║   ██║   ██║\n██║   ██║██╔═══╝ ██╔══╝  ██║╚██╗██║       ██║   ██║   ██║\n╚██████╔╝██║     ███████╗██║ ╚████║       ██║   ╚██████╔╝\n ╚═════╝ ╚═╝     ╚══════╝╚═╝  ╚═══╝       ╚═╝    ╚═════╝ \n                                                         \n██╗    ██╗ ██████╗ ██████╗ ██╗  ██╗\n██║    ██║██╔═══██╗██╔══██╗██║ ██╔╝\n██║ █╗ ██║██║   ██║██████╔╝█████╔╝ \n██║███╗██║██║   ██║██╔══██╗██╔═██╗ \n╚███╔███╔╝╚██████╔╝██║  ██║██║  ██╗\n ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝\n                                   ", "colors": ["#5ee6c0", "#b6e26a", "#6cc6ff"], "cap": "available now · SF Bay Area"}, {"key": "letsship", "art": "██╗     ███████╗████████╗███████╗\n██║     ██╔════╝╚══██╔══╝██╔════╝\n██║     █████╗     ██║   ███████╗\n██║     ██╔══╝     ██║   ╚════██║\n███████╗███████╗   ██║   ███████║\n╚══════╝╚══════╝   ╚═╝   ╚══════╝\n                                 \n███████╗██╗  ██╗██╗██████╗ \n██╔════╝██║  ██║██║██╔══██╗\n███████╗███████║██║██████╔╝\n╚════██║██╔══██║██║██╔═══╝ \n███████║██║  ██║██║██║     \n╚══════╝╚═╝  ╚═╝╚═╝╚═╝     \n                           ", "colors": ["#f5b642", "#ffd98a", "#ff8a6b"], "cap": "from a commit to production"}, {"key": "merci", "art": "\n\n\n███╗   ███╗███████╗██████╗  ██████╗██╗\n████╗ ████║██╔════╝██╔══██╗██╔════╝██║\n██╔████╔██║█████╗  ██████╔╝██║     ██║\n██║╚██╔╝██║██╔══╝  ██╔══██╗██║     ██║\n██║ ╚═╝ ██║███████╗██║  ██║╚██████╗██║\n╚═╝     ╚═╝╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝\n                                      \n\n\n\n", "colors": ["#b89cff", "#6cc6ff", "#5ee6c0"], "cap": "merci d'être passé"}, {"key": "release", "art": "\n\n\n██████╗ ███████╗██╗     ███████╗ █████╗ ███████╗███████╗\n██╔══██╗██╔════╝██║     ██╔════╝██╔══██╗██╔════╝██╔════╝\n██████╔╝█████╗  ██║     █████╗  ███████║███████╗█████╗  \n██╔══██╗██╔══╝  ██║     ██╔══╝  ██╔══██║╚════██║██╔══╝  \n██║  ██║███████╗███████╗███████╗██║  ██║███████║███████╗\n╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝\n                                                        \n\n\n\n", "colors": ["#f5b642", "#5ee6c0", "#6cc6ff"], "cap": "release engineering, end to end"}, {"key": "k8s", "art": "\n\n\n██╗  ██╗ █████╗ ███████╗\n██║ ██╔╝██╔══██╗██╔════╝\n█████╔╝ ╚█████╔╝███████╗\n██╔═██╗ ██╔══██╗╚════██║\n██║  ██╗╚█████╔╝███████║\n╚═╝  ╚═╝ ╚════╝ ╚══════╝\n                        \n\n\n\n", "colors": ["#6cc6ff", "#5ee6c0", "#b89cff"], "cap": "kubernetes · aws · terraform"}]</script>
+
+<!-- vendored libraries (self-contained, no runtime CDN) -->
+<script src="vendor/gsap.min.js" defer></script>
+<script src="vendor/ScrollTrigger.min.js" defer></script>
+<script src="vendor/lenis.min.js" defer></script>
+<script type="module" src="scripts/main.js"></script>
+</body>
+</html>
