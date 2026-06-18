@@ -9,6 +9,8 @@ dist/
 .lighthouseci/
 test-results/
 playwright-report/
+graphify-out/
+.graphify_labels.json
 
 # OS / editor cruft
 .DS_Store
