@@ -42,6 +42,23 @@ jobs:
         env:
           BASE_URL: http://127.0.0.1:8098
 
+      # Boots all 10 live-demo embeds (/demos/<slug>/) in a real browser: HTTP 200,
+      # real DOM/canvas rendered, no uncaught exception. These are the portfolio's
+      # headline content, so a dead embed is a blocking failure.
+      - name: Live-demo embeds (10 apps)
+        run: node tests/run-demos.mjs
+        env:
+          BASE_URL: http://127.0.0.1:8098
+
+      # Trusted-input interaction checks (terminal wheel-scroll, constant banner height). Informational
+      # only — trusted mouse input + animation timing is inherently flakier than DOM assertions, so a
+      # flake must never block a correct change. Promote to blocking once it's proven stable in CI.
+      - name: Interaction checks (informational)
+        continue-on-error: true
+        run: node tests/run-interaction.mjs
+        env:
+          BASE_URL: http://127.0.0.1:8098
+
       - name: Accessibility gate (axe-core · WCAG A/AA)
         run: node tests/run-axe.mjs
         env:

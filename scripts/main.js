@@ -26,9 +26,14 @@ if ('onpageswap' in window){
     if (!e.viewTransition || !e.activation || !e.activation.entry) return;
     const m = (e.activation.entry.url || '').match(/#build-([a-z0-9-]+)/i);
     if (!m) return;
-    const card = document.querySelector('.bd-card[href*="#build-' + m[1] + '"]');
+    // the Flux Builds redesign renders cards as .pj-build (link = .pj-case → projects.html#build-<slug>);
+    // tag the matching card's frame + title so the cross-document View Transition has a real shared element
+    // to morph into the destination dossier (CSS opt-in + group timing live in main.css; destination names
+    // are :target-driven in projects.html). Without this the nav silently degrades to a root cross-fade.
+    const link = document.querySelector('.pj-case[href*="#build-' + m[1] + '"]');
+    const card = link && link.closest('.pj-build');
     if (!card) return;
-    const frame = card.querySelector('.bd-card__frame'), title = card.querySelector('.bd-card__title');
+    const frame = card.querySelector('.pj-build__media'), title = card.querySelector('h3');
     if (frame) frame.style.viewTransitionName = 'vt-deploy-hero';
     if (title) title.style.viewTransitionName = 'vt-deploy-title';
   });
@@ -36,8 +41,9 @@ if ('onpageswap' in window){
 
 /* ---------- boot (invoked at end of file, after all module state is initialized) ---------- */
 function boot(){
-  // motion follows the OS "reduce motion" setting only — no in-site toggle
-  if (!motionOn) window.__motionPaused = true;   // reduced-motion must also halt the ambient rAF loop
+  // motion is always-on by design (see header note); reduceQuery is stubbed, so this branch only
+  // trips the no-motion fallback when GSAP failed to load — never from an OS reduce-motion setting.
+  if (!motionOn) window.__motionPaused = true;   // halt the ambient rAF loop in the no-motion fallback
   if (!motionOn || !hasGSAP){
     document.body.classList.add('no-motion');
     runPreloader(true);
@@ -317,9 +323,12 @@ function afterLoad(){
   initLenis();
   revealHero();
   initScrollReveals();
+  initVelocitySkew();
+  initScanPanel();
   initHeadlineCompile();
   initThroughput();
   initThesis();
+  initThesisAutoScroll();
   initPipeline();
   initBuildbar();
   initCounters();
@@ -523,6 +532,113 @@ function initScrollReveals(){
 /* =====================  HEADLINE "COMPILE" REVEAL  =====================
    Each section title builds into place: chars stagger up while the variable Bricolage weight
    ramps thin->bold, like type finishing its build. The locked type system becomes the motion. */
+/* =====================  SCROLL-VELOCITY SKEW  =====================
+   Award-tier "motion blur" feel: section headings shear with scroll velocity and ease back to rest,
+   so the page reads as a pipeline accelerating under load. Peak-velocity model (snap to the fastest
+   sample, tween home) so it always relaxes to 0 even after the scroll stops firing onUpdate. Skews
+   only a curated set of text headings — never the fixed nav/codefield/cursor/terminal or the live
+   Builds iframe grid (transforms on iframe ancestors are settled to 0 at rest, so interaction is clean). */
+function initVelocitySkew(){
+  try {
+    if (!hasGSAP || !motionOn || !window.ScrollTrigger){ window.__velocitySkew = { active:false, fellBack:true }; return; }
+    if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches){ window.__velocitySkew = { active:false, fellBack:true }; return; }  // touch: skip (no real fling velocity, perf)
+    const targets = gsap.utils.toArray('#fluxHead, #bdHead, #contact h2, #status h2').filter(Boolean);
+    if (!targets.length){ window.__velocitySkew = { active:false, fellBack:true }; return; }
+    gsap.set(targets, { transformOrigin: '0% 50%', force3D: true });
+    const setter = gsap.quickSetter(targets, 'skewY', 'deg');
+    const clamp = gsap.utils.clamp(-6, 6);
+    const proxy = { skew: 0 };
+    ScrollTrigger.create({
+      onUpdate: (self) => {
+        if (window.__motionPaused) return;
+        const skew = clamp(self.getVelocity() / -320);
+        if (Math.abs(skew) > Math.abs(proxy.skew)){
+          proxy.skew = skew;
+          window.__velocitySkewPeak = skew;                       // exposed for live validation (mid-scroll assertion)
+          gsap.to(proxy, { skew: 0, duration: .8, ease: 'power3', overwrite: true, onUpdate: () => setter(proxy.skew) });
+        }
+      }
+    });
+    window.__velocitySkew = { active:true, fellBack:false, count: targets.length };
+  } catch(e){ window.__velocitySkew = { active:false, fellBack:true }; }   // silent degrade — never trip the console-error gate
+}
+
+/* =====================  #6 · CI SECURITY-SCAN BEAM (raw WebGL)  =====================
+   A single fragment shader over a #status panel: a soft light beam travels up the frame and develops a
+   dot-grid where it passes, fading behind it — "a scan in progress". Section-scoped (one GL context),
+   DPR-capped, paused offscreen/hidden, and — like initCompilerLens — every failure path degrades SILENTLY
+   to the CSS gradient panel (no console.warn/error) so the zero-console-error gate always holds. */
+function initScanPanel(){
+  const canvas = document.getElementById('scanCanvas');
+  if (!canvas){ window.__scanPanel = { active:false, fellBack:true }; return; }
+  try {
+    const gl = canvas.getContext('webgl', { alpha:true, antialias:false, premultipliedAlpha:false })
+            || canvas.getContext('experimental-webgl');
+    if (!gl){ window.__scanPanel = { active:false, fellBack:true }; return; }
+    const vsSrc = 'attribute vec2 p; void main(){ gl_Position = vec4(p,0.0,1.0); }';
+    const fsSrc = [
+      'precision highp float;',
+      'uniform vec2 uRes; uniform float uTime;',
+      'float hash(vec2 p){ p=fract(p*vec2(123.34,345.45)); p+=dot(p,p+34.345); return fract(p.x*p.y); }',
+      'void main(){',
+      '  vec2 uv = gl_FragCoord.xy/uRes;',
+      '  vec2 g = uv*vec2(uRes.x/uRes.y,1.0);',
+      '  vec2 cell = fract(g*24.0)-0.5;',
+      '  float grid = smoothstep(0.46,0.5,max(abs(cell.x),abs(cell.y)))*0.05;',  // faint base lattice
+      '  float beam = fract(uTime*0.16);',                                        // beam sweeps upward, loops
+      '  float d = uv.y - beam;',
+      '  float band = exp(-d*d*46.0);',                                           // soft beam core
+      '  float lead = smoothstep(0.0,0.18,d)*exp(-d*8.0);',                       // structure develops ahead, fades behind
+      '  vec2 dc = fract(g*38.0)-0.5;',
+      '  float dots = smoothstep(0.34,0.24,length(dc)) * (0.6+0.4*hash(floor(g*38.0)));',
+      '  float reveal = dots*(band*1.25 + lead*0.7);',
+      '  vec3 amber = vec3(0.96,0.71,0.26), green = vec3(0.37,0.9,0.75);',
+      '  vec3 col = amber*grid;',
+      '  col += mix(amber,green,smoothstep(0.0,1.0,uv.y))*reveal;',
+      '  col += green*band*0.10;',                                               // beam glow
+      '  float a = clamp(max(reveal, grid+band*0.14), 0.0, 1.0);',
+      '  gl_FragColor = vec4(col, a);',
+      '}'
+    ].join('\n');
+    const compile = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return gl.getShaderParameter(s, gl.COMPILE_STATUS) ? s : null; };
+    const vs = compile(gl.VERTEX_SHADER, vsSrc), fs = compile(gl.FRAGMENT_SHADER, fsSrc);
+    if (!vs || !fs){ window.__scanPanel = { active:false, fellBack:true }; return; }
+    const prog = gl.createProgram(); gl.attachShader(prog, vs); gl.attachShader(prog, fs); gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)){ window.__scanPanel = { active:false, fellBack:true }; return; }
+    gl.useProgram(prog);
+    const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 3,-1, -1,3]), gl.STATIC_DRAW);
+    const pLoc = gl.getAttribLocation(prog, 'p'); gl.enableVertexAttribArray(pLoc); gl.vertexAttribPointer(pLoc, 2, gl.FLOAT, false, 0, 0);
+    const uRes = gl.getUniformLocation(prog, 'uRes'), uTime = gl.getUniformLocation(prog, 'uTime');
+    gl.clearColor(0, 0, 0, 0);
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const w = Math.max(1, Math.round(canvas.clientWidth * dpr)), h = Math.max(1, Math.round(canvas.clientHeight * dpr));
+      if (canvas.width !== w || canvas.height !== h){ canvas.width = w; canvas.height = h; gl.viewport(0, 0, w, h); }
+    };
+    let onScreen = true;
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver((es) => { onScreen = es[0].isIntersecting; }, { rootMargin: '120px' }).observe(canvas);
+    }
+    const t0 = performance.now();
+    let lastFrame = 0;
+    const render = (now) => {
+      requestAnimationFrame(render);
+      if (!onScreen || document.hidden || window.__motionPaused) return;
+      if (now - lastFrame < 33) return;                      // ~30fps cap — plenty for a slow beam, saves battery
+      lastFrame = now;
+      resize();
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, (now - t0) / 1000);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      window.__scanPanel.frames++;                          // proof-of-life for validation: increments only while actually drawing
+    };
+    window.__scanPanel = { active:true, fellBack:false, frames:0 };
+    requestAnimationFrame(render);
+  } catch(e){ window.__scanPanel = { active:false, fellBack:true }; }   // silent — the CSS gradient panel remains
+}
+
 function initHeadlineCompile(){
   if (!hasGSAP || reduceQuery.matches) return;
   document.querySelectorAll('.sec__title').forEach((el) => {
@@ -937,22 +1053,28 @@ function initCodeField(){
   }
   const targ = { x: window.innerWidth * .7, y: window.innerHeight * .32 };
   const cur = { x: targ.x, y: targ.y };
-  let t = 0, lastActive = -1e9;             // start idle-drifting immediately on load
+  let t = 0, lastActive = -1e9, lastScroll = -1e9;   // start idle-drifting immediately on load
   let lastX = NaN, lastY = NaN;             // last values written to --mx/--my (dirty-check)
-  const IDLE_MS = 2000;                      // resume the autonomous orbit 2s after the last scroll OR mouse move
+  const IDLE_MS = 2000;                      // resume the autonomous orbit 2s after the last mouse move
   const bump = () => { lastActive = performance.now(); };
   window.addEventListener('mousemove', (e) => { targ.x = e.clientX; targ.y = e.clientY; bump(); }, { passive: true });
-  window.addEventListener('scroll', bump, { passive: true });   // scrolling counts as activity — drift restarts 2s after it stops
+  window.addEventListener('scroll', () => { lastScroll = performance.now(); }, { passive: true });   // scrolling DRIVES the light (below)
   const loop = () => {
     requestAnimationFrame(loop);
     if (window.__motionPaused || document.hidden) return;   // pause only when the tab is backgrounded (battery/CPU); never "off"
     t += .024;                               // a touch faster than before (was .016)
-    const idle = (performance.now() - lastActive) > IDLE_MS;   // autonomous orbit when idle, follow instantly on use
-    if (idle){                               // always-moving sweep — wider + quicker so it visibly drifts on its own
+    const now = performance.now();
+    const mouseActive = (now - lastActive) < IDLE_MS;                  // following the cursor
+    const scrollActive = !mouseActive && (now - lastScroll) < 700;     // scrolling → sweep the light so it highlights code as you scroll
+    if (scrollActive){                       // tie the flashlight to the scroll position so it visibly travels through the code while scrolling
+      const sy = window.scrollY || window.pageYOffset || 0;
+      targ.x = window.innerWidth * (.5 + .40 * Math.cos(sy * .0012));
+      targ.y = window.innerHeight * (.5 + .34 * Math.sin(sy * .0019));
+    } else if (!mouseActive){                // fully idle → autonomous orbit
       targ.x = window.innerWidth * (.5 + .34 * Math.cos(t * .27));
       targ.y = window.innerHeight * (.44 + .30 * Math.sin(t * .35));
     }
-    const ease = idle ? .055 : .14;          // a bit snappier drift so the light keeps visibly moving; snappy when following the cursor
+    const ease = mouseActive ? .14 : .075;   // snappy when following the cursor; smooth for the scroll-sweep / orbit
     cur.x += (targ.x - cur.x) * ease; cur.y += (targ.y - cur.y) * ease;
     const nx = +cur.x.toFixed(1), ny = +cur.y.toFixed(1);   // viewport coords — field is position:fixed
     // dirty-check: skip the write (and the repaint it triggers) only when truly converged & still.
@@ -1000,7 +1122,7 @@ function initCompilerLens(field, codeText){
       '  float ab = (0.0011 + uVel * 0.006) * smoothstep(0.0, 0.45, dist);',  // aberration grows with scroll velocity, toward the rim
       '  vec2 dir = normalize(d + 1e-4);',
       '  float r = lum(uv + dir*ab); float g = lum(uv); float b = lum(uv - dir*ab);',
-      '  float intensity = 0.05 + light * 0.85;',                     // faint ambient everywhere + bright reveal
+      '  float intensity = 0.05 + light * 0.62;',                     // faint ambient everywhere + reveal (eased back a touch so copy on top stays readable)
       '  float scan = 0.92 + 0.08 * sin(uv.y * 760.0 + uTime * 1.4);',// subtle CRT scanline
       '  vec3 col = vec3(r * 1.0, g * 0.74, b * 0.34) * intensity * scan;',   // amber-weighted channels = phosphor fringe
       '  gl_FragColor = vec4(col, g * intensity * scan);',
@@ -1028,7 +1150,18 @@ function initCompilerLens(field, codeText){
       octx.clearRect(0, 0, w, h); octx.fillStyle = '#fff';
       const fz = 12.5 * DPR, lh = fz * 1.7, colW = 340 * DPR, gap = 48 * DPR, padX = 24 * DPR, padY = 60 * DPR;
       octx.font = fz + 'px "JetBrains Mono", ui-monospace, monospace'; octx.textBaseline = 'top';
-      const lines = codeText.split('\n'); let x = padX, li = 0;
+      // fillText does NOT wrap — pre-wrap every line to the column width so long lines can't bleed
+      // across the gap and overlap the next column (monospace → wrap by char count is exact + fast).
+      const charW = octx.measureText('M').width || (fz * 0.6);
+      const maxChars = Math.max(10, Math.floor((colW - 10 * DPR) / charW));
+      const rawLines = codeText.split('\n'); const lines = [];
+      for (const ln of rawLines) {
+        if (ln.length <= maxChars) { lines.push(ln); continue; }
+        let s = ln;
+        while (s.length > maxChars) { let cut = s.lastIndexOf(' ', maxChars); if (cut < maxChars * 0.55) cut = maxChars; lines.push(s.slice(0, cut)); s = s.slice(cut).replace(/^\s+/, ''); }
+        lines.push(s);
+      }
+      let x = padX, li = 0;
       while (x < w) { let y = padY; for (; li < lines.length && y < h; li++, y += lh) octx.fillText(lines[li], x, y); if (li >= lines.length) li = 0; x += colW + gap; }
       gl.bindTexture(gl.TEXTURE_2D, tex);
       gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);   // canvas origin is top-left, WebGL's is bottom-left — flip or the code renders mirrored/upside-down
@@ -1054,10 +1187,10 @@ function initCompilerLens(field, codeText){
     const cg = document.getElementById('codeGlow'); if (cg) cg.style.opacity = '0';
     const cb = document.getElementById('codeBase'); if (cb) cb.style.opacity = '0';
 
-    let mx = window.innerWidth * 0.7, my = window.innerHeight * 0.32, t0 = performance.now(), paused = false;
+    let mx = window.innerWidth * 0.7, my = window.innerHeight * 0.32, t0 = performance.now(), paused = false, inView = true;
     const rv = (name, fb) => { const v = parseFloat(field.style.getPropertyValue(name)); return isNaN(v) ? fb : v; };
     const render = () => {
-      if (paused || document.hidden) return;
+      if (paused || document.hidden || !inView) return;   // also idle the GPU when the field is scrolled off-screen
       try {
         mx = rv('--mx', mx); my = rv('--my', my);
         gl.uniform2f(uRes, canvas.width, canvas.height);
@@ -1072,6 +1205,8 @@ function initCompilerLens(field, codeText){
     // per-frame GPU work ahead of it jitters Lenis's scrollTo (it was destabilizing the dock's exact
     // scroll-restore). This is not the forbidden double-rAF: that rule is only about driving lenis twice.
     requestAnimationFrame(function loop(){ render(); requestAnimationFrame(loop); });
+    // pause the field's GPU work while the experience section is off-screen (battery/CPU)
+    try { new IntersectionObserver((es) => { inView = es[0].isIntersecting; }, { rootMargin: '160px' }).observe(canvas); } catch (_) {}
     window.addEventListener('resize', debounce(() => { try { resize(); } catch (_) {} }, 200));
     document.addEventListener('visibilitychange', () => { paused = document.hidden; });
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); paused = true; }, false);
@@ -1284,6 +1419,7 @@ function initPalette(){
     else if (e.key === 'ArrowUp'){ e.preventDefault(); selectItem(Math.max(paletteSel-1, 0)); ensureVisible(list); }
     else if (e.key === 'Enter'){ e.preventDefault(); execItem(paletteSel); }
     else if (e.key === 'Escape'){ togglePalette(false); }
+    else if (e.key === 'Tab'){ e.preventDefault(); }   // aria-modal dialog: input is the only focusable control — keep Tab inside
   });
   scrim?.addEventListener('click', () => togglePalette(false));
 
@@ -1374,6 +1510,30 @@ function makeShell(cfg){
   const input = document.getElementById(cfg.inputId);
   const scroll = document.getElementById(cfg.scrollId);
   if (!term || !bodyEl || !input) return null;
+
+  // Keep wheel/touch scrolling INSIDE the terminal output. Lenis binds wheel/touchstart/touchmove on
+  // window in the BUBBLE phase ({passive:false}) and preventDefaults to drive the page — so without this
+  // the page scrolls and the shell's overflowed output can't be read (no scroll up/down). We stopPropagation
+  // here BEFORE the event reaches Lenis, but only while the shell can still absorb the scroll in that
+  // direction; at the top/bottom edge we let it bubble so the PAGE keeps scrolling smoothly via Lenis.
+  // Bound in makeShell so every shell — hero, floating mini, expanded overlay, section terminals — gets it.
+  if (scroll){
+    const canTake = (dir) => {
+      if (scroll.scrollHeight - scroll.clientHeight <= 1) return false;                       // nothing to scroll
+      if (dir < 0) return scroll.scrollTop > 0;                                                // room to scroll up
+      if (dir > 0) return scroll.scrollTop + scroll.clientHeight < scroll.scrollHeight - 1;    // room to scroll down
+      return false;
+    };
+    scroll.addEventListener('wheel', (e) => { if (canTake(e.deltaY)) e.stopPropagation(); }, { passive: true });
+    let ty = 0;
+    scroll.addEventListener('touchstart', (e) => { if (e.touches[0]) ty = e.touches[0].clientY; }, { passive: true });
+    scroll.addEventListener('touchmove', (e) => {
+      if (!e.touches[0]) return;
+      const dir = ty - e.touches[0].clientY;   // finger up = scroll down (positive)
+      ty = e.touches[0].clientY;
+      if (canTake(dir)) e.stopPropagation();
+    }, { passive: true });
+  }
 
   const SKILLS = {
     'ci/cd & devops': ['Jenkins','GitHub Actions','GitLab CI/CD','Release Engineering','GitOps','Kubernetes','AWS','Cloud-Native'],
@@ -1526,9 +1686,12 @@ function makeShell(cfg){
 
   const hist = []; let hi = 0;
   const print = (html, cls) => {
+    // stick to the latest line only if the reader is already at the bottom — if they scrolled up to
+    // re-read earlier output, don't yank them back down on the next print (the attract loop keeps printing).
+    const stick = !scroll || (scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight) < 40;
     const d = document.createElement('div'); d.className = 'row' + (cls ? ' ' + cls : '');
     d.innerHTML = html; bodyEl.appendChild(d);
-    if (scroll) scroll.scrollTop = scroll.scrollHeight;
+    if (scroll && stick) scroll.scrollTop = scroll.scrollHeight;
     if (window.__bindCursor){ d.querySelectorAll('a').forEach(window.__bindCursor); }
   };
   const run = (raw) => {
@@ -1606,18 +1769,61 @@ function makeShell(cfg){
     const check = () => { if (demoAborted || demoVisible()) return res(); setTimeout(check, 400); };
     check();
   });
+  const wipe = () => { bodyEl.innerHTML = ''; };
+  // erase the input one character at a time (the "un-type" half of the attract animation)
+  const deleteInput = () => new Promise((res) => {
+    const step = () => {
+      if (demoAborted) return res();
+      const v = input.value;
+      if (!v.length) return res();
+      input.value = v.slice(0, -1);
+      if (soundOn) blip(900 + Math.random()*150, .01, 'square', .01);
+      const t = setTimeout(step, 55 + Math.random()*45); demoTimers.push(t);
+    };
+    step();
+  });
+  // entice: type a command, hold it, then erase it letter-by-letter — NEVER sending it
+  const typeAndDelete = async (str) => {
+    if (demoAborted) return;
+    await typeInto(str); if (demoAborted) return;
+    await dsleep(1000); if (demoAborted) return;
+    await deleteInput();
+  };
   async function runDemo(){
     if (demoOn || demoAborted || !motionOn) return;
     demoOn = true;
-    if (hintEl) hintEl.innerHTML = `<span class='g'>●</span> live demo · type to take over`;
     await dsleep(450);
-    // loop the tour continuously until the visitor takes over (types / clicks / taps a chip),
-    // wiping between cycles so output never piles up; pauses while off-screen or the tab is hidden.
-    if (!demoAborted){
-      await waitVisible();
-      if (!demoAborted){ await typeInto('help'); }
-      if (!demoAborted){ await dsleep(300); run('help'); input.value = ''; }
-      if (!demoAborted) print(`<span class='d'>// your turn — <span class='a'>click a row</span> above, or type a command · try <span class='a'>whoami</span> · <span class='a'>git log</span> · <span class='a'>skills</span> · <span class='a'>Tab</span> completes</span>`);
+    const tour = DEMO, entice = cfg.entice || ['whoami', 'hire', 'git log', 'skills'];
+    let ei = 0;
+    // loop the FULL command tour forever until the visitor takes over (types / clicks / taps a chip);
+    // run each command, hold so it can be read, then wipe for the next; pauses while off-screen / tab hidden.
+    while (!demoAborted){
+      await waitVisible(); if (demoAborted) break;
+      // FLOATING (scrolled into the mini dock): do NOT run the command tour — just show the shell is
+      // live/usable by typing a command and erasing it, letter by letter, without ever sending it.
+      if (term.classList.contains('is-floating')){
+        if (bodyEl.querySelector('.cmd')) wipe();              // drop any leftover hero output so the mini reads clean
+        if (hintEl) hintEl.innerHTML = `<span class='g'>●</span> type a command — it's live`;
+        await typeAndDelete(entice[ei++ % entice.length]); if (demoAborted) break;
+        await dsleep(900);
+        continue;
+      }
+      // IN-PAGE hero: loop the FULL command tour (type → run → hold → wipe), then a your-turn nudge.
+      if (hintEl) hintEl.innerHTML = `<span class='g'>●</span> live demo · type to take over`;
+      for (let k = 0; k < tour.length && !demoAborted; k++){
+        if (term.classList.contains('is-floating')) break;     // scrolled mid-tour → switch to entice-only next loop
+        await waitVisible(); if (demoAborted) break;
+        await typeInto(tour[k]); if (demoAborted) break;       // type the command, character by character
+        await dsleep(360); if (demoAborted) break;             // a beat, as if reaching for Enter
+        run(tour[k]); input.value = '';                         // run it → its output / banner appears
+        await dsleep(2300); if (demoAborted) break;             // hold so a visitor can actually read it
+        wipe(); await dsleep(300);                              // clean slate for the next command
+      }
+      if (demoAborted) break;
+      // your-turn nudge: type then un-type a command so the caret visibly invites the visitor to take over
+      if (hintEl) hintEl.innerHTML = `<span class='g'>●</span> your turn — type a command`;
+      await typeAndDelete(entice[ei++ % entice.length]); if (demoAborted) break;
+      await dsleep(800);
     }
     demoOn = false;
     if (hintEl) hintEl.innerHTML = hintOrig;
@@ -1685,7 +1891,8 @@ function initTerminal(){
   // so the hero always shows a live, fully-populated terminal that invites you to take over.
   makeShell({ rootId:'heroTerm', bodyId:'heroTermBody', inputId:'heroTermInput', scrollId:'heroTermScroll', chipsId:'heroTermChips',
     heroStatic: true, clearAfterDemo: false,
-    demo: ['help', 'whoami', 'git log', 'kubectl get skills', 'top', 'cat lendingclub.md'],
+    demo: ['help', 'whoami', 'git log', 'kubectl get skills', 'hire', 'top', 'cat lendingclub.md'],
+    entice: ['whoami', 'hire', 'git log', 'skills', 'cat resume.pdf'],
     staticList: ['help', 'whoami', 'git log', 'kubectl get skills'],
     welcome: `<span class='d'>release &amp; software engineer · ci/cd · cloud-native · 5g/lte. this is a real shell — watch the tour, or type <span class='a'>help</span> and take over.</span>`,
     demoEndMsg: `<span class='d'>// that's the tour — your turn. type <span class='a'>help</span>, <span class='a'>git log</span>, <span class='a'>kubectl get skills</span>, or pick a chip ↑</span>` });
@@ -1729,13 +1936,19 @@ function initHeroDock(){
     dock.tabIndex = show ? 0 : -1;
   };
 
-  // reveal the dock once the hero scrolls out of view (IntersectionObserver survives lenis + deep-link jumps)
+  // float the live shell once the hero scrolls out of view (was a tiny pill; now the full mini terminal);
+  // returning to the hero tucks it back into the page. IntersectionObserver survives lenis + deep-link jumps.
+  const onHeroVis = () => {
+    if (heroInView){ if (state === 'mini') close(true); }                          // back at the hero → dock home
+    else if (state === 'closed' && !document.body.classList.contains('is-loading')) openMini(false);  // float it (no focus steal)
+    syncDock();   // the pill remains as a fallback launcher only after the visitor closes the floating shell
+  };
   if ('IntersectionObserver' in window){
     new IntersectionObserver((entries) => {
-      entries.forEach((e) => { heroInView = e.isIntersecting; syncDock(); });
+      entries.forEach((e) => { heroInView = e.isIntersecting; onHeroVis(); });
     }, { rootMargin: '-42% 0px 0px 0px', threshold: 0 }).observe(hero);
   } else {
-    const onScroll = () => { heroInView = hero.getBoundingClientRect().bottom > window.innerHeight * 0.55; syncDock(); };
+    const onScroll = () => { heroInView = hero.getBoundingClientRect().bottom > window.innerHeight * 0.55; onHeroVis(); };
     window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
   }
 
@@ -1787,8 +2000,10 @@ function initHeroDock(){
   const focusInput = () => setTimeout(() => { if (input && state !== 'closed') input.focus({ preventScroll: true }); }, reduceQuery.matches ? 0 : 90);
 
   // dock → small, NON-modal docked window (page stays scrollable + usable underneath)
-  function openMini(){
-    if (state === 'mini') return;
+  function openMini(focus){
+    // already floating (e.g. auto-floated on scroll without focus): a real open/click should still
+    // drop the caret into the shell so you can type — only the auto-float path (focus===false) stays hands-off.
+    if (state === 'mini'){ if (focus !== false) focusInput(); return; }
     if (state === 'expanded') return collapse();
     state = 'mini'; lastFocus = document.activeElement;
     mount();
@@ -1797,7 +2012,7 @@ function initHeroDock(){
     dock.classList.remove('is-shown'); dock.setAttribute('aria-expanded', 'true'); dock.setAttribute('aria-hidden', 'true'); dock.tabIndex = -1;
     requestAnimationFrame(() => overlay.classList.add('is-open'));
     document.addEventListener('keydown', onKey, true);
-    focusInput();
+    if (focus !== false) focusInput();   // auto-float on scroll passes false → don't steal focus/scroll
   }
   // mini → large centered MODAL overlay (focus-trapped, background inert, scroll held)
   function expand(){
@@ -1819,19 +2034,25 @@ function initHeroDock(){
     focusInput();
   }
   // fully close from any state → shell back home, page restored
-  function close(){
+  function close(skipFocus){
     if (state === 'closed') return;
     const wasModal = state === 'expanded';
+    const sy = window.scrollY;                           // where the reader was — survive the unmount reflow
     state = 'closed';
     overlay.classList.remove('is-open');
     document.removeEventListener('keydown', onKey, true);
     if (wasModal) setModal(false); else document.body.classList.remove('term-frozen');
     const settle = () => {
       overlay.classList.remove('is-mini');
-      unmount();
-      dock.setAttribute('aria-expanded', 'false');
-      syncDock();                                        // restores the dock's aria-hidden / tabindex
-      if (lastFocus && lastFocus.focus && document.contains(lastFocus)) lastFocus.focus(); else dock.focus();
+      unmount();                                         // clears the hero slot's reserved minHeight → the
+      dock.setAttribute('aria-expanded', 'false');       // hero can change height at the top of the page, and
+      syncDock();                                        // scroll-anchoring then nudges us a few px off-position
+      if (skipFocus) return;                             // auto-close on scroll-back: don't yank focus/scroll
+      if (lastFocus && lastFocus.focus && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true }); else dock.focus({ preventScroll: true });
+      // the hero may resize on unmount (released minHeight / a taller-or-shorter cycling banner) and
+      // scroll-anchoring nudges us a few px — applied AFTER this task, so re-pin now AND next frame.
+      const pin = () => { if (lenis && lenis.scrollTo) lenis.scrollTo(sy, { immediate: true, force: true }); else window.scrollTo(0, sy); };
+      pin(); requestAnimationFrame(pin);
     };
     reduceQuery.matches ? settle() : setTimeout(settle, 300);
   }
@@ -1888,6 +2109,36 @@ function initBanner(){
       setTimeout(() => { paint(el, caps[k], fr); el.style.opacity = '1'; if (caps[k]) caps[k].style.opacity = '1'; }, 500);
     });
   }, 4200);
+}
+
+/* When the visitor first reaches the thesis, gently auto-scroll through its beats all the way into the
+   Experience section (slow, hands-off). One-shot, and any wheel/touch/key/click hands control back. */
+function initThesisAutoScroll(){
+  const thesis = document.getElementById('thesis');
+  const target = document.getElementById('work') || (document.querySelector('#fluxStage') && document.querySelector('#fluxStage').closest('section'));
+  if (!thesis || !target || !lenis || reduceQuery.matches || isTouch || !motionOn) return;
+  let armed = true, running = false;
+  const stop = () => { if (!running) return; running = false; try { lenis.scrollTo(window.scrollY, { immediate: true, force: true }); } catch (e) {} };
+  // Escape (or any ⌘/Ctrl shortcut) bails out of the guided ride — but the WHEEL that brought the visitor
+  // here must NOT cancel it (that was the bug: the reaching-scroll instantly aborted the auto-scroll).
+  window.addEventListener('keydown', (e) => { if (running && (e.key === 'Escape' || e.metaKey || e.ctrlKey)) stop(); });
+  const begin = () => {
+    if (!armed || running) return;
+    const r = thesis.getBoundingClientRect();
+    if (!(r.top <= window.innerHeight * 0.30 && r.bottom > window.innerHeight * 0.4)) return;   // arrived at the thesis
+    armed = false; running = true;
+    // let the reaching flick settle, then take over with a LOCKED smooth scroll so the visitor's own wheel
+    // can't fight it off — it glides through the 3 beats and into Experience hands-free.
+    setTimeout(() => {
+      if (!running) return;
+      const endY = Math.round(target.getBoundingClientRect().top + window.scrollY - 64);
+      if (endY - window.scrollY < 120){ running = false; return; }
+      const dur = Math.min(9, Math.max(5, (endY - window.scrollY) / 560));   // slow; scaled to the distance
+      lenis.scrollTo(endY, { duration: dur, easing: (t) => t, lock: true, force: true, onComplete: () => { running = false; } });
+    }, 320);
+  };
+  if (lenis.on) lenis.on('scroll', begin);
+  window.addEventListener('scroll', begin, { passive: true });
 }
 
 /* =====================  THESIS — pinned kinetic interstitial (hero → pipeline)  ===================== */

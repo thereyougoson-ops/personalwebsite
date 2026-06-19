@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Renovation Watchlist — San Francisco</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f2ece0'/%3E%3Ccircle cx='50' cy='50' r='30' fill='none' stroke='%23bf3b22' stroke-width='9'/%3E%3Cline x1='50' y1='50' x2='50' y2='27' stroke='%23bf3b22' stroke-width='9' stroke-linecap='round'/%3E%3Cline x1='50' y1='50' x2='69' y2='50' stroke='%23bf3b22' stroke-width='9' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <meta name="description" content="A ranked watchlist of rent-controlled San Francisco buildings showing unpermitted-renovation pressure — the earliest public signal of quiet displacement. Built from DataSF open data." />
+  <link rel="canonical" href="./" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="The Renovation Watchlist — San Francisco" />
+  <meta property="og:description" content="985 rent-controlled SF buildings, ranked by unpermitted-renovation pressure. Built from open city data." />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./vendor/maplibre-gl.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "name": "The Renovation Watchlist — San Francisco",
+    "description": "Rent-controlled San Francisco buildings ranked by unpermitted-renovation pressure, derived from DBI Notices of Violation and the Assessor Secured Property Tax Roll.",
+    "creator": { "@type": "Person", "name": "Independent analysis" },
+    "isBasedOn": ["https://data.sfgov.org/d/nbtm-fbw5", "https://data.sfgov.org/d/wv5m-vpq2"],
+    "license": "https://datasf.org/opendata/terms/"
+  }
+  </script>
+</head>
+
+<body class="is-loading">
+  <noscript>
+    <div class="noscript">
+      This is an interactive map and ranked table. It needs JavaScript. The raw data is in
+      <code>data/watchlist.csv</code>.
+    </div>
+  </noscript>
+
+  <a class="skip-link" href="#explore">Skip to the map</a>
+  <div class="cursor" aria-hidden="true"></div>
+
+  <header class="topbar" data-reveal>
+    <a class="brand" href="#top">
+      <span class="brand-mark">◷</span>
+      <span class="brand-text">Renovation&nbsp;Watchlist</span>
+    </a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="#story">The signal</a>
+      <a href="#explore">Map</a>
+      <a href="#watchlist">Watchlist</a>
+      <a href="#method">Method</a>
+    </nav>
+    <button class="motion-toggle" type="button" aria-pressed="false" title="Toggle motion">
+      <span class="motion-dot"></span><span class="motion-label">Motion</span>
+    </button>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <canvas class="hero-grid" aria-hidden="true"></canvas>
+      <div class="hero-inner">
+        <p class="eyebrow" data-reveal>San Francisco · Housing-displacement early-warning</p>
+        <h1 class="hero-title">
+          <span class="line"><span class="line-in">The Renovation</span></span>
+          <span class="line"><span class="line-in">Watchlist</span></span>
+        </h1>
+        <p class="lede" data-reveal>
+          Rent-controlled buildings are rarely emptied by mass eviction. More often they go quiet —
+          renovated, one unit at a time. <strong>Unpermitted construction is often the earliest public signal.</strong>
+          This is a ranked watchlist of the protected San Francisco buildings showing that pressure now.
+        </p>
+        <dl class="hero-stats" data-reveal>
+          <div class="stat"><dt>protected buildings flagged</dt><dd class="stat-num" data-count data-key="watchlist_parcels">0</dd></div>
+          <div class="stat"><dt>permit-required violations</dt><dd class="stat-num" data-count data-key="permit_novs_on_watchlist">0</dd></div>
+          <div class="stat"><dt>neighborhoods touched</dt><dd class="stat-num" data-count data-key="neighborhoods_count">0</dd></div>
+        </dl>
+        <a class="scroll-cue" href="#story" data-reveal><span>Read the signal</span><span class="cue-line"></span></a>
+      </div>
+    </section>
+
+    <!-- SCROLLYTELLING -->
+    <section class="story" id="story">
+      <div class="story-track">
+        <div class="story-sticky">
+          <figure class="story-figure" aria-hidden="true">
+            <div class="bldg">
+              <div class="bldg-frame"></div>
+              <div class="bldg-floors">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="stamps">
+                <span class="stamp">PERMIT<br>REQUIRED</span>
+                <span class="stamp">NO<br>PERMIT</span>
+                <span class="stamp">NOTICE OF<br>VIOLATION</span>
+              </div>
+            </div>
+            <p class="story-figure-cap">DBI Notice of Violation · unpermitted work</p>
+          </figure>
+        </div>
+        <div class="story-steps">
+          <div class="step" data-step="0">
+            <p class="step-kicker">01</p>
+            <h2>About 70,000 SF homes are under rent control.</h2>
+            <p>Most sit in buildings of two or more units, built before June 1979 — the city's largest
+              source of unsubsidized affordable housing. Occupied, they can't be re-priced.</p>
+          </div>
+          <div class="step" data-step="1">
+            <p class="step-kicker">02</p>
+            <h2>So some of the work goes unpermitted.</h2>
+            <p>Work that needs a permit, done without one, is a quiet way to upgrade — and re-rent — a
+              protected unit. The Department of Building Inspection logs each one as a Notice of Violation.</p>
+          </div>
+          <div class="step" data-step="2">
+            <p class="step-kicker">03</p>
+            <h2>We matched every permit-required violation to the rent-controlled stock.</h2>
+            <p><span data-fact="permit_nov_rows_total">1,968</span> violations since 2018, joined by parcel to
+              <span data-fact="eligible_parcels">34,604</span> eligible buildings.</p>
+          </div>
+          <div class="step" data-step="3">
+            <p class="step-kicker">04</p>
+            <h2><span data-fact="watchlist_parcels">985</span> buildings carry the signal.</h2>
+            <p>Ranked by how many violations, how recent, the assessed renovation value, and how many
+              homes are at stake. Explore them below.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section class="explore" id="explore">
+      <div class="section-head">
+        <p class="eyebrow">Explore</p>
+        <h2 class="section-title">Every flagged building</h2>
+        <p class="section-intro">Each dot is a rent-controlled parcel with at least one permit-required violation.
+          Larger and deeper-red means a stronger renovation-pressure signal. Click any dot for the record.</p>
+      </div>
+      <div class="map-shell">
+        <div class="map-controls" role="group" aria-label="Map filters">
+          <label class="ctl">
+            <span class="ctl-label">Neighborhood</span>
+            <select id="f-neighborhood" aria-label="Filter by neighborhood"><option value="">All neighborhoods</option></select>
+          </label>
+          <label class="ctl">
+            <span class="ctl-label">Min. violations <b id="f-nov-val">1</b></span>
+            <input id="f-nov" type="range" min="1" max="6" value="1" step="1" aria-label="Minimum permit-required violations" />
+          </label>
+          <label class="ctl">
+            <span class="ctl-label">Min. score <b id="f-score-val">0</b></span>
+            <input id="f-score" type="range" min="0" max="90" value="0" step="5" aria-label="Minimum pressure score" />
+          </label>
+          <button class="ctl-reset" id="f-reset" type="button">Reset</button>
+          <p class="map-count" role="status" aria-live="polite"><b id="map-count">985</b> shown</p>
+        </div>
+        <div id="map" tabindex="0" role="application"
+             aria-label="Interactive map of flagged buildings. Each dot is a rent-controlled parcel; dot color shows the pressure score and size shows the violation count. The ranked table below lists the same buildings as text."
+             aria-describedby="map-legend"></div>
+        <div class="legend" id="map-legend">
+          <span class="legend-title">Pressure score</span>
+          <span class="legend-bar"></span>
+          <span class="legend-ends"><i>lower</i><i>higher</i></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TABLE -->
+    <section class="table-section" id="watchlist">
+      <div class="section-head">
+        <p class="eyebrow">The list</p>
+        <h2 class="section-title">Ranked watchlist</h2>
+        <p class="section-intro">Sort any column. Search an address or neighborhood. Select a building to fly the map there.</p>
+        <p class="table-caveat">Each score reflects <strong>alleged, unproven</strong> violations — a signal of renovation
+          pressure, <strong>not evidence of wrongdoing or eviction</strong>.</p>
+      </div>
+      <div class="table-tools">
+        <div class="search">
+          <input id="t-search" type="search" placeholder="Search address or neighborhood…" aria-label="Search the watchlist" />
+        </div>
+        <p class="table-count" role="status" aria-live="polite"><b id="table-count">985</b> buildings</p>
+        <a class="download" href="./data/watchlist.csv" download>Download CSV ↓</a>
+      </div>
+      <div class="table-wrap">
+        <table class="watchtable" id="watchtable">
+          <caption class="sr-only">Rent-controlled buildings ranked by renovation-pressure score. Use the column buttons to sort; select a row to locate it on the map.</caption>
+          <thead>
+            <tr>
+              <th class="num" aria-sort="none"><button type="button" data-sort="rank">#</button></th>
+              <th class="num" aria-sort="descending"><button type="button" data-sort="score">Score</button></th>
+              <th><button type="button" data-sort="address">Address</button></th>
+              <th><button type="button" data-sort="neighborhood">Neighborhood</button></th>
+              <th class="num"><button type="button" data-sort="nov_count">NOVs</button></th>
+              <th class="num"><button type="button" data-sort="last_nov_date">Latest</button></th>
+              <th class="num"><button type="button" data-sort="units">Units</button></th>
+              <th class="num"><button type="button" data-sort="year_built">Built</button></th>
+              <th class="num"><button type="button" data-sort="assessed_improvement_value">Improv. value</button></th>
+            </tr>
+          </thead>
+          <tbody id="watchbody"></tbody>
+        </table>
+      </div>
+      <p class="table-more" id="table-more"></p>
+    </section>
+
+    <!-- METHOD -->
+    <section class="method" id="method">
+      <div class="section-head">
+        <p class="eyebrow">Method &amp; caveats</p>
+        <h2 class="section-title">How this is built</h2>
+      </div>
+      <div class="method-grid">
+        <div class="method-col">
+          <h3>The data</h3>
+          <ul class="ds-list" id="ds-list">
+            <li><a href="https://data.sfgov.org/d/nbtm-fbw5" target="_blank" rel="noopener">DBI Notices of Violation</a>
+              — the permit-required violation signal.</li>
+            <li><a href="https://data.sfgov.org/d/wv5m-vpq2" target="_blank" rel="noopener">Assessor Secured Property Tax Roll</a>
+              — rent-control eligibility, units, and assessed renovation value.</li>
+          </ul>
+          <p class="refreshed">Snapshot refreshed <time id="refreshed">—</time>. Re-run <code>pipeline/build_watchlist.py</code> to update.</p>
+        </div>
+        <div class="method-col">
+          <h3>The signal</h3>
+          <p>SF's DBI data has no "work without permit" flag. The signal lives in the free-text
+            <code>item</code> field — violations such as <em>building permit required</em>,
+            <em>provide plumbing/electrical permit</em>, and <em>failure to file for necessary permits</em>.</p>
+          <h3>The score</h3>
+          <p>Each building is scored 0–100 on four normalized parts:</p>
+          <ul class="score-list">
+            <li><b>45%</b> repeat violations (log-scaled count)</li>
+            <li><b>25%</b> recency of the latest violation</li>
+            <li><b>20%</b> assessed improvement value (renovation upside)</li>
+            <li><b>10%</b> residential units at stake</li>
+          </ul>
+        </div>
+        <div class="method-col">
+          <h3>Read this carefully</h3>
+          <p class="caveat">A Notice of Violation is an <strong>alleged</strong> violation, not a conviction —
+            treat it as a <strong>signal, not proof</strong>.</p>
+          <p class="caveat">This is <strong>not</strong> an eviction predictor. It flags renovation
+            <em>pressure</em> on protected stock, nothing more.</p>
+          <p class="caveat">Rent-control eligibility is a proxy (pre-1979, 2+ units); condominium parcels and
+            some edge cases can be imperfect.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Built with <a href="https://datasf.org" target="_blank" rel="noopener">San Francisco open data</a>.
+       Independent project — not affiliated with the City &amp; County of San Francisco.</p>
+    <p class="foot-mono">data.sfgov.org · nbtm-fbw5 · wv5m-vpq2</p>
+  </footer>
+
+  <!-- vendored libraries (UMD globals) -->
+  <script src="./vendor/gsap.min.js"></script>
+  <script src="./vendor/ScrollTrigger.min.js"></script>
+  <script src="./vendor/lenis.min.js"></script>
+  <script src="./vendor/maplibre-gl.js"></script>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>

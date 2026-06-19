@@ -60,6 +60,15 @@ window.runSelfTest = async function runSelfTest(){
     catch(e){ return false; }
   })(), q('#fluxCanvas') && (q('#fluxCanvas').width + 'x' + q('#fluxCanvas').height));
   ok('compiler-lens active (or graceful CSS fallback)', !window.__compilerLens || window.__compilerLens.active || window.__compilerLens.fellBack);
+  // ---- ported lab effects (Wave 1) — active OR graceful fallback, never broken ----
+  ok('#1 velocity-skew active (or graceful fallback)', !!window.__velocitySkew && (window.__velocitySkew.active || window.__velocitySkew.fellBack),
+    window.__velocitySkew && ('active=' + window.__velocitySkew.active + (window.__velocitySkew.count ? ' n=' + window.__velocitySkew.count : '')));
+  ok('#2 deploy-handoff source tagger wired to .pj-build', 'onpageswap' in window && qa('#bdGrid .pj-build .pj-case[href*="#build-"]').length > 0,
+    qa('#bdGrid .pj-build .pj-case[href*="#build-"]').length + ' case-study cards');
+  ok('#3 builds scroll-state strip present', !!q('.bd-stuck .bd-stuck__state'));
+  ok('#5 status popover + anchored info button present', !!q('#fxStatusPop[popover]') && !!q('.fx-info[popovertarget="fxStatusPop"]'));
+  ok('#6 scan panel drawing frames (or graceful CSS fallback)', !!q('#scanCanvas') && !!window.__scanPanel && ((window.__scanPanel.active && window.__scanPanel.frames > 0) || window.__scanPanel.fellBack),
+    window.__scanPanel && ('active=' + window.__scanPanel.active + ' frames=' + window.__scanPanel.frames));
   const stations = qa('#fluxStations button');
   ok('5 magnetic role stations', stations.length === 5, 'count=' + stations.length);
   ok('station detail populated', !!q('#fluxDetail') && q('#fluxDetail').innerText.trim().length > 8);
@@ -69,16 +78,43 @@ window.runSelfTest = async function runSelfTest(){
     ok('station click swaps the detail panel', q('#fluxDetail').innerText.slice(0, 40) !== before, 'before≠after');
   }
 
-  // 5 — 02 Builds (one project at a time, real screenshots, prev/next, auto-advance)
+  // 5 — 02 Builds: the live-demo grid (10 real apps, each iframed same-origin from /demos/<slug>/).
+  // The earlier one-slide-at-a-time #bdStage carousel (.bd-slide/.bd-tab/#bdPrev/#bdNext) was
+  // replaced by this <demo-card> grid — its JS self-guards (if(!stage)return), so assert it's ABSENT.
   scrollTo('#builds'); await sleep(500);
-  const slides = qa('#bdStage .bd-slide');
-  ok('builds shows 5 project slides', slides.length === 5, 'count=' + slides.length);
-  ok('every build slide carries a real screenshot', slides.length > 0 && slides.every(s => !!s.querySelector('img')), qa('#builds img').length + ' imgs');
-  ok('builds has prev + next controls', !!q('#bdPrev') && !!q('#bdNext'));
-  const maxZ = () => { let mi = -1, mz = -1; slides.forEach((s, i) => { const z = +getComputedStyle(s).zIndex || 0; if (z > mz){ mz = z; mi = i; } }); return mi; };
-  const zb = maxZ(); q('#bdNext') && q('#bdNext').click(); await sleep(750);
-  ok('next advances the active slide', maxZ() !== zb, 'z-index active ' + zb + '→' + maxZ());
-  ok('builds link to full case studies (projects.html)', qa('#builds a[href*="projects.html#build-"]').length >= 5, qa('#builds a[href*="projects.html#build-"]').length + ' links');
+  ['#bdStage', '.bd-slide', '.bd-tab', '#bdPrev', '#bdNext'].forEach(s =>
+    ok('removed (builds carousel) ' + s, !q(s)));
+  ok('builds links to full case studies (projects.html)', qa('#builds a[href*="projects.html#build-"]').length >= 5, qa('#builds a[href*="projects.html#build-"]').length + ' links');
+
+  // 5b — <demo-card> live-demo grid contract.
+  // Cards render a poster + a launch veil and load NOTHING until clicked.
+  // Each embed's actual boot (200 · real DOM · no uncaught error) is verified end-to-end by
+  // tests/run-demos.mjs, which loads all 10 /demos/<slug>/ apps in a real browser.
+  const cards = qa('#bdGrid demo-card');
+  ok('demo grid renders all live-demo cards', cards.length === 10, cards.length + ' cards');
+  ok('every demo card has a launch veil + control bar', cards.length > 0 &&
+    cards.every(c => c.querySelector('.dc__launch') && c.querySelector('.pj-frame__bar')),
+    cards.filter(c => c.querySelector('.dc__launch')).length + '/' + cards.length + ' with launch');
+  ok('every demo card shows a poster or numbered fallback', cards.length > 0 &&
+    cards.every(c => c.querySelector('.dc__poster') || c.querySelector('.dc__fallback')));
+  const liveBadges = qa('#bdGrid .dc__badge[data-mode="live"]');
+  ok('all demos are tagged "live" (real app, not a tour)', liveBadges.length === cards.length && cards.length === 10,
+    liveBadges.length + '/' + cards.length + ' live');
+  ok('nothing is loaded before click (no eager iframes)', qa('#bdGrid iframe').length === 0,
+    qa('#bdGrid iframe').length + ' iframes pre-click');
+  // click-to-load contract: activating a card mounts a sandboxed iframe pointing at /demos/<slug>/
+  const firstCard = cards[0], firstLaunch = firstCard && firstCard.querySelector('.dc__launch');
+  if (firstLaunch){
+    firstLaunch.click(); await sleep(400);
+    const f = firstCard.querySelector('.dc__host iframe');
+    ok('launching a demo mounts a sandboxed /demos/ iframe', !!f && /(^|\/)demos\//.test(f.getAttribute('src') || ''),
+      f ? f.getAttribute('src') : 'no iframe');
+    ok('demo iframe is sandboxed (allow-scripts, allow-same-origin)', !!f &&
+      /allow-scripts/.test(f.getAttribute('sandbox') || '') && /allow-same-origin/.test(f.getAttribute('sandbox') || ''),
+      f ? (f.getAttribute('sandbox') || '').slice(0, 40) : '');
+    // restore the card so the rest of the suite (and the page) is left clean
+    const closeBtn = firstCard.querySelector('[data-act="close"]'); if (closeBtn) closeBtn.click(); await sleep(120);
+  }
 
   // 6 — 03 Contact (vibrant terminal commit form → mailto; live SF clock)
   scrollTo('#contact'); await sleep(400);

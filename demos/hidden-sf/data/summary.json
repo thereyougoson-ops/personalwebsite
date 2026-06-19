@@ -1,0 +1,188 @@
+{
+  "generated_at": "2026-06-18T23:58:26Z",
+  "source": {
+    "id": "65ik-7wqd",
+    "name": "Privately Owned Public Open Space",
+    "agency": "San Francisco Planning Department",
+    "url": "https://data.sfgov.org/Culture-and-Recreation/Privately-Owned-Public-Open-Space/65ik-7wqd",
+    "updated": "2026-06-18"
+  },
+  "totals": {
+    "spaces": 81,
+    "mapped": 81,
+    "always_open": 50,
+    "business_hours": 30,
+    "unknown_access": 1,
+    "indoor": 19,
+    "outdoor": 62,
+    "with_art": 36,
+    "with_food": 47,
+    "with_restroom": 26,
+    "with_seating": 76,
+    "poor_signage": 49,
+    "indirect_entry": 20,
+    "categories": 10,
+    "year_min": 1959,
+    "year_max": 2019
+  },
+  "categories": [
+    [
+      "Plaza",
+      20
+    ],
+    [
+      "Urban Garden",
+      15
+    ],
+    [
+      "Snippet",
+      11
+    ],
+    [
+      "Indoor Park",
+      9
+    ],
+    [
+      "Pedestrian Walkway",
+      8
+    ],
+    [
+      "Atrium",
+      5
+    ],
+    [
+      "Sun Terrace",
+      5
+    ],
+    [
+      "Urban Park",
+      3
+    ],
+    [
+      "Greenhouse",
+      3
+    ],
+    [
+      "View Terrace",
+      2
+    ]
+  ],
+  "access": [
+    [
+      "always",
+      50
+    ],
+    [
+      "business",
+      30
+    ],
+    [
+      "unknown",
+      1
+    ]
+  ],
+  "decades": [
+    [
+      1950,
+      1
+    ],
+    [
+      1960,
+      7
+    ],
+    [
+      1970,
+      13
+    ],
+    [
+      1980,
+      25
+    ],
+    [
+      1990,
+      3
+    ],
+    [
+      2000,
+      22
+    ],
+    [
+      2010,
+      8
+    ]
+  ],
+  "most_hidden": [
+    {
+      "name": "135 Main St",
+      "category": "Indoor Park",
+      "hidden": 100,
+      "access": "business"
+    },
+    {
+      "name": "Marriott Courtyard - C",
+      "category": "Atrium",
+      "hidden": 100,
+      "access": "business"
+    },
+    {
+      "name": "1 Market St",
+      "category": "Atrium",
+      "hidden": 82,
+      "access": "always"
+    },
+    {
+      "name": "101 2nd St",
+      "category": "Greenhouse",
+      "hidden": 82,
+      "access": "business"
+    },
+    {
+      "name": "235 Second St",
+      "category": "Plaza",
+      "hidden": 82,
+      "access": "business"
+    },
+    {
+      "name": "Rincon Center",
+      "category": "Indoor Park",
+      "hidden": 82,
+      "access": "always"
+    },
+    {
+      "name": "Citygroup Center",
+      "category": "Atrium",
+      "hidden": 78,
+      "access": "business"
+    },
+    {
+      "name": "181 Fremont",
+      "category": "Indoor Park",
+      "hidden": 70,
+      "access": "business"
+    },
+    {
+      "name": "Millenium Tower Plaza",
+      "category": "Atrium",
+      "hidden": 70,
+      "access": "business"
+    },
+    {
+      "name": "77 Van Ness Ave",
+      "category": "Indoor Park",
+      "hidden": 66,
+      "access": "business"
+    },
+    {
+      "name": "1 Bush Street",
+      "category": "Urban Garden",
+      "hidden": 64,
+      "access": "always"
+    },
+    {
+      "name": "1 Kearny St",
+      "category": "Sun Terrace",
+      "hidden": 64,
+      "access": "business"
+    }
+  ]
+}

@@ -35,6 +35,22 @@ const benign = (e) =>
   /status of 501|Unsupported method \('POST'\)/i.test(e) ||
   /mailto:/i.test(e) ||
   /user gesture is required/i.test(e);
+// projects.html runs its own inline script (no main.js) and now carries ported effects
+// (#4 grayscale→colour thumbnail shader, #2 View-Transition destination). It isn't covered by
+// selftest.js, so at minimum gate it for console/page errors under the same allowlist.
+const pjErrors = [];
+const pj = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+pj.on('pageerror', (e) => pjErrors.push('pageerror: ' + e.message));
+pj.on('console', (m) => { if (m.type() === 'error') pjErrors.push('console.error: ' + m.text()); });
+await pj.goto(`${BASE}/projects.html`, { waitUntil: 'load' });
+await pj.waitForTimeout(1800);
+// scroll through so the thumbnail reveal shaders init + run their fallback path if WebGL is absent
+await pj.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 700){ window.scrollTo(0, y); await new Promise(r => setTimeout(r, 80)); } });
+await pj.waitForTimeout(400);
+const pjReal = pjErrors.filter((e) => !benign(e));
+console.log(`\nprojects.html: ${pjReal.length ? pjReal.length + ' error(s)' : 'clean'}`);
+for (const e of pjErrors) console.log('  ' + (benign(e) ? '(benign, ignored) ' : '') + e);
+
 const realErrors = errors.filter((e) => !benign(e));
 if (errors.length) {
   console.log('\nconsole / page errors:');
@@ -42,4 +58,4 @@ if (errors.length) {
 }
 
 await browser.close();
-process.exit(res.fail > 0 || realErrors.length > 0 ? 1 : 0);
+process.exit(res.fail > 0 || realErrors.length > 0 || pjReal.length > 0 ? 1 : 0);

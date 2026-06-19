@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hidden SF — The Public Spaces Inside Private Towers</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23efe8d9'/%3E%3Crect x='30' y='22' width='40' height='56' fill='none' stroke='%231f4b54' stroke-width='6'/%3E%3Crect x='44' y='52' width='12' height='26' fill='%23b9842b'/%3E%3C/svg%3E" />
+  <meta name="description" content="There are 81 privately-owned public open spaces in San Francisco — rooftop terraces, atriums and plazas the public is legally entitled to use, hidden inside downtown's private towers. A map and field guide built from open city data." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Hidden SF — The Public Spaces Inside Private Towers" />
+  <meta property="og:description" content="81 public spaces hidden inside San Francisco's private downtown buildings. By law, they're yours. Most people never find them." />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Archivo:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="./vendor/maplibre-gl.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body class="is-loading">
+  <a class="skip-link" href="#map-section">Skip to the map</a>
+  <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+
+  <div class="wrap">
+    <header class="topbar" data-reveal data-reveal-y="0">
+      <a class="brand" href="#top">
+        <span class="brand-mark">◧</span>
+        <span>Hidden SF</span>
+        <span class="brand-sub">POPOS field guide</span>
+      </a>
+      <nav class="topnav" aria-label="Sections">
+        <a href="#story">The law</a>
+        <a href="#map-section">The map</a>
+        <a href="#spaces">The 81</a>
+        <a href="#method">Method</a>
+      </nav>
+      <button class="motion-toggle" id="motion-toggle" aria-label="Toggle motion" aria-pressed="false">
+        <span class="motion-dot"></span> <span class="motion-label">Motion: on</span>
+      </button>
+    </header>
+  </div>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero wrap" id="top">
+    <div class="hero__bg" aria-hidden="true"><canvas id="hero-grid"></canvas></div>
+    <p class="eyebrow hero-eyebrow" data-reveal data-reveal-y="14">San Francisco · Privately-Owned Public Open Spaces</p>
+    <h1 class="hero-title" data-split-lines>There are <em>81 public spaces</em> hidden inside private towers.</h1>
+    <p class="hero-lede" data-reveal data-reveal-y="26">
+      Rooftop terraces, sunlit atriums, walled gardens — built by developers in exchange for
+      extra height, and open to you by law. Most have no sign. Most people walk right past.
+    </p>
+    <div class="hero-stats" data-reveal data-reveal-y="30">
+      <div class="stat">
+        <b class="stat-num is-brass" data-stat="spaces">81</b>
+        <span class="stat-label">public spaces inside private buildings</span>
+      </div>
+      <div class="stat">
+        <b class="stat-num" data-stat="poor_signage">49</b>
+        <span class="stat-label">with poor or no signage from the street</span>
+      </div>
+      <div class="stat">
+        <b class="stat-num is-petrol" data-stat="business_hours">30</b>
+        <span class="stat-label">that quietly vanish after business hours</span>
+      </div>
+    </div>
+    <span class="magnetic" data-magnetic="0.5"><a class="scroll-cue" href="#map-section" data-cursor="Explore"><span class="cue-line"></span> Find them</a></span>
+  </section>
+
+  <!-- ===================== STORY: THE LAW ===================== -->
+  <section class="section wrap story" id="story">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal>The bargain · since 1985</p>
+      <h2 class="section-title" data-split-lines>You paid for these with the skyline.</h2>
+      <p class="section-intro" data-reveal>When San Francisco let downtown grow taller, it attached a condition: build up, and you owe the public somewhere to sit down.</p>
+    </div>
+    <div class="story-grid">
+      <div class="story-steps">
+        <div class="step" data-reveal>
+          <p class="step-k">01 — The deal</p>
+          <p>The 1985 Downtown Plan reshaped the rules for the C-3 district. Developers could add height and floor area — but in exchange they had to carve out open space the public could actually use.</p>
+        </div>
+        <div class="step" data-reveal>
+          <p class="step-k">02 — Open space for height</p>
+          <p>The rate was blunt: one square foot of public open space for every fifty square feet of office. A tower's plaza, atrium, or rooftop terrace became part of the price of building it — written into Planning Code Section 138.</p>
+        </div>
+        <div class="step" data-reveal>
+          <p class="step-k">03 — Ten flavors of public</p>
+          <p>The result wasn't one kind of space but ten: plazas and urban gardens at street level, sun terraces and view terraces on the roof, atriums and greenhouses indoors, and "snippets" — slivers too small to be anything else.</p>
+        </div>
+        <div class="step" data-reveal>
+          <p class="step-k">04 — Hidden by design</p>
+          <p>Since 2012 the city has required a standardized plaque at every entrance, meant to steer you up to the rooftops and into the atriums. Many still fall short — SPUR called signage “the most glaring defect” in the whole program. The result is a network of public rooms that read as private. Which is exactly why this map exists.</p>
+        </div>
+      </div>
+      <aside class="story-figure">
+        <div class="tower" aria-hidden="true">
+          <span class="tower-tag tower-tag--roof">Sun terrace</span>
+          <div class="tower-roof"></div>
+          <div class="tower-body">
+            <span class="tower-floor"></span><span class="tower-floor"></span>
+            <span class="tower-floor is-public"><span class="tower-tag">Atrium</span></span>
+            <span class="tower-floor"></span><span class="tower-floor"></span>
+            <span class="tower-floor"></span><span class="tower-floor"></span>
+          </div>
+          <div class="tower-base is-public"><span class="tower-tag">Plaza</span></div>
+        </div>
+        <p class="sr-only">Diagram: a downtown tower with three public levels won under the open-space rules — a rooftop sun terrace, an interior atrium, and a ground-level plaza.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ===================== MAP — CINEMATIC TOUR ===================== -->
+  <section class="map-tour" id="map-section">
+    <div class="wrap section-head">
+      <p class="eyebrow" data-reveal>A guided descent</p>
+      <h2 class="section-title" data-split-lines>Take the tour, or wander.</h2>
+      <p class="section-intro" data-reveal>
+        Scroll to fly between six of the spaces — street-level plaza to fifteenth-floor roof. Brass dots
+        are open at all times, petrol only during business hours; bigger dots are harder to find. Or grab
+        the controls and explore all eighty-one yourself.
+      </p>
+    </div>
+
+    <div class="tour-scene">
+      <div class="tour-viz">
+        <div class="wrap">
+          <div class="map-shell">
+            <div class="map-controls">
+              <div class="chips" id="access-chips" role="group" aria-label="Filter by access">
+                <button class="chip" data-access="all" aria-pressed="true">All</button>
+                <button class="chip" data-access="always" aria-pressed="false">Always open</button>
+                <button class="chip" data-access="business" aria-pressed="false">Business hours</button>
+              </div>
+              <p class="map-count" aria-live="polite"><b id="map-count">81</b> spaces shown</p>
+            </div>
+            <div class="map-frame">
+              <div id="map" tabindex="0" role="application" aria-label="Map of San Francisco's 81 privately-owned public open spaces" data-cursor="Drag"></div>
+              <div class="tour-caption" id="tour-caption" aria-live="polite">
+                <span class="tc-index" id="tc-index"></span>
+                <h3 class="tc-name" id="tc-name"></h3>
+                <p class="tc-note" id="tc-note"></p>
+              </div>
+            </div>
+            <div class="map-legend" id="map-legend">
+              <span class="legend-item"><span class="legend-dot" style="background:#b9842b"></span> Open at all times</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#1f4b54"></span> Business hours only</span>
+              <span class="legend-item"><span class="legend-dot" style="background:#8a8276"></span> Hours unknown</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tour-steps" aria-hidden="true">
+        <div class="tour-step" data-step="0"></div>
+        <div class="tour-step" data-step="1"></div>
+        <div class="tour-step" data-step="2"></div>
+        <div class="tour-step" data-step="3"></div>
+        <div class="tour-step" data-step="4"></div>
+        <div class="tour-step" data-step="5"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FEATURED: WORTH THE DETOUR ===================== -->
+  <section class="section wrap" id="featured">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal>Worth the detour</p>
+      <h2 class="section-title" data-split-lines>If you only find six.</h2>
+      <p class="section-intro" data-reveal>A redwood grove at the foot of the Pyramid, a rooftop obelisk fifteen floors up, a two-hundred-ton heart of black granite. The spaces that reward the climb — tap any to open it.</p>
+    </div>
+    <div class="feature-strip" id="feature-strip"></div>
+  </section>
+
+  <!-- ===================== INTERSTITIAL: THE HIDDEN HALF ===================== -->
+  <section class="interstitial" id="hidden-half">
+    <div class="mesh-bg" aria-hidden="true"><canvas id="mesh-canvas"></canvas></div>
+    <div class="wrap interstitial-inner">
+      <p class="eyebrow on-dark" data-reveal>The catch</p>
+      <p class="sc-words">Most are yours at every hour. Thirty of them quietly disappear when the lobby locks at six.</p>
+      <div class="split-stats" data-reveal>
+        <div class="split-stat"><b class="is-always" data-stat="always_open">50</b><span>open at all times</span></div>
+        <div class="split-stat"><b class="is-business" data-stat="business_hours">30</b><span>only while the building is</span></div>
+        <div class="split-stat"><b data-stat="poor_signage">49</b><span>poorly signed or not at all</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== KINETIC INDEX (marquee) ===================== -->
+  <section class="marquee-band" aria-hidden="true">
+    <div class="mq-viewport"><div class="mq-track" id="mq-track"></div></div>
+  </section>
+
+  <!-- ===================== FIELD GUIDE: THE 81 ===================== -->
+  <section class="section wrap" id="spaces">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal>The field guide</p>
+      <h2 class="section-title" data-split-lines>All eighty-one, in your pocket.</h2>
+      <p class="section-intro" data-reveal>Filter by what you want — a sunny roof, a quiet atrium, a bench and a coffee — then open any space for hours, how to get in, and how hidden it really is.</p>
+    </div>
+
+    <div class="grid-controls">
+      <div class="gc-row">
+        <label class="ctl">
+          <span class="ctl-label">Search</span>
+          <input type="search" id="f-search" placeholder="name, street, feature…" />
+        </label>
+        <label class="ctl">
+          <span class="ctl-label">Type</span>
+          <select id="f-category"><option value="all">All types</option></select>
+        </label>
+        <label class="ctl">
+          <span class="ctl-label">Sort</span>
+          <select id="f-sort">
+            <option value="hidden">Hardest to find</option>
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+            <option value="az">A–Z</option>
+          </select>
+        </label>
+        <span class="magnetic" data-magnetic="0.4"><button type="button" class="ctl-reset" id="f-reset">Reset</button></span>
+        <p class="grid-count" aria-live="polite"><b id="grid-count">81</b> spaces</p>
+      </div>
+      <div class="gc-row gc-chips">
+        <div class="chips" id="grid-access" role="group" aria-label="Filter by access">
+          <button class="chip" data-access="all" aria-pressed="true">All access</button>
+          <button class="chip" data-access="always" aria-pressed="false">Always open</button>
+          <button class="chip" data-access="business" aria-pressed="false">Business hours</button>
+        </div>
+        <div class="chips" id="grid-amenity" role="group" aria-label="Filter by amenity">
+          <button class="chip" data-amenity="has_seating" aria-pressed="false">Seating</button>
+          <button class="chip" data-amenity="has_food" aria-pressed="false">Food</button>
+          <button class="chip" data-amenity="has_art" aria-pressed="false">Art</button>
+          <button class="chip" data-amenity="has_restroom" aria-pressed="false">Restroom</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="space-grid" id="space-grid"></div>
+  </section>
+
+  <!-- ===================== GLOSSARY: THE TEN TYPES ===================== -->
+  <section class="section wrap" id="glossary">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal>The ten types</p>
+      <h2 class="section-title" data-split-lines>Ten ways to be a public space.</h2>
+      <p class="section-intro" data-reveal>The code doesn't just say “open space.” It names ten kinds — from a street-level plaza to a glassed-in greenhouse fourteen floors up. The official taxonomy, with how many of each we have.</p>
+    </div>
+    <dl class="glossary">
+      <div class="glos" data-reveal><dt><span class="glos-ic">▢</span> Plaza <span class="glos-n" data-glos="Plaza"></span></dt><dd>An open-air, mostly paved space at street level, furnished with seating to draw people off the sidewalk.</dd></div>
+      <div class="glos" data-reveal><dt><span class="glos-ic">❧</span> Urban Garden <span class="glos-n" data-glos="Urban Garden"></span></dt><dd>A small, sheltered landscaped pocket — defined by planters, sitting ledges, and a fountain.</dd></div>
+      <div class="glos" data-reveal><dt><span class="glos-ic">▪</span> Snippet <span class="glos-n" data-glos="Snippet"></span></dt><dd>A small, sunny sitting area: a few seats, minimal landscaping. The leftover slivers.</dd></div>
+      <div class="glos" data-reveal><dt><span class="glos-ic">◳</span> Indoor Park <span class="glos-n" data-glos="Indoor Park"></span></dt><dd>An interior room open to the public, with at least one full-glass wall facing the street.</dd></div>
+      <div class="glos" data-reveal><dt><span class="glos-ic">⇄</span> Pedestrian Walkway <span class="glos-n" data-glos="Pedestrian Walkway"></span></dt><dd>A public sitting area threaded through a galleria, arcade, alley, or pedestrian mall.</dd></div>
+      <div class="glos" data-reveal><dt><span class="glos-ic">☀</span> Sun Terrace <span class="glos-n" data-glos="Sun Terrace"></span></dt><dd>A wind-sheltered perch on an upper floor, placed to catch the midday sun.</dd></div>
+      <div class="glos" data-reveal><dt><span class="glos-ic">◈</span> Atrium <span class="glos-n" data-glos="Atrium"></span></dt><dd>A skylit interior court — glass-covered, open to the public, with seating below.</dd></div>
+      <div class="glos" data-reveal><dt><span class="glos-ic">❋</span> Greenhouse <span class="glos-n" data-glos="Greenhouse"></span></dt><dd>A glassed-in enclosure — at least 1,000 sq ft under a 20-foot ceiling — full of light and plantings.</dd></div>
+      <div class="glos" data-reveal><dt><span class="glos-ic">❦</span> Urban Park <span class="glos-n" data-glos="Urban Park"></span></dt><dd>A larger green space led by trees, lawn, and water rather than pavement.</dd></div>
+      <div class="glos" data-reveal><dt><span class="glos-ic">◹</span> View Terrace <span class="glos-n" data-glos="View Terrace"></span></dt><dd>Like a sun terrace, but sited for the city view instead of the sun.</dd></div>
+    </dl>
+  </section>
+
+  <!-- ===================== TIMELINE ===================== -->
+  <section class="section wrap" id="timeline">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal>Built over sixty years</p>
+      <h2 class="section-title" data-split-lines>A surge after the Plan.</h2>
+      <p class="section-intro" data-reveal>Nearly half of these spaces predate the rules. Then 1985 changed the deal — and the gift itself: the 1980s handed over plazas open around the clock, while the 2000s built nearly as many that lock when the lobby does.</p>
+    </div>
+    <div class="timeline-wrap">
+      <div class="timeline-chart" id="timeline-chart"></div>
+      <p class="tl-legend">
+        <span class="legend-item"><span class="legend-dot" style="background:#b9842b"></span> Always open</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#1f4b54"></span> Business hours</span>
+        <span class="legend-item"><span class="legend-dot" style="background:#8a8276"></span> Unknown</span>
+      </p>
+      <p class="tl-sr sr-only" role="note"></p>
+    </div>
+  </section>
+
+  <!-- ===================== METHOD ===================== -->
+  <section class="section wrap" id="method">
+    <div class="section-head">
+      <p class="eyebrow" data-reveal>How this was made</p>
+      <h2 class="section-title" data-split-lines>The method, and the caveats.</h2>
+    </div>
+    <div class="method-grid">
+      <div class="method-col" data-reveal>
+        <h3>The data</h3>
+        <p>Every space here comes from the City's own inventory of Privately-Owned Public Open Space, published by the San Francisco Planning Department on DataSF. The spaces themselves are required under Planning Code Section 138; SPUR's 2009 survey first catalogued and critiqued them.</p>
+        <p class="m-mono" id="m-source">Dataset 65ik-7wqd · DataSF</p>
+      </div>
+      <div class="method-col" data-reveal>
+        <h3>The "obscurity" score</h3>
+        <p>A space scores higher when it's harder for the public to find or use: an indirect entrance through a private lobby, poor or missing signage, limited hours, or an interior location. It's a reading of the data, not an official rating.</p>
+      </div>
+      <div class="method-col" data-reveal>
+        <h3>Read this carefully</h3>
+        <p>The descriptions, hours, and amenities are the city's own field notes — some are years old and a few are frank about uncertainty. One space is listed as under construction; another as having disputed public access. We kept them in, and labeled them.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer wrap">
+    <p>A field guide to San Francisco's privately-owned public open spaces, built from
+      <a href="https://data.sfgov.org/Culture-and-Recreation/Privately-Owned-Public-Open-Space/65ik-7wqd" target="_blank" rel="noopener">DataSF open data</a>.</p>
+    <p class="foot-mono" id="foot-meta">Hidden SF · POPOS field guide</p>
+  </footer>
+
+  <!-- detail panel -->
+  <div class="dialog" id="space-dialog" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Open space details">
+    <div class="dialog-scrim"></div>
+    <div class="dialog-panel" role="document">
+      <button type="button" class="dialog-close" aria-label="Close details">✕</button>
+      <div class="dialog-body"></div>
+    </div>
+  </div>
+
+  <div id="fx-status" aria-hidden="true"></div>
+
+  <!-- vendor: GSAP stack + Lenis, then MapLibre -->
+  <script src="./vendor/gsap.min.js"></script>
+  <script src="./vendor/ScrollTrigger.min.js"></script>
+  <script src="./vendor/SplitText.min.js"></script>
+  <script src="./vendor/ScrambleTextPlugin.min.js"></script>
+  <script src="./vendor/Flip.min.js"></script>
+  <script src="./vendor/Observer.min.js"></script>
+  <script src="./vendor/Physics2DPlugin.min.js"></script>
+  <script src="./vendor/lenis.min.js"></script>
+  <script src="./vendor/maplibre-gl.js"></script>
+
+  <!-- FX engine (must be first) + effects -->
+  <script src="./js/fx/core.js"></script>
+  <script src="./js/fx/cursor.js"></script>
+  <script src="./js/fx/scroll.js"></script>
+  <script src="./js/fx/scroll2.js"></script>
+  <script src="./js/fx/type.js"></script>
+  <script src="./js/fx/type2.js"></script>
+  <script src="./js/fx/mesh.js"></script>
+
+  <!-- site glue -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

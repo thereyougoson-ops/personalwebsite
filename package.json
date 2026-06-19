@@ -9,8 +9,10 @@
     "serve:dist": "python -m http.server 8098 --bind 127.0.0.1 --directory dist",
     "test": "node tests/run-selftest.mjs",
     "test:console": "node tests/run-console-validation.mjs",
+    "test:interaction": "node tests/run-interaction.mjs",
     "test:axe": "node tests/run-axe.mjs",
-    "test:links": "node tests/run-linkcheck.mjs"
+    "test:links": "node tests/run-linkcheck.mjs",
+    "test:demos": "node tests/run-demos.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.3",

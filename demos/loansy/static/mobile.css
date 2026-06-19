@@ -1,0 +1,124 @@
+/* Mobile-specific optimizations for admin dashboard */
+/* This file contains touch interactions, performance optimizations, and mobile-only components */
+
+/* Touch-friendly interactions */
+@media (max-width: 767px) {
+  /* Reduce animation on mobile for performance */
+  * { animation-duration: 0.1s !important; animation-delay: 0 !important; }
+  button, a, input { transition: background 0.12s, border-color 0.12s, color 0.12s; }
+
+  /* Increase tap target sizes */
+  .btn-d, button { min-height: 44px; min-width: 44px; }
+
+  /* Optimize table density for mobile */
+  table.data tbody td { padding: 8px 10px; height: 40px; }
+
+  /* Make icons touch-friendly */
+  .bi { font-size: 18px; }
+
+  /* Improve link tap areas */
+  a { padding: 4px 2px; }
+
+  /* Optimize card touch targets */
+  .panel { padding: 12px; }
+
+  /* Mobile-safe spacing for lists */
+  li, .list-item { padding: 8px 0; }
+}
+
+/* Tablet optimizations (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .hide-tablet { display: none; }
+  .show-tablet { display: block; }
+
+  /* Adjust padding for tablet */
+  .panel { padding: 14px; }
+  table.data tbody td { padding: 9px 12px; }
+}
+
+/* Desktop optimizations (1200px+) */
+@media (min-width: 1200px) {
+  .hide-desktop { display: none; }
+  .show-desktop { display: block; }
+
+  /* Full density on desktop */
+  .panel { padding: 16px; }
+  table.data tbody td { padding: 10px 14px; }
+}
+
+/* Mobile-specific utility classes */
+.mobile-only { display: none; }
+@media (max-width: 767px) {
+  .mobile-only { display: block; }
+  .desktop-only { display: none; }
+}
+
+@media (min-width: 768px) {
+  .mobile-only { display: none; }
+  .desktop-only { display: block; }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  /* Slightly larger touch targets for touch devices */
+  .btn-d { min-height: 48px; }
+  button { min-height: 48px; }
+
+  /* Remove hover effects on touch devices (they don't make sense) */
+  .btn-d:hover { background: inherit; }
+  a:hover { text-decoration: inherit; }
+}
+
+/* Prevent text selection on buttons (mobile) */
+@media (max-width: 767px) {
+  button, .btn-d, [role="button"] {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+}
+
+/* Smooth scrolling for tables */
+@media (max-width: 767px) {
+  .table-responsive {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Mobile modal/overlay adjustments */
+@media (max-width: 767px) {
+  .modal-overlay { padding: 12px; }
+  .modal-box { width: calc(100vw - 24px); max-height: calc(100vh - 64px); }
+  .modal-box-head { font-size: 12px; }
+  .modal-box-body { padding: 14px; }
+}
+
+/* Mobile form adjustments */
+@media (max-width: 767px) {
+  .form-group { margin-bottom: 14px; }
+  label { display: block; margin-bottom: 4px; font-size: 12px; }
+  input[type="text"], input[type="email"], input[type="number"], select, textarea {
+    width: 100%;
+  }
+}
+
+/* Disable pulldown refresh on iOS for dashboard */
+@media (max-width: 767px) {
+  body {
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+  }
+}
+
+/* Optimize performance: reduce shadows on mobile */
+@media (max-width: 767px) {
+  .panel { box-shadow: none; }
+  .btn-d { box-shadow: none; }
+}
+
+/* Safe area insets for notched devices */
+@media (max-width: 480px) {
+  .sidebar { padding-left: max(12px, env(safe-area-inset-left)); }
+  .main-content { padding-right: max(12px, env(safe-area-inset-right)); }
+}

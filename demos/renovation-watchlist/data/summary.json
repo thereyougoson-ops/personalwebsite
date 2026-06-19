@@ -1,0 +1,213 @@
+{
+ "generated_at": "2026-06-18T21:26:44.131558Z",
+ "totals": {
+  "watchlist_parcels": 985,
+  "permit_novs_on_watchlist": 1449,
+  "eligible_parcels": 34604,
+  "permit_nov_rows_total": 1968,
+  "geo_coverage": 985
+ },
+ "neighborhoods": [
+  {
+   "neighborhood": "Mission",
+   "parcels": 147,
+   "nov_total": 210
+  },
+  {
+   "neighborhood": "Russian Hill",
+   "parcels": 74,
+   "nov_total": 122
+  },
+  {
+   "neighborhood": "Castro/Upper Market",
+   "parcels": 73,
+   "nov_total": 123
+  },
+  {
+   "neighborhood": "Chinatown",
+   "parcels": 62,
+   "nov_total": 116
+  },
+  {
+   "neighborhood": "North Beach",
+   "parcels": 61,
+   "nov_total": 95
+  },
+  {
+   "neighborhood": "Hayes Valley",
+   "parcels": 46,
+   "nov_total": 87
+  },
+  {
+   "neighborhood": "Tenderloin",
+   "parcels": 44,
+   "nov_total": 52
+  },
+  {
+   "neighborhood": "Haight Ashbury",
+   "parcels": 39,
+   "nov_total": 67
+  },
+  {
+   "neighborhood": "Noe Valley",
+   "parcels": 38,
+   "nov_total": 45
+  },
+  {
+   "neighborhood": "Lone Mountain/USF",
+   "parcels": 36,
+   "nov_total": 51
+  },
+  {
+   "neighborhood": "Inner Richmond",
+   "parcels": 34,
+   "nov_total": 42
+  },
+  {
+   "neighborhood": "Nob Hill",
+   "parcels": 30,
+   "nov_total": 37
+  },
+  {
+   "neighborhood": "Sunset/Parkside",
+   "parcels": 28,
+   "nov_total": 35
+  },
+  {
+   "neighborhood": "Bayview Hunters Point",
+   "parcels": 26,
+   "nov_total": 51
+  },
+  {
+   "neighborhood": "South of Market",
+   "parcels": 26,
+   "nov_total": 32
+  },
+  {
+   "neighborhood": "Outer Richmond",
+   "parcels": 26,
+   "nov_total": 28
+  },
+  {
+   "neighborhood": "Bernal Heights",
+   "parcels": 24,
+   "nov_total": 28
+  },
+  {
+   "neighborhood": "Inner Sunset",
+   "parcels": 22,
+   "nov_total": 37
+  },
+  {
+   "neighborhood": "Presidio Heights",
+   "parcels": 17,
+   "nov_total": 21
+  },
+  {
+   "neighborhood": "Marina",
+   "parcels": 16,
+   "nov_total": 19
+  },
+  {
+   "neighborhood": "Twin Peaks",
+   "parcels": 15,
+   "nov_total": 19
+  },
+  {
+   "neighborhood": "Pacific Heights",
+   "parcels": 14,
+   "nov_total": 15
+  },
+  {
+   "neighborhood": "Western Addition",
+   "parcels": 12,
+   "nov_total": 18
+  },
+  {
+   "neighborhood": "Outer Mission",
+   "parcels": 11,
+   "nov_total": 15
+  },
+  {
+   "neighborhood": "Excelsior",
+   "parcels": 11,
+   "nov_total": 14
+  },
+  {
+   "neighborhood": "Financial District/South Beach",
+   "parcels": 9,
+   "nov_total": 13
+  },
+  {
+   "neighborhood": "Potrero Hill",
+   "parcels": 9,
+   "nov_total": 13
+  },
+  {
+   "neighborhood": "Glen Park",
+   "parcels": 9,
+   "nov_total": 11
+  },
+  {
+   "neighborhood": "Portola",
+   "parcels": 9,
+   "nov_total": 10
+  },
+  {
+   "neighborhood": "West of Twin Peaks",
+   "parcels": 7,
+   "nov_total": 8
+  },
+  {
+   "neighborhood": "Oceanview/Merced/Ingleside",
+   "parcels": 5,
+   "nov_total": 7
+  },
+  {
+   "neighborhood": "Visitacion Valley",
+   "parcels": 3,
+   "nov_total": 3
+  },
+  {
+   "neighborhood": "Japantown",
+   "parcels": 1,
+   "nov_total": 4
+  },
+  {
+   "neighborhood": "Lakeshore",
+   "parcels": 1,
+   "nov_total": 1
+  }
+ ],
+ "datasets": {
+  "nov": {
+   "id": "nbtm-fbw5",
+   "name": "DBI Notices of Violation"
+  },
+  "assessor": {
+   "id": "wv5m-vpq2",
+   "name": "Assessor Secured Property Tax Roll",
+   "roll_year": "2024"
+  }
+ },
+ "method": {
+  "nov_since": "2018-01-01",
+  "permit_item_patterns": [
+   "%PERMIT REQUIRED%",
+   "%PROVIDE BUILDING PERMIT%",
+   "%PROVIDE PLUMBING PERMIT%",
+   "%PROVIDE ELECTRICAL PERMIT%",
+   "%WITHOUT%PERMIT%",
+   "%FAILURE TO FILE FOR NECESSARY PERMIT%",
+   "%BID, EID%",
+   "%BID PERMIT%"
+  ],
+  "eligibility": "built before 1979 AND > 1 units",
+  "weights": {
+   "nov_count": 0.45,
+   "recency": 0.25,
+   "improvement": 0.2,
+   "units": 0.1
+  }
+ }
+}

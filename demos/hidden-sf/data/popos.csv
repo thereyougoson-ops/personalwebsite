@@ -1,0 +1,82 @@
+name,address,category,access,hours,entry,signage,year,indoor,has_art,has_food,has_restroom,has_seating,hidden,hidden_rank,status,lat,lng
+135 Main St,135 Main St,Indoor Park,business,Unknown. Security would not disclose hours.,Indirect,Poor,1982,True,True,False,False,True,100,1,,37.79142819,-122.39411196
+55 Second St - C,55 Second St,Atrium,business,"8AM - 6PM, M-F",Unknown,Some,2002,True,True,False,True,True,60,22,,37.789,-122.400283
+Millenium Tower Plaza,301 Mission St,Atrium,business,"8AM - 6PM, M-F",Indirect,Good,2005,True,True,True,True,True,70,9,,37.79052,-122.39656
+425 Market St,425 Market St,Urban Garden,always,Open at all times,Direct,Poor,1973,False,False,True,False,True,30,51,,37.79111153,-122.39851021
+77 Van Ness Ave,77 Van Ness Ave,Indoor Park,business,"8AM - 6PM, M-F",Direct,Poor,2002,True,True,False,True,True,66,10,,37.77613,-122.41971
+345 California St - A,345 California St,Plaza,always,Open at all times,Direct,Poor,1986,False,False,True,False,True,30,48,,37.79306,-122.40046
+345 California St - East B,345 California St,Snippet,always,Open at all times,Direct,Poor,1986,False,False,True,False,True,30,49,,37.79286,-122.40005
+345 California St - West C,345 California St,Snippet,always,Open at all times,Direct,Poor,1986,False,False,True,False,True,30,50,,37.79263,-122.40091
+"Embarcadero Center West 1, 2, & 3",1-5 Embarcadero Center,Pedestrian Walkway,always,Open at all times,Mixed,Poor,1985,False,True,True,False,True,64,18,,37.79446,-122.40125
+250 Howard,250 Howard,Urban Park,unknown,,Unknown,Poor,,False,,,,False,52,23,under_construction,37.790744,-122.394009
+333 Market St,333 Market St,Plaza,always,Open at all times,Direct,Poor,1979,False,False,True,False,True,30,47,,37.79175429,-122.39779067
+555 Mission St,555 Mission St,Plaza,always,Open at all times,Direct,Good,2008,False,True,True,True,True,0,81,,37.7884,-122.39891
+Foundry Square NE,400 Howard St,Plaza,always,"8AM - 6PM, M-F",Direct,Some,2008,False,True,True,False,True,12,79,,37.7888,-122.396
+Foundry Square SE,405 Howard St,Plaza,business,"8AM - 6PM, M-F",Direct,Some,2005,False,True,True,False,True,30,67,,37.78852,-122.39566
+Foundry Square NW,500 Howard St,Plaza,always,Open at all times,Direct,Poor,2003,False,True,True,False,True,30,66,,37.78854,-122.39631
+235 Second St,235 Second St,Plaza,business,"8AM - 6PM, M-F",Mixed,Some,2002,True,True,True,False,True,82,5,,37.78618,-122.39721
+560 Mission St,560 Mission St,Plaza,always,Open at all times,Direct,Good,2002,True,True,True,True,True,18,75,,37.78892,-122.39908
+Marriott Courtyard - A (Starbucks),299 2nd St,Snippet,always,Open at all times,Direct,Some,2001,False,False,True,True,True,12,80,,37.78577,-122.39684
+Marriott Courtyard - B (Starbucks),299 2nd St,Snippet,business,8:00am - 5:00pm,Direct,Some,2001,False,False,True,False,True,30,72,,37.78576,-122.39668
+Marriott Courtyard - C,299 2nd St,Atrium,business,,Indirect,Poor,2001,True,True,True,True,True,100,2,disputed,37.78611,-122.39669
+101 2nd St,101 2nd St,Greenhouse,business,"8AM - 6PM, M-F",Indirect,Some,2000,True,True,True,True,True,82,4,,37.78803,-122.39953
+199 Fremont St,199 Fremont St,Urban Garden,always,Open at all times,Direct,Some,2000,False,True,True,False,True,12,76,,37.78967,-122.39491
+343 Sansome,343 Sansome St,View Terrace,business,"10AM-5PM, M-F",Indirect,Some,1990,False,True,True,True,True,64,15,,37.79374,-122.40146
+211 Main St,211 Main St,Plaza,always,Open at all times,Direct,Poor,1973,False,False,False,False,True,30,45,,37.7903972,-122.39288583
+Empire Park,642 Commercial St,Urban Park,business,Daylight Hours.,Direct,Some,1988,False,False,True,False,True,30,65,,37.79428,-122.40384
+100 California St,100 California St,Plaza,always,Open at all times,Direct,Poor,2013,False,False,True,False,True,30,39,,37.79358,-122.39797
+Commercial Street (235 Pine Entitlement),235 Pine St,Snippet,always,Open at all times,Direct,Poor,1984,False,False,True,False,True,30,64,,37.79439,-122.40228
+120 Howard St,120 Howard St,Urban Garden,business,"8AM - 6PM, M-F",Direct,Poor,,False,False,True,False,True,48,24,,37.79107,-122.39305
+1 Kearny St,1 Kearny St,Sun Terrace,business,"10AM-5PM, M-F",Indirect,Some,2006,False,False,False,True,True,64,12,,37.78784,-122.40376
+55 Second St - A,55 Second St,Indoor Park,business,"8AM - 6PM, M-F",Unknown,Good,2002,True,True,False,False,True,48,30,,37.789,-122.400283
+55 Second St - B,55 Second St,Snippet,business,"8AM - 6PM, M-F",Unknown,Good,2002,False,False,False,False,True,30,57,,37.78895,-122.40011
+Rincon Center,121 Spear St,Indoor Park,always,Open at all times,Indirect,Poor,1989,True,True,True,False,True,82,6,,37.79208,-122.39259
+123 Mission St,123 Mission St,Urban Garden,always,Open at all times,Direct,Poor,1986,False,True,True,False,True,30,41,,37.79219,-122.39423
+525 Market St,525 Market St,Urban Garden,always,Open at all times,Direct,Poor,1973,False,True,True,False,True,30,56,,37.79034281,-122.3997369
+150 California St,150 California St,Sun Terrace,business,"9AM-6PM, M-F",Indirect,Some,2000,False,True,False,False,True,64,13,,37.79361,-122.39864
+600 California St,600 California St,Snippet,always,Open at all times,Direct,Some,1990,False,True,True,False,True,12,78,,37.79277,-122.40487
+Westfield Sky Terrace (Wesfield Center Mall),845 Market St,Sun Terrace,business,9AM-5PM M-F,Indirect,Some,2006,False,False,True,False,True,64,20,,37.78473,-122.40652
+100 1st St,100 1st St,Sun Terrace,always,"Ground level arcade space accessible at all times, Sun Terrace open during daylight hours.",Indirect,Some,1985,False,True,False,False,True,46,33,,37.7891,-122.39797
+200 California St,200 California St,Pedestrian Walkway,always,Open at all times,Direct,Some,1990,False,True,False,False,True,12,77,,37.79347,-122.39889
+49 Stevenson St,49 Stevenson St,Pedestrian Walkway,always,Open at all times,Direct,Poor,1984,False,True,True,False,True,30,53,,37.78993,-122.39938
+Marathon Plaza,303 Second St,Urban Garden,always,Open at all times,Direct,Poor,1982,False,True,True,True,True,30,71,,37.78522,-122.3957
+Gap Building,2 Folsom St,Urban Garden,always,Open at all times,Direct,Poor,2001,False,True,False,False,True,30,69,,37.79122985,-122.39121179
+1 Market St,1 Market St,Atrium,always,Open at all times,Indirect,Poor,1976,True,True,True,True,True,82,3,,37.793,-122.39372
+71 Stevenson St,71 Stevenson St,Pedestrian Walkway,always,Open at all times,Direct,Poor,1983,False,False,True,False,True,30,62,,37.78902357,-122.39978307
+14 Fremont St,14 Fremont St,Pedestrian Walkway,always,Open at all times,Direct,Poor,1983,False,False,True,True,True,30,42,,37.79076641,-122.39788898
+456 Montomery St,456 Montgomery St,Plaza,always,Open at all times,Indirect,Poor,1983,False,True,False,False,True,64,16,,37.79363998,-122.40279735
+Citygroup Center,1 Sansome St,Atrium,business,,Unknown,Poor,1983,True,,True,True,True,78,7,,37.79047982,-122.40079791
+Trinity Alley,333 Bush St,Pedestrian Walkway,always,Open at all times,Direct,Poor,1983,False,False,True,False,True,30,74,,37.790618,-122.402717
+Spear Street Plaza,160 Spear St,Urban Garden,always,Open at all times,Direct,Poor,1983,False,True,True,False,True,30,73,,37.79154685,-122.39337112
+25 Jessie St,25 Jessie St,Pedestrian Walkway,always,Open at all times,Indirect,Poor,1983,False,False,False,False,True,64,14,,37.78961221,-122.39879604
+201 Spear St,201 Spear St,Urban Garden,always,Open at all times,Unknown,Poor,1982,False,,,,False,42,36,,37.79094499,-122.39162755
+Crocker Galleria,165 Sutter St,Sun Terrace,business,"6AM-7PM, M-SAT",Indirect,Some,1982,False,False,False,True,True,64,17,,37.78927548,-122.4028214
+301 Howard St,301 Howard St,Urban Garden,always,Open at all times,Unknown,Poor,1981,False,,,,False,42,37,,37.78968512,-122.39426674
+444 Market  St,444 Market St,Plaza,always,Open at all times,Direct,Poor,1980,False,True,True,False,True,30,52,,37.79167436,-122.39868154
+180 Howard St,180 Howard St,Pedestrian Walkway,always,"8AM - 6PM, M-F",Direct,Poor,1980,False,False,True,False,True,30,43,,37.79073351,-122.39221925
+595 Market St,595 Market St,Plaza,always,Open at all times,Direct,Poor,1979,False,False,True,False,True,30,60,,37.78900186,-122.40072729
+221 Main St,221 Main St,Plaza,always,Open at all times,Direct,Poor,1974,False,False,False,False,True,30,46,,37.79015362,-122.39254577
+Redwood Park,535 Washington St,Urban Park,business,Not posted. Closes before 6pm,Direct,Poor,1972,False,True,False,False,True,48,32,,37.79505236,-122.40216798
+50 California St,50 California St,Snippet,always,Open at all times,Direct,Poor,1970,False,True,True,False,True,30,55,,37.79380746,-122.39753052
+100 Pine St,100 Pine St,Urban Garden,business,,Unknown,Poor,1972,False,,True,,True,60,21,,37.79273921,-122.39915923
+Golden Gate University,536 Mission St,Snippet,always,Open at all times,Direct,Poor,1972,False,False,False,True,True,30,70,,37.78915139,-122.39868143
+1 California St,1 California St,Snippet,always,Open at all times,Direct,Poor,1970,False,False,True,False,True,30,38,,37.79335343,-122.39728414
+77 Beale St,77 Beale St,Plaza,always,Open at all times,Direct,Poor,1970,False,False,False,False,True,30,63,,37.79173693,-122.39622554
+555 California St,555 California St,Urban Garden,always,Open at all times,Direct,Poor,1969,False,False,False,False,True,30,58,,37.7924598,-122.40395114
+1 Post St,1 Post St,Snippet,always,,Unknown,Poor,1969,False,,,,False,42,35,,37.78862256,-122.40264635
+50 Beale St,50 Beale St,Plaza,always,Open at all times,Direct,Poor,1968,False,False,False,False,True,30,54,,37.79160342,-122.39691639
+555/557 Market St,555/557 Market St,Urban Garden,always,Open at all times,Direct,Poor,1965,False,False,False,True,True,30,59,,37.78975722,-122.4001579
+650 California St,650 California St,Plaza,always,Open at all times,Indirect,Some,1965,False,True,False,True,True,46,34,,37.79305037,-122.40520017
+611 Folsom St,611 Folsom St,Plaza,always,Open at all times,Direct,Poor,1965,False,False,False,False,True,30,61,,37.78516765,-122.39673063
+201 Mission St,201 Mission St,Urban Garden,always,,Direct,Poor,1960,False,,,,False,30,44,,37.79096222,-122.39516089
+1 Bush Street,1 Bush Street,Urban Garden,always,Open at all times,Indirect,Poor,1959,False,True,False,False,True,64,11,,37.79098054,-122.40045257
+222 2nd St,222 2nd St,Greenhouse,business,"8AM - 6PM, M-F",Direct,Some,2016,True,True,True,True,True,48,25,,37.78638,-122.39823
+350 Mission St,350 Mission St,Greenhouse,business,"8AM-5PM, M-F",Direct,Some,2011,True,False,False,False,True,48,29,,37.791,-122.396685
+Foundry Square SW (indoor),505-525 Howard St (200 1st St),Indoor Park,business,"8AM - 6PM, M-F",Direct,Some,2008,True,False,True,True,True,48,31,,37.7882,-122.3961
+Foundry Square SW (outdoor),505-525 Howard St (200 1st St),Plaza,business,"8AM - 6PM, M-F",Direct,Some,2008,False,False,True,True,True,30,68,,37.7882,-122.3961
+101 California St,101 California Street,Plaza,always,Open at all times,Direct,Poor,1982,False,False,True,False,True,30,40,,37.793249,-122.398
+Hampton Inn,942 Mission Street,View Terrace,business,"10AM-5PM, M-F",Indirect,Some,2015,False,False,False,True,True,64,19,,37.78219483,-122.407839
+181 Fremont,181 Fremont,Indoor Park,business,8AM-6PM M-F,Indirect,Good,2015,True,True,True,True,True,70,8,,37.789785,-122.395367
+350 Bush St,350 Bush St,Indoor Park,business,"7AM-6PM, M-F",Direct,Some,2019,True,,False,True,True,48,26,,37.7911099,-122.40337084
+350 Bush St,350 Bush St,Indoor Park,business,"7AM-6PM, M-F",Direct,Some,2019,True,,False,True,True,48,27,,37.79159219,-122.40340574
+350 Bush St,350 Bush St,Indoor Park,business,"7AM-6PM, M-F",Direct,Some,2019,True,,False,True,True,48,28,,37.79183314,-122.40454244

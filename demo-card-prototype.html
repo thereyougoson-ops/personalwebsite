@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<title>&lt;demo-card&gt; — real live demos · Philip Toulinov</title>
+<meta name="description" content="Prototype: non-invasive demo cards that load each project's REAL app — live embeds for the static sites, guided hotspot tours over real screenshots for the backends." />
+
+<link rel="stylesheet" href="assets/fonts/fonts.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ===== Flux tokens (from styles/main.css). For .pj-* the accent is AMBER, not Flux purple. ===== */
+:root{
+  --bg:#0c0b10; --bg-1:#121118; --bg-2:#14131a; --bg-3:#1d1b24;
+  --line:rgba(237,232,224,.08); --line-2:rgba(237,232,224,.14);
+  --text:#ede8e0; --text-2:#a9a39a; --text-3:#8b857b;
+  --amber:#f5b642; --amber-soft:#ffd585; --green:#5ee6c0; --cyan:#5ec8ff; --magenta:#e878f5; --red:#f8553f; --pending:#555259;
+  --accent:var(--amber); --accent-soft:var(--amber-soft); --accent-rgb:245,182,66;
+  --sans:"Geist",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --display:"Bricolage Grotesque","Geist",ui-sans-serif,system-ui,sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --pixel:"Silkscreen",var(--mono);
+  --pad:clamp(1.25rem,5vw,6rem); --maxw:1200px; --r:8px; --r-lg:12px;
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-out:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box}
+body{ margin:0; background:var(--bg); color:var(--text); font-family:var(--sans); font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased; overflow-x:hidden }
+body::after{ content:""; position:fixed; inset:0; z-index:2; pointer-events:none; opacity:.035; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/></svg>") }
+a{color:inherit}
+:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; border-radius:4px }
+.skip-link{ position:fixed; left:8px; top:-60px; z-index:60; background:var(--bg-3); color:var(--text); padding:.6rem 1rem;
+  border:1px solid var(--line-2); border-radius:8px; transition:top .2s var(--ease) }
+.skip-link:focus{ top:8px }
+
+.pj-bar{ position:sticky; top:0; z-index:40; display:flex; align-items:center; gap:1rem; padding:.85rem var(--pad);
+  border-bottom:1px solid var(--line); background:rgba(12,11,16,.72); backdrop-filter:blur(14px) }
+.pj-bar__mark{ font-family:var(--display); font-weight:700; letter-spacing:-.01em } .pj-bar__mark b{ color:var(--accent) }
+.pj-bar__chip{ font-family:var(--mono); font-size:.66rem; text-transform:lowercase; color:var(--text-2); border:1px solid var(--line-2); border-radius:20px; padding:.2rem .6rem }
+.pj-avail{ margin-left:auto; display:inline-flex; align-items:center; gap:.5rem; font-family:var(--mono); font-size:.7rem; color:var(--text-2) }
+.pj-avail i{ width:8px; height:8px; border-radius:50%; background:var(--green); animation:pulse 2.4s var(--ease) infinite }
+@keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(94,230,192,.5)} 70%{box-shadow:0 0 0 7px rgba(94,230,192,0)} 100%{box-shadow:0 0 0 0 rgba(94,230,192,0)} }
+
+.intro{ max-width:var(--maxw); margin:0 auto; padding:clamp(2.5rem,6vw,5rem) var(--pad) 1rem }
+.intro__eb{ font-family:var(--pixel); font-size:.7rem; letter-spacing:.12em; text-transform:uppercase; color:var(--accent) }
+.intro h1{ font-family:var(--display); font-weight:800; letter-spacing:-.02em; line-height:1.02; font-size:clamp(2rem,5.5vw,3.4rem); margin:.6rem 0 .8rem }
+.intro h1 .lt{ font-family:var(--mono); font-weight:600; color:var(--accent); font-size:.82em }
+.intro p{ color:var(--text-2); max-width:66ch }
+.legend{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1.4rem }
+.legend .lg{ display:inline-flex; align-items:center; gap:.45rem; font-family:var(--mono); font-size:.68rem; border:1px solid var(--line-2); border-radius:20px; padding:.3rem .7rem; color:var(--text-2) }
+.legend .lg b{ color:var(--text) }
+.legend .dot{ width:8px; height:8px; border-radius:50% }
+.dot--live{ background:var(--green) } .dot--tour{ background:var(--cyan) }
+
+.pj-builds{ max-width:var(--maxw); margin:0 auto; padding:clamp(1.5rem,4vw,2.5rem) var(--pad) 5rem; display:flex; flex-direction:column; gap:clamp(3rem,7vw,5.5rem) }
+.pj-build{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:clamp(1.4rem,3.5vw,2.6rem); align-items:center }
+.pj-build:nth-child(even) .pj-build__media{ order:2 }
+.pj-build.cv{ content-visibility:auto; contain-intrinsic-size:auto 780px }
+@media(max-width:900px){ .pj-build{ grid-template-columns:1fr; gap:1.4rem } .pj-build:nth-child(even) .pj-build__media{ order:0 } }
+
+/* browser frame */
+.pj-frame{ margin:0; border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; background:var(--bg-2); box-shadow:0 24px 60px -28px rgba(0,0,0,.7) }
+.pj-frame__bar{ display:flex; align-items:center; gap:.6rem; padding:.5rem .7rem; border-bottom:1px solid var(--line); background:var(--bg-1) }
+.pj-frame__dots{ display:inline-flex; gap:.32rem } .pj-frame__dots i{ width:9px; height:9px; border-radius:50% }
+.pj-frame__dots i:nth-child(1){ background:#3a2c2c } .pj-frame__dots i:nth-child(2){ background:#3a352c } .pj-frame__dots i:nth-child(3){ background:#2c3a30 }
+.pj-frame__addr{ font-family:var(--mono); font-size:.7rem; color:var(--text-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.pj-cap{ font-family:var(--mono); font-size:.72rem; color:var(--text-3); margin:.7rem .2rem 0; line-height:1.5 }
+
+/* demo-card */
+demo-card{ display:block }
+.dc__badge{ margin-left:auto; font-family:var(--mono); font-size:.6rem; letter-spacing:.05em; text-transform:uppercase; border:1px solid var(--line-2); border-radius:20px; padding:.15rem .5rem; color:var(--text-2); white-space:nowrap }
+.dc__badge[data-mode="live"]{ color:var(--green); border-color:rgba(94,230,192,.4) }
+.dc__badge[data-mode="tour"]{ color:var(--cyan); border-color:rgba(94,200,255,.4) }
+.dc__live{ display:none; align-items:center; gap:.4rem; font-family:var(--mono); font-size:.62rem; color:var(--green) }
+.dc__live i{ width:7px; height:7px; border-radius:50%; background:var(--green); animation:pulse 1.8s var(--ease) infinite }
+.dc.is-live .dc__badge{ display:none } .dc.is-live .dc__live{ display:inline-flex }
+.dc__ctl{ display:none; gap:.3rem; margin-left:auto } .dc.is-live .dc__ctl{ display:inline-flex }
+.dc__iconbtn{ font:inherit; font-family:var(--mono); font-size:.66rem; cursor:pointer; color:var(--text-2); display:inline-flex; align-items:center; min-height:34px;
+  background:transparent; border:1px solid var(--line-2); border-radius:6px; padding:.18rem .6rem; transition:transform .18s var(--ease), border-color .18s var(--ease), color .18s var(--ease) }
+.dc__iconbtn:hover{ color:var(--text); border-color:var(--accent); transform:translateY(-1px) }
+
+.dc__stage{ position:relative; aspect-ratio:16/10; background:var(--bg-2); overflow:hidden }
+.dc__poster{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block }
+.dc__fallback{ position:absolute; inset:0; display:grid; place-items:center; background:radial-gradient(120% 120% at 30% 20%, #1b1822, #0c0b10); font-family:var(--display); font-weight:800; font-size:clamp(3rem,10vw,6rem); color:rgba(237,232,224,.08) }
+.dc__veil{ position:absolute; inset:0; display:grid; place-items:center; background:linear-gradient(180deg, rgba(12,11,16,.12), rgba(12,11,16,.66)); transition:opacity .35s var(--ease) }
+.dc.is-live .dc__veil{ opacity:0; pointer-events:none; visibility:hidden }
+.dc__launch{ display:inline-flex; flex-direction:column; align-items:center; gap:.45rem; cursor:pointer; font:inherit; color:var(--text);
+  background:rgba(20,19,26,.72); backdrop-filter:blur(6px); border:1px solid var(--line-2); border-radius:12px; padding:1rem 1.4rem;
+  transition:transform .2s var(--ease), border-color .2s var(--ease), box-shadow .2s var(--ease) }
+.dc__launch:hover{ transform:translateY(-2px) scale(1.02); border-color:var(--accent); box-shadow:0 0 0 4px rgba(var(--accent-rgb),.12) }
+.dc__launch:active{ transform:scale(.97) }
+.dc__play{ width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background:var(--accent); color:#15110a; font-size:1rem }
+.dc__launchtxt{ font-family:var(--mono); font-size:.82rem } .dc__weight{ font-family:var(--mono); font-size:.62rem; color:var(--text-3) }
+.dc__hint{ position:absolute; left:0; right:0; bottom:0; padding:.5rem .7rem; font-family:var(--mono); font-size:.6rem; color:var(--text-3); background:linear-gradient(0deg, rgba(12,11,16,.85), transparent); display:flex; gap:.5rem; flex-wrap:wrap }
+.dc__hint b{ color:var(--text-2); font-weight:500 }
+.dc__confirm{ position:absolute; inset:0; display:grid; place-items:center; padding:1.5rem; text-align:center; background:rgba(12,11,16,.86); backdrop-filter:blur(4px) }
+.dc__confirm p{ font-family:var(--mono); font-size:.78rem; color:var(--text-2); margin:0 0 1rem }
+.dc__host{ position:absolute; inset:0; opacity:0; background:var(--bg); transition:opacity .4s var(--ease) }
+.dc.is-live .dc__host{ opacity:1 } .dc.is-live .dc__poster, .dc.is-live .dc__fallback{ display:none }
+.dc__host iframe{ width:100%; height:100%; border:0; display:block; background:var(--bg) }
+
+.btn{ font:inherit; font-family:var(--mono); font-size:.76rem; cursor:pointer; display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--line-2); border-radius:9px; padding:.6rem 1rem; background:transparent; color:var(--text); transition:border-color .18s var(--ease), transform .18s var(--ease) }
+.btn:hover{ border-color:var(--accent); transform:translateY(-1px) }
+.btn--primary{ background:var(--accent); color:#15110a; border-color:transparent; font-weight:600 } .btn--primary:hover{ background:var(--accent-soft) }
+
+/* ===== TOUR mode ===== */
+.tour{ position:absolute; inset:0; display:flex; flex-direction:column; background:var(--bg) }
+.tour__stage{ position:relative; flex:1; min-height:0; overflow:hidden }
+.tour__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform-origin:50% 50%; transition:transform .6s var(--ease-out) }
+.tour.zoomed .tour__img{ transform:scale(1.85) }
+.tour__pin{ position:absolute; transform:translate(-50%,-50%); width:26px; height:26px; border-radius:50%; cursor:pointer;
+  background:rgba(var(--accent-rgb),.92); color:#15110a; border:2px solid #15110a; font:600 .72rem/1 var(--mono); display:grid; place-items:center;
+  box-shadow:0 0 0 4px rgba(var(--accent-rgb),.28); transition:transform .2s var(--ease); z-index:3 }
+.tour__pin:hover{ transform:translate(-50%,-50%) scale(1.15) }
+.tour__pin.active{ background:var(--green); box-shadow:0 0 0 5px rgba(94,230,192,.35); transform:translate(-50%,-50%) scale(1.18) }
+.tour.zoomed .tour__pin:not(.active){ opacity:.32 }   /* inactive pins drift under zoom — recede them */
+.tour__cap{ flex:0 0 auto; border-top:1px solid var(--line); background:var(--bg-1); padding:.6rem .8rem; display:flex; align-items:center; gap:.7rem; min-height:74px }
+.tour__capbody{ flex:1; min-width:0 }
+.tour__capttl{ font-family:var(--mono); font-size:.74rem; color:var(--accent); margin:0 0 .15rem }
+.tour__captxt{ font-size:.8rem; color:var(--text-2); margin:0; line-height:1.4 }
+.tour__nav{ display:inline-flex; align-items:center; gap:.35rem }
+.tour__count{ font-family:var(--mono); font-size:.66rem; color:var(--text-3); min-width:2.6rem; text-align:center }
+
+/* ===== modal ===== */
+.dlg{ position:fixed; inset:0; z-index:80; display:none; place-items:center; padding:clamp(.8rem,3vw,2.5rem) }
+.dlg[open]{ display:grid }
+.dlg__backdrop{ position:absolute; inset:0; background:rgba(6,5,9,.8); backdrop-filter:blur(8px) }
+.dlg__panel{ position:relative; width:min(1180px,97vw); height:min(820px,92vh); display:flex; flex-direction:column; background:var(--bg-2); border:1px solid var(--line-2); border-radius:var(--r-lg); overflow:hidden; box-shadow:0 40px 120px -30px rgba(0,0,0,.85) }
+.dlg__bar{ display:flex; align-items:center; gap:.7rem; padding:.7rem 1rem; border-bottom:1px solid var(--line); background:var(--bg-1) }
+.dlg__title{ font-family:var(--mono); font-size:.78rem; color:var(--text-2) } .dlg__title b{ color:var(--text) }
+.dlg__close{ margin-left:auto }
+.dlg__body{ position:relative; flex:1; min-height:0; background:var(--bg) }
+.dlg__body > *{ width:100%; height:100% }
+
+/* body column */
+.pj-build__cat{ font-family:var(--mono); font-size:.72rem; color:var(--text-2) } .pj-build__cat b{ color:var(--accent); font-weight:600 }
+.pj-build__body h2{ font-family:var(--display); font-weight:800; letter-spacing:-.02em; line-height:1.05; font-size:clamp(1.5rem,3vw,2.2rem); margin:.45rem 0 .35rem }
+.pj-build__tag{ color:var(--text); font-size:1.02rem; margin:0 0 .7rem }
+.pj-build__lede{ color:var(--text-2); font-size:.94rem; margin:.2rem 0 1rem } .pj-build__lede b{ color:var(--text); font-weight:600 }
+.pj-pills{ display:flex; flex-wrap:wrap; gap:.4rem; margin:1rem 0 .9rem }
+.pj-pill{ font-family:var(--mono); font-size:.66rem; color:var(--text-2); border:1px solid var(--line); border-radius:6px; padding:.22rem .5rem; background:var(--bg-1) }
+.pj-pill--lead{ color:var(--accent); border-color:rgba(var(--accent-rgb),.4) }
+.pj-facts{ list-style:none; display:flex; flex-wrap:wrap; gap:1.1rem; padding:0; margin:.6rem 0 0 }
+.pj-facts li{ font-family:var(--mono); font-size:.72rem; color:var(--text-3) } .pj-facts b{ color:var(--text); font-size:.95rem }
+.pj-tech-note{ margin-top:1rem; font-family:var(--mono); font-size:.66rem; color:var(--text-3); border-left:2px solid rgba(var(--accent-rgb),.5); padding:.3rem 0 .3rem .7rem; line-height:1.55 }
+.pj-tech-note b{ color:var(--text-2); font-weight:500 }
+.pj-new{ display:inline-block; font-family:var(--mono); font-size:.6rem; color:var(--green); border:1px solid rgba(94,230,192,.4); border-radius:20px; padding:.1rem .45rem; margin-left:.5rem; vertical-align:middle }
+
+footer{ max-width:var(--maxw); margin:0 auto; padding:2rem var(--pad) 4rem; border-top:1px solid var(--line); font-family:var(--mono); font-size:.72rem; color:var(--text-3) }
+footer b{ color:var(--text-2) }
+.pj-reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s var(--ease-out), transform .7s var(--ease-out) }
+.pj-reveal.in{ opacity:1; transform:none }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#builds">Skip to projects</a>
+
+<header class="pj-bar">
+  <span class="pj-bar__mark">philip&nbsp;toulinov<b>.</b></span>
+  <span class="pj-bar__chip">demo-card · real demos</span>
+  <span class="pj-avail"><i></i> live apps · load-on-demand</span>
+</header>
+
+<section class="intro">
+  <p class="intro__eb">facade pattern · the real app</p>
+  <h1>Every demo is the <span class="lt">real</span> project — loaded only on click.</h1>
+  <p>Each card ships a lightweight poster on load. Click it and the static sites mount their <b>actual deployed app</b>
+  in a sandboxed iframe; the backend apps (no public instance) open a <b>guided hotspot tour over their real screenshot</b>.
+  Nothing heavy loads until you ask. One vanilla <code>&lt;demo-card&gt;</code> element, two honest modes, ten projects.</p>
+  <div class="legend" aria-hidden="true">
+    <span class="lg"><span class="dot dot--live"></span><b>live</b> · real deployed app, embedded</span>
+    <span class="lg"><span class="dot dot--tour"></span><b>tour</b> · guided hotspots over the real UI</span>
+  </div>
+</section>
+
+<main class="pj-builds" id="builds"></main>
+
+<footer>
+  <b>Prototype · noindex.</b> Live embeds are served same-origin from <code>/demos/&lt;slug&gt;/</code>; tours annotate the real
+  screenshots in <code>/assets/projects/</code>. Heavy resources load on interaction; off-screen cards skip rendering via
+  <code>content-visibility</code>; the modal traps focus; motion is always-on per the project decision.
+</footer>
+
+<script>
+/* ====================== PROJECT DATA ====================== */
+const PROJECTS = [
+  { num:"01", slug:"sokoloff", mode:"live", isNew:false,
+    title:"Anatoly Sokoloff: A&nbsp;Visual&nbsp;Journey", cat:"Creative web app · PWA gallery + Python media pipeline",
+    tag:"A data-driven artist gallery with an AI cinemagraph pipeline.",
+    lede:"An installable <b>PWA</b> presenting a 150+ work catalogue as a horizontally-scrolling timeline; a sibling <b>Python pipeline</b> turns stills into looping AI cinemagraphs with zero per-view inference cost.",
+    pills:["React (SPA)","PWA / Web Manifest","Supabase storage","Python 3","Kling image2video","Pillow / PIL"],
+    facts:["<b>150+</b> works","<b>4</b> series","<b>30</b> cinemagraphs"],
+    addr:"anatoly-sokoloff · a visual journey", poster:"assets/projects/sokoloff-1280.webp", src:"http://localhost:8754/",
+    note:"Live embed of the real PWA. Served at its own origin (the bundle hardcodes /images/ paths) — localhost:8754 in this prototype, its own Netlify site in production.",
+    tour:[
+      {x:6,y:5,t:"Bilingual EN / RU",c:"The whole gallery ships in English and Russian — toggle top-left."},
+      {x:21,y:36,t:"Period collections",c:"The 150+ catalogue grouped into themed series — United States, Troikas, Europe, Portraits…"},
+      {x:13,y:52,t:"Per-collection timeline",c:"Each card opens a horizontally-scrolling timeline of that series' works."},
+      {x:97,y:50,t:"Immersive scroll nav",c:"A single-page immersive scroll with section dots — built as an installable, offline-capable PWA."}
+    ] },
+  { num:"02", slug:"freqtrade", mode:"live", isNew:false,
+    title:"Freqtrade · Hyperliquid", cat:"Algorithmic trading · Dockerized bot",
+    tag:"A Dockerized crypto trading bot on the Hyperliquid DEX.",
+    lede:"A <b>freqtrade</b> stack wired to Hyperliquid with a REST/WS control UI (FreqUI), running a dry-run strategy with backtests persisted to Feather.",
+    pills:["Python 3","freqtrade","pandas","CCXT","Hyperliquid DEX","Docker Compose"],
+    facts:["<b>FreqUI</b> REST/WS","dry-run paper","feather backtests"],
+    addr:"127.0.0.1:8080 — frequi", poster:"assets/projects/freqtrade-1280.webp", src:"demos/freqtrade/",
+    note:"Live embed of the REAL upstream FreqUI (built from source). Its API is intercepted client-side with believable dry-run data (seeded JWT bypasses login, WebSocket stubbed) — no bot, no exchange keys.",
+    tour:[
+      {x:23,y:19,t:"Live bot state",c:"Running in dry-run (paper) mode — strategy, timeframe and market at a glance."},
+      {x:55,y:19,t:"P&L + win rate",c:"Closed profit +6.82 USDC, 17/9 win-loss across 26 trades, open positions and stake."},
+      {x:40,y:42,t:"Equity curve",c:"Cumulative profit since inception, charted live from the trade database."},
+      {x:82,y:40,t:"Performance",c:"Best/worst pair, avg trade duration and profit per trade."},
+      {x:50,y:72,t:"Open & closed trades",c:"Every position with entry/exit, profit % and the exit reason (ROI / trailing / stoploss)."}
+    ] },
+  { num:"03", slug:"stakeodds", mode:"live", isNew:false,
+    title:"STAKE·ODDS — Live Odds Tracker", cat:"Real-time data · dual-feed odds engine",
+    tag:"A dual-feed live sports-odds tracking &amp; movement engine.",
+    lede:"Two independent odds feeds reconciled into one movement view, driven over the <b>Chrome DevTools Protocol</b> against a real book, with inline-SVG dashboards and JSONL persistence.",
+    pills:["Node.js","Chrome DevTools Protocol","GraphQL","Browserbase","JSONL","Vanilla JS"],
+    facts:["<b>2</b> feeds","live movement","CDP-driven"],
+    addr:"localhost — stake·odds tracker", poster:"assets/projects/stakeodds-1280.webp", src:"demos/stakeodds/#demo",
+    note:"Live embed of the real tracker UI in its built-in demo mode — the actual board animating from self-seeded fixtures (no scraper, no secrets).",
+    tour:[
+      {x:80,y:4,t:"Session telemetry",c:"Live status — poll cadence (10s), boards, events, selections and moves/poll."},
+      {x:40,y:34,t:"Odds-movement chart",c:"Real-time price lines per market — watch each selection drift tick by tick."},
+      {x:83,y:34,t:"Reconciled stream",c:"The dual-feed movement stream: every up/down tick with its delta, 30/min."},
+      {x:33,y:73,t:"Per-event boards",c:"1/X/2 prices per live event with inline movement sparklines."},
+      {x:28,y:98,t:"CDP engine",c:"Driven by the Chrome DevTools Protocol against a real sportsbook — DOM-poll extractor v3."}
+    ] },
+  { num:"04", slug:"loansy", mode:"live", isNew:false,
+    title:"Loansy", cat:"Fintech ops · Telegram bot + 60-view Flask console",
+    tag:"A Telegram P2P crypto-lending bot with a 60-view Flask ops console.",
+    lede:"An admin console over a Mongo/Redis lending core, with multi-chain payouts (<b>TON</b>, <b>Solana</b>), scheduled jobs and a live activity stream.",
+    pills:["Python","Flask + Jinja2","MongoDB","Redis","TON · pytoniq","Solana"],
+    facts:["<b>60</b> admin views","<b>2</b> chains","248 active loans"],
+    addr:"loansy-admin · flask ops console", poster:"assets/projects/loansy-admin-1280.webp", src:"http://127.0.0.1:8770/dashboard",
+    note:"Live embed of the REAL 15k-line Flask/Jinja console, running against an in-memory DB (mongomock + fakeredis) seeded with sample data, login bypassed — no real Mongo/Redis, no secrets. Prototype: localhost:8770; production: a static crawl/bake of these screens.",
+    tour:[
+      {x:75,y:18,t:"Portfolio KPIs",c:"248 active loans, $1.28M volume, $38K platform take — with 24h deltas."},
+      {x:18,y:28,t:"Risk monitor",c:"Overdue, pending and loss loans flagged on every sweep."},
+      {x:40,y:46,t:"Loan ledger",c:"Every P2P loan: borrower, lender, group, daily rate, due date and status."},
+      {x:83,y:46,t:"Live activity feed",c:"Real-time event stream — repayments, new loans, deposits, IP verifications."},
+      {x:25,y:88,t:"Advanced analytics",c:"Repayment rate 92.4%, avg loan, avg interest + volume-trend chart."}
+    ] },
+  { num:"05", slug:"claudedown", mode:"live", isNew:false,
+    title:"ClaudeDown", cat:"Monitoring · status page",
+    tag:"A real-time availability monitor for AI infrastructure.",
+    lede:"A no-framework <b>Node</b> service polling provider status into Postgres, charted with inline SVG and a Statuspage-style timeline.",
+    pills:["Node.js (ESM)","node:http","PostgreSQL","Redis","Railway","Playwright"],
+    facts:["<b>11</b> providers","live latency","99.90% uptime"],
+    addr:"claudedown — infrastructure monitor", poster:"assets/projects/claudedown-1280.webp", src:"demos/claudedown/",
+    note:"Live embed of the real single-file monitor UI, fed believable 11-provider data via a tiny client-side mock (no Postgres, no scan loop, no secrets).",
+    tour:[
+      {x:35,y:24,t:"Rolled-up health",c:"Availability 99.90%, endpoint health 8/8, avg latency 314ms across all probes."},
+      {x:11,y:50,t:"Per-provider card",c:"Live UP/DOWN, edge-probe latency and status-page state for each provider."},
+      {x:14,y:74,t:"Uptime + history",c:"Last-hour uptime ring and a latency history sparkline from real probes."},
+      {x:55,y:50,t:"11 providers side by side",c:"Claude, OpenAI, Gemini, GitHub, Cursor… sortable by status, latency or name."},
+      {x:30,y:78,t:"Latency distribution",c:"P50 / P95 latency distribution per provider."}
+    ] },
+  { num:"06", slug:"flex-lane", mode:"live", isNew:false,
+    title:"Flex Lane Fare Console", cat:"Civic data · express-lane pricing",
+    tag:"What every Bay Area express lane costs — live, with honest fallbacks.",
+    lede:"A <b>React + Vite</b> front-end over a small <b>Express</b> reader of the 511 Toll Data API, designed to degrade honestly when the upstream feed is missing.",
+    pills:["TypeScript","React 18","Vite","Express","511 Toll Data API","Playwright"],
+    facts:["<b>honest</b> fallbacks","live pricing","MapLibre map"],
+    addr:"flex-lane · bay area express lanes", poster:"assets/projects/baytoolmap-1280.webp", src:"demos/flex-lane/",
+    note:"Live embed of the real Vite build. Live 511 pricing needs the backend, so embedded it shows its designed no-data fallback." },
+  { num:"07", slug:"renovation-watchlist", mode:"live", isNew:false,
+    title:"The Renovation Watchlist", cat:"Civic data · DataSF pipeline + MapLibre editorial site",
+    tag:"The earliest public signal of renovation-driven displacement in San Francisco — ranked.",
+    lede:"A <b>Python</b> pipeline scores DataSF building-permit records for displacement risk; a <b>MapLibre GL</b> editorial front-end maps and ranks them. No build step, no backend on the page.",
+    pills:["Python (stdlib)","DataSF / SODA API","MapLibre GL","GSAP + Lenis","Vanilla JS","No build"],
+    facts:["<b>985</b> flagged","<b>1,449</b> violations","34 neighborhoods"],
+    addr:"renovation-watchlist · datasf", poster:"assets/projects/sfopendata-1280.webp", src:"demos/renovation-watchlist/",
+    note:"Live embed of the real, fully-static MapLibre app — read-only baked DataSF snapshot." },
+  { num:"08", slug:"urbanforest", mode:"live", isNew:true,
+    title:"The Urban Forest", cat:"Civic data · DataSF pipeline + deck.gl map",
+    tag:"An art-directed botanical map of every street tree San Francisco keeps a record of.",
+    lede:"A pure-Python pipeline pulls the DPW Street Tree List; a <b>195K-point deck.gl</b> map renders every tree, colored by genus, on a deep-ink ground — a sibling of the Renovation Watchlist in a forest palette.",
+    pills:["Python (stdlib)","DataSF","deck.gl","Vanilla JS","No build"],
+    facts:["<b>198,435</b> trees","<b>586</b> species","195,309 mapped"],
+    addr:"the-urban-forest · datasf", poster:"assets/projects/urbanforest-poster.jpeg", src:"demos/urbanforest/",
+    note:"Live embed of the real, fully-static deck.gl app." },
+  { num:"09", slug:"hidden-sf", mode:"live", isNew:true,
+    title:"Hidden SF", cat:"Civic data · DataSF + MapLibre field guide",
+    tag:"A field guide to San Francisco's 81 privately-owned public open spaces.",
+    lede:"The rooftop terraces and atriums downtown developers owe the public under <b>Planning Code §138</b> — mapped, with a brass / petrol duotone keyed to whether each space is open all day or business hours only.",
+    pills:["Python","DataSF 65ik-7wqd","MapLibre GL","Vanilla JS","No build"],
+    facts:["<b>81</b> POPOS","Planning §138","since 1959"],
+    addr:"hidden-sf · popos field guide", poster:"assets/projects/hiddensf-poster.png", src:"demos/hidden-sf/",
+    note:"Live embed of the real, fully-static MapLibre app." },
+  { num:"10", slug:"sf-on-screen", mode:"live", isNew:true,
+    title:"SF on Screen", cat:"Civic data · SF Film Commission + MapLibre",
+    tag:"A century of film &amp; television shot on location in San Francisco.",
+    lede:"Every location the SF Film Commission has logged since 1915, pinned to the corner it was filmed on; press <b>Play</b> to watch the century fill in, decade by decade.",
+    pills:["Python","SF Film locations","MapLibre GL","Vanilla JS","No build"],
+    facts:["<b>2,118</b> locations","<b>295</b> productions","1915–2025"],
+    addr:"sf-on-screen · film locations", poster:"assets/projects/sfonscreen-poster.jpeg", src:"demos/sf-on-screen/",
+    note:"Live embed of the real, fully-static MapLibre app." }
+];
+
+/* ====================== helpers ====================== */
+(function(){
+  "use strict";
+  var conn = navigator.connection || navigator.webkitConnection || null;
+  function isDataSaver(){ return !!(conn && (conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType||""))); }
+  function deferMount(fn){
+    if (window.scheduler && typeof scheduler.postTask === "function") scheduler.postTask(fn, { priority:"user-blocking" });
+    else if (typeof window.requestIdleCallback === "function") requestIdleCallback(function(){ fn(); }, { timeout:300 });
+    else setTimeout(fn, 0);
+  }
+  function esc(s){ return String(s).replace(/"/g,"&quot;"); }
+
+  /* ---------- focus-trapped modal ---------- */
+  var Modal = (function(){
+    var dlg, panel, body, titleEl, lastFocused, onClose=null;
+    function ensure(){
+      if (dlg) return;
+      dlg = document.createElement("div");
+      dlg.className="dlg"; dlg.setAttribute("role","dialog"); dlg.setAttribute("aria-modal","true");
+      dlg.innerHTML = '<div class="dlg__backdrop" data-close></div><div class="dlg__panel" role="document">'+
+        '<div class="dlg__bar"><span class="dlg__title"></span><button class="btn dlg__close" type="button" data-close>Close ✕</button></div>'+
+        '<div class="dlg__body"></div></div>';
+      document.body.appendChild(dlg);
+      panel=dlg.querySelector(".dlg__panel"); body=dlg.querySelector(".dlg__body"); titleEl=dlg.querySelector(".dlg__title");
+      dlg.addEventListener("mousedown", function(e){ if (e.target.hasAttribute("data-close")) close(); });
+      dlg.addEventListener("keydown", onKey);
+    }
+    function onKey(e){
+      if (e.key==="Escape"){ e.preventDefault(); close(); return; }
+      if (e.key!=="Tab") return;
+      var f = panel.querySelectorAll('a[href],button:not([disabled]),input,select,textarea,iframe,[tabindex]:not([tabindex="-1"])');
+      f = Array.prototype.filter.call(f, function(el){ return el.offsetParent!==null || el.tagName==="IFRAME"; });
+      if (!f.length) return;
+      var first=f[0], last=f[f.length-1];
+      if (e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+    }
+    function open(node, labelHtml, closeCb, returnFocusEl){
+      ensure(); lastFocused = returnFocusEl || document.activeElement; onClose = closeCb || null;
+      titleEl.innerHTML = labelHtml || "Live demo"; dlg.setAttribute("aria-label", titleEl.textContent||"Live demo");
+      body.innerHTML=""; body.appendChild(node); dlg.setAttribute("open","");
+      var c=dlg.querySelector(".dlg__close"); if(c) c.focus();
+      document.documentElement.style.overflow="hidden";
+      if (window.__lenis && window.__lenis.stop) window.__lenis.stop();
+    }
+    function close(){
+      if (!dlg || !dlg.hasAttribute("open")) return;
+      if (onClose){ try{ onClose(); }catch(e){} onClose=null; }
+      dlg.removeAttribute("open"); body.innerHTML="";
+      document.documentElement.style.overflow="";
+      if (window.__lenis && window.__lenis.start) window.__lenis.start();
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
+    }
+    return { open:open, close:close };
+  })();
+
+  /* ---------- LIVE iframe (real deployed app, same-origin) ---------- */
+  function mountLive(host, p){
+    var f = document.createElement("iframe");
+    f.src = p.src; f.title = p.title.replace(/&nbsp;/g," ") + " — live app";
+    f.loading = "lazy"; f.setAttribute("allow","fullscreen; geolocation; clipboard-write");
+    // own, same-origin content — permissive sandbox keeps it isolated without breaking WebGL/workers
+    f.setAttribute("sandbox","allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-downloads allow-pointer-lock");
+    host.appendChild(f);
+  }
+
+  /* ---------- TOUR (guided hotspots over a real screenshot) ---------- */
+  function mountTour(host, p){
+    var wrap = document.createElement("div"); wrap.className="tour";
+    var pins = p.tour.map(function(h,i){
+      return '<button class="tour__pin" type="button" data-i="'+i+'" style="left:'+h.x+'%;top:'+h.y+'%" '+
+        'aria-label="Feature '+(i+1)+': '+esc(h.t)+'">'+(i+1)+'</button>';
+    }).join("");
+    wrap.innerHTML =
+      '<div class="tour__stage"><img class="tour__img" src="'+p.poster+'" alt="'+esc(p.title.replace(/&nbsp;/g," "))+' — real interface" decoding="async">'+pins+'</div>'+
+      '<div class="tour__cap"><div class="tour__capbody"><p class="tour__capttl"></p><p class="tour__captxt"></p></div>'+
+      '<div class="tour__nav"><button class="dc__iconbtn" type="button" data-nav="prev" aria-label="Previous feature">‹</button>'+
+      '<span class="tour__count"></span>'+
+      '<button class="dc__iconbtn" type="button" data-nav="next" aria-label="Next feature">›</button></div></div>';
+    host.appendChild(wrap);
+    var img=wrap.querySelector(".tour__img"), ttl=wrap.querySelector(".tour__capttl"), txt=wrap.querySelector(".tour__captxt"),
+        count=wrap.querySelector(".tour__count"), pinEls=wrap.querySelectorAll(".tour__pin");
+    var n=p.tour.length, cur=-1;
+    function select(i){
+      cur=(i+n)%n; var h=p.tour[cur];
+      img.style.transformOrigin = h.x+"% "+h.y+"%"; wrap.classList.add("zoomed");
+      ttl.textContent = h.t; txt.textContent = h.c; count.textContent = (cur+1)+" / "+n;
+      Array.prototype.forEach.call(pinEls, function(el,idx){ el.classList.toggle("active", idx===cur); });
+    }
+    Array.prototype.forEach.call(pinEls, function(el){ el.addEventListener("click", function(){ select(+el.dataset.i); }); });
+    wrap.querySelector('[data-nav="prev"]').addEventListener("click", function(){ select(cur<0?0:cur-1); });
+    wrap.querySelector('[data-nav="next"]').addEventListener("click", function(){ select(cur+1); });
+    count.textContent = "tap a pin";
+    ttl.textContent = "Guided tour"; txt.textContent = "Click a numbered hotspot (or ›) to zoom into each real feature.";
+  }
+
+  /* ====================== <demo-card> ====================== */
+  var proto = {};
+  proto.connectedCallback = function(){
+    if (this._init) return; this._init=true;
+    this.p = PROJECTS[+this.getAttribute("data-i")];
+    this.activated=false; this.renderPoster();
+  };
+  proto.renderPoster = function(){
+    var p=this.p, mode=p.mode;
+    var poster = p.poster
+      ? '<img class="dc__poster" src="'+p.poster+'" alt="'+esc(p.title.replace(/&nbsp;/g," "))+' — preview" loading="lazy" decoding="async" '+
+        'onerror="this.style.display=\'none\';this.nextElementSibling&&(this.nextElementSibling.style.display=\'grid\')"><div class="dc__fallback" style="display:none">'+p.num+'</div>'
+      : '<div class="dc__fallback">'+p.num+'</div>';
+    var launchTxt = mode==="live" ? "Launch live app" : "Explore the real UI";
+    var weight = mode==="live" ? "real app · loads on click" : "guided tour · real screenshot";
+    this.innerHTML =
+      '<figure class="pj-frame dc">'+
+        '<figcaption class="pj-frame__bar"><span class="pj-frame__dots"><i></i><i></i><i></i></span>'+
+          '<span class="pj-frame__addr">'+p.addr+'</span>'+
+          '<span class="dc__badge" data-mode="'+mode+'">'+mode+'</span>'+
+          '<span class="dc__live"><i></i> '+(mode==="live"?"live":"tour")+'</span>'+
+          '<span class="dc__ctl">'+
+            '<button class="dc__iconbtn" type="button" data-act="expand" aria-label="Expand to full size">Expand ⤢</button>'+
+            '<button class="dc__iconbtn" type="button" data-act="close" aria-label="Close and restore preview">Close ✕</button>'+
+          '</span>'+
+        '</figcaption>'+
+        '<div class="dc__stage">'+ poster +
+          '<div class="dc__host"></div>'+
+          '<div class="dc__veil"><button class="dc__launch" type="button" aria-label="'+launchTxt+' for '+esc(p.title.replace(/&nbsp;/g," "))+'">'+
+            '<span class="dc__play" aria-hidden="true">▶</span><span class="dc__launchtxt">'+launchTxt+'</span><span class="dc__weight">'+weight+'</span></button></div>'+
+          '<div class="dc__hint" aria-hidden="true"><b>'+mode+'</b> · nothing loads until you click</div>'+
+        '</div>'+
+      '</figure>';
+    this.frame=this.querySelector(".dc"); this.stage=this.querySelector(".dc__stage"); this.host=this.querySelector(".dc__host");
+    var card=this;
+    this.querySelector(".dc__launch").addEventListener("click", function(){ card.activate(); });
+    this.querySelector(".dc__ctl").addEventListener("click", function(e){
+      var b=e.target.closest("[data-act]"); if(!b) return;
+      if (b.getAttribute("data-act")==="expand") card.expand(); else card.close();
+    });
+  };
+  proto.activate = function(){
+    if (this.activated) return;
+    if (isDataSaver() && !this._confirmed){ this.showConfirm(); return; }
+    this.activated=true; var card=this;
+    var h=this.querySelector(".dc__hint"); if(h) h.remove();
+    deferMount(function(){ card.mount(); });
+  };
+  proto.showConfirm = function(){
+    var card=this, c=document.createElement("div"); c.className="dc__confirm";
+    c.innerHTML='<div><p>Data Saver is on — this loads the real app/screenshot.</p><button class="btn btn--primary" type="button">Load it anyway</button></div>';
+    c.querySelector("button").addEventListener("click", function(){ card._confirmed=true; c.remove(); card.activate(); });
+    this.stage.appendChild(c);
+  };
+  proto.mount = function(){
+    this.frame.classList.add("is-live");
+    if (this.p.mode==="live") mountLive(this.host, this.p); else mountTour(this.host, this.p);
+  };
+  proto.expand = function(){
+    var card=this, returnTo=this.querySelector(".dc__launch");
+    if (this.activated) this.close();
+    var mhost=document.createElement("div"); mhost.className="dc__host"; mhost.style.opacity="1";
+    if (this.p.mode==="live") mountLive(mhost, this.p); else mountTour(mhost, this.p);
+    Modal.open(mhost, "<b>"+this.p.title.replace(/&nbsp;/g," ")+"</b> · "+(this.p.mode==="live"?"live app":"guided tour"), null, returnTo);
+  };
+  proto.close = function(){
+    var hadFocus=this.contains(document.activeElement);
+    this.frame.classList.remove("is-live");
+    this.host.innerHTML=""; this.activated=false;
+    if (!this.querySelector(".dc__hint")){
+      var h=document.createElement("div"); h.className="dc__hint"; h.setAttribute("aria-hidden","true");
+      h.innerHTML='<b>'+this.p.mode+'</b> · nothing loads until you click'; this.stage.appendChild(h);
+    }
+    var lb=this.querySelector(".dc__launch"); if (lb && hadFocus) lb.focus({preventScroll:true});
+  };
+  if ("customElements" in window){
+    var El = class extends HTMLElement {}; Object.assign(El.prototype, proto); customElements.define("demo-card", El);
+  }
+
+  /* ====================== render cards ====================== */
+  var main = document.getElementById("builds");
+  PROJECTS.forEach(function(p, i){
+    var art=document.createElement("article");
+    art.className="pj-build pj-reveal"+(i>0?" cv":"");
+    art.innerHTML =
+      '<div class="pj-build__media"><demo-card data-i="'+i+'"></demo-card>'+
+        '<p class="pj-cap">'+(p.mode==="live"?"Click to load the real, deployed app in a sandboxed iframe.":"Click for a guided hotspot tour over the real interface.")+'</p></div>'+
+      '<div class="pj-build__body">'+
+        '<span class="pj-build__cat"><b>'+p.num+'</b> · '+p.cat+'</span>'+
+        '<h2>'+p.title+(p.isNew?'<span class="pj-new">new</span>':'')+'</h2>'+
+        '<p class="pj-build__tag">'+p.tag+'</p>'+
+        '<p class="pj-build__lede">'+p.lede+'</p>'+
+        '<div class="pj-pills">'+ p.pills.map(function(t,j){ return '<span class="pj-pill'+(j===0?' pj-pill--lead':'')+'">'+t+'</span>'; }).join("") +'</div>'+
+        '<ul class="pj-facts">'+ p.facts.map(function(f){ return '<li>'+f+'</li>'; }).join("") +'</ul>'+
+        '<p class="pj-tech-note"><b>'+(p.mode==="live"?"live embed →":"tour →")+'</b> '+p.note+'</p>'+
+      '</div>';
+    main.appendChild(art);
+  });
+
+  /* ---------- Lenis (optional) ---------- */
+  window.addEventListener("load", function(){
+    if (typeof window.Lenis === "function"){
+      try{ var l=new Lenis({lerp:.095,smoothWheel:true,wheelMultiplier:1,touchMultiplier:1.4}); window.__lenis=l;
+        function raf(t){ l.raf(t); requestAnimationFrame(raf); } requestAnimationFrame(raf); }catch(e){}
+    }
+  });
+  /* ---------- reveal (motion always-on) ---------- */
+  if ("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } }); }, { rootMargin:"0px 0px -10% 0px" });
+    document.querySelectorAll(".pj-reveal").forEach(function(el){ io.observe(el); });
+  } else { document.querySelectorAll(".pj-reveal").forEach(function(el){ el.classList.add("in"); }); }
+})();
+</script>
+<script src="vendor/lenis.min.js" defer></script>
+</body>
+</html>

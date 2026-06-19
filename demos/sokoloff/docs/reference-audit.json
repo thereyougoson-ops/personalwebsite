@@ -1,0 +1,15 @@
+﻿{
+    "generated_at":  "2026-05-30T17:23:12.7219652-07:00",
+    "before_reference_count":  165,
+    "after_reference_count":  165,
+    "missing_reference_count":  0,
+    "missing_references":  [
+
+                           ],
+    "renamed_file_count":  150,
+    "alias_count":  0,
+    "aliases_by_mode":  {
+                            "copy":  0,
+                            "hardlink":  0
+                        }
+}

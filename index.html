@@ -127,7 +127,7 @@
   "telephone": "+1-415-823-7537",
   "url": "https://philiptoulinov.com/",
   "sameAs": ["https://www.linkedin.com/in/ptoulinov"],
-  "knowsLanguage": ["en", "fr"],
+  "knowsLanguage": ["en", "fr", "ru"],
   "alumniOf": [
     { "@type": "CollegeOrUniversity", "name": "Humboldt State University" },
     { "@type": "EducationalOrganization", "name": "Lycée Français La Pérouse" }
@@ -138,6 +138,7 @@
 </script>
 </head>
 <body class="is-loading">
+<a class="skip-link" href="#top">Skip to content</a>
 <script>window.addEventListener('unhandledrejection',function(e){try{var m=String((e&&e.reason&&e.reason.message)||e.reason||'');if(m.indexOf('Transition was skipped')>-1||m.indexOf('skipped')>-1&&m.indexOf('ransition')>-1){e.preventDefault();}}catch(_){}}); </script>
 
 
@@ -218,7 +219,7 @@
   </div>
 </header>
 
-<main id="top">
+<main id="top" tabindex="-1">
 
   <!-- ░░ HERO — the working terminal ░░ -->
   <section class="hero" id="hero">
@@ -311,7 +312,7 @@
     </div>
   </section>
 
-<div id="fluxRoot" style="position:relative;background:#06060a;color:#f2f2f7;font-family:'Geist',ui-sans-serif,system-ui,sans-serif;padding:clamp(30px,5vw,80px) clamp(20px,6vw,96px) 130px;overflow-x:hidden;">
+<div id="fluxRoot" style="position:relative;background:transparent;color:#f2f2f7;font-family:'Geist',ui-sans-serif,system-ui,sans-serif;padding:clamp(30px,5vw,80px) clamp(20px,6vw,96px) 130px;overflow-x:clip;">
 
   <!-- custom cursor -->
   
@@ -322,7 +323,7 @@
   <div id="work" style="max-width:1200px;margin:0 auto;position:relative;z-index:3;">
     <p data-rv style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.18em;color:#7c6cff;text-transform:uppercase;margin:0 0 26px;" class="fx-eb">01 / experience</p>
     <div data-rv style="display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;border-bottom:1px solid rgba(230,230,255,.1);padding-bottom:30px;margin-bottom:clamp(20px,3vw,40px);">
-      <h1 id="fluxHead" data-text="Selected experience." style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(40px,7.5vw,98px);line-height:.9;letter-spacing:-.04em;margin:0;max-width:13ch;">Selected experience.</h1>
+      <h2 id="fluxHead" data-text="Selected experience." style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(40px,7.5vw,98px);line-height:.9;letter-spacing:-.04em;margin:0;max-width:13ch;">Selected experience.</h2>
       <p data-mag style="max-width:33ch;color:#9a9aae;font-size:clamp(14px,1.1vw,16px);line-height:1.6;margin:0;">A live fluid field, rendered on the GPU. Push your cursor through it — it ripples and warps. Tap a station to decode the work.</p>
     </div>
   </div>
@@ -334,34 +335,34 @@
       <div id="fluxNoise" style="position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);"></div>
       <button id="fluxMotion" data-mag type="button" aria-label="Toggle field motion" style="position:absolute;top:14px;right:14px;z-index:3;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.08em;color:#cfcfe0;background:rgba(10,10,16,.55);border:1px solid rgba(230,230,255,.16);border-radius:20px;padding:6px 12px;backdrop-filter:blur(4px);">&#9673; motion</button>
       <div id="fluxStations" style="position:absolute;inset:0;">
-        <button class="flux-st" data-i="0" data-mag type="button" style="position:absolute;left:10%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:11px;z-index:2;">
+        <button class="flux-st" data-i="0" data-mag type="button" aria-label="01 — Education" style="position:absolute;left:10%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:11px;z-index:2;">
           <span class="flux-num" style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;color:#7a7a90;transition:color .35s;">01</span>
           <span class="flux-ring" style="width:28px;height:28px;border-radius:50%;border:1.5px solid #44445a;background:rgba(8,8,14,.5);backdrop-filter:blur(2px);transition:all .35s cubic-bezier(.16,1,.3,1);"></span>
           <span class="flux-lab" style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.04em;color:#7a7a90;white-space:nowrap;transition:color .35s;text-shadow:0 1px 6px #06060a;">Education</span>
         </button>
-        <button class="flux-st" data-i="1" data-mag type="button" style="position:absolute;left:30%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:11px;z-index:2;">
+        <button class="flux-st" data-i="1" data-mag type="button" aria-label="02 — Catalina USA" style="position:absolute;left:30%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:11px;z-index:2;">
           <span class="flux-num" style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;color:#7a7a90;transition:color .35s;">02</span>
           <span class="flux-ring" style="width:28px;height:28px;border-radius:50%;border:1.5px solid #44445a;background:rgba(8,8,14,.5);backdrop-filter:blur(2px);transition:all .35s cubic-bezier(.16,1,.3,1);"></span>
           <span class="flux-lab" style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.04em;color:#7a7a90;white-space:nowrap;transition:color .35s;text-shadow:0 1px 6px #06060a;">Catalina USA</span>
         </button>
-        <button class="flux-st" data-i="2" data-mag type="button" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:11px;z-index:2;">
+        <button class="flux-st" data-i="2" data-mag type="button" aria-label="03 — Tech Mahindra" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:11px;z-index:2;">
           <span class="flux-num" style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;color:#7a7a90;transition:color .35s;">03</span>
           <span class="flux-ring" style="width:28px;height:28px;border-radius:50%;border:1.5px solid #44445a;background:rgba(8,8,14,.5);backdrop-filter:blur(2px);transition:all .35s cubic-bezier(.16,1,.3,1);"></span>
           <span class="flux-lab" style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.04em;color:#7a7a90;white-space:nowrap;transition:color .35s;text-shadow:0 1px 6px #06060a;">Tech Mahindra</span>
         </button>
-        <button class="flux-st" data-i="3" data-mag type="button" style="position:absolute;left:70%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:11px;z-index:2;">
+        <button class="flux-st" data-i="3" data-mag type="button" aria-label="04 — LendingClub" style="position:absolute;left:70%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:11px;z-index:2;">
           <span class="flux-num" style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;color:#7a7a90;transition:color .35s;">04</span>
           <span class="flux-ring" style="width:28px;height:28px;border-radius:50%;border:1.5px solid #44445a;background:rgba(8,8,14,.5);backdrop-filter:blur(2px);transition:all .35s cubic-bezier(.16,1,.3,1);"></span>
           <span class="flux-lab" style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.04em;color:#7a7a90;white-space:nowrap;transition:color .35s;text-shadow:0 1px 6px #06060a;">LendingClub</span>
         </button>
-        <button class="flux-st" data-i="4" data-mag type="button" style="position:absolute;left:90%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:11px;z-index:2;">
+        <button class="flux-st" data-i="4" data-mag type="button" aria-label="05 — Independent" style="position:absolute;left:90%;top:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:11px;z-index:2;">
           <span class="flux-num" style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.12em;color:#7a7a90;transition:color .35s;">05</span>
           <span class="flux-ring" style="width:28px;height:28px;border-radius:50%;border:1.5px solid #44445a;background:rgba(8,8,14,.5);backdrop-filter:blur(2px);transition:all .35s cubic-bezier(.16,1,.3,1);"></span>
           <span class="flux-lab" style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.04em;color:#7a7a90;white-space:nowrap;transition:color .35s;text-shadow:0 1px 6px #06060a;">Independent</span>
         </button>
       </div>
-      <span style="position:absolute;left:16px;bottom:13px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:#6a6a80;z-index:2;text-shadow:0 1px 6px #06060a;">2020</span>
-      <span style="position:absolute;right:16px;bottom:13px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:#6a6a80;z-index:2;text-shadow:0 1px 6px #06060a;">NOW</span>
+      <span style="position:absolute;left:16px;bottom:13px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:#86879d;z-index:2;text-shadow:0 1px 6px #06060a;">2020</span>
+      <span style="position:absolute;right:16px;bottom:13px;font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:#86879d;z-index:2;text-shadow:0 1px 6px #06060a;">NOW</span>
     </div>
 
     <!-- detail -->
@@ -444,140 +445,146 @@
     </div>
   </section>
 
-  <!-- ░░ 03 — BUILDS · cinematic showcase ░░ -->
+  <!-- ░░ 02 — BUILDS · live demos ░░ -->
   <section id="builds" data-screen-label="Builds" data-rv style="max-width:1200px;margin:clamp(72px,11vw,150px) auto 0;position:relative;z-index:2;">
+    <style id="dc-styles">
+    /* ===== demo-card subsystem — scoped tokens (Flux purple/teal) ===== */
+    .dcwrap,.dlg{
+      --bg:#0b0a10; --bg-1:#0e0d15; --bg-2:#121118; --bg-3:#1d1b24;
+      --line:rgba(230,230,255,.1); --line-2:rgba(230,230,255,.18);
+      --text:#f2f2f7; --text-2:#9a9aae; --text-3:#7a7a90;
+      --accent:#7c6cff; --accent-soft:#9a8cff; --accent-rgb:124,108,255;
+      --green:#5ee6c0; --cyan:#3fe0d0;
+      --mono:'Geist Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      --display:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;
+      --sans:'Geist',ui-sans-serif,system-ui,sans-serif;
+      --r:8px; --r-lg:12px;
+      --dcease:cubic-bezier(.22,.61,.36,1); --dceaseout:cubic-bezier(.16,1,.3,1);
+    }
+    @keyframes dcPulse{ 0%{box-shadow:0 0 0 0 rgba(94,230,192,.5)} 70%{box-shadow:0 0 0 7px rgba(94,230,192,0)} 100%{box-shadow:0 0 0 0 rgba(94,230,192,0)} }
+
+    /* legend */
+    .dc-legend{ display:flex; flex-wrap:wrap; gap:.5rem; margin:-8px 0 clamp(26px,4vw,40px) }
+    .dc-lg{ display:inline-flex; align-items:center; gap:.45rem; font-family:'Geist Mono',monospace; font-size:11px; border:1px solid rgba(230,230,255,.18); border-radius:20px; padding:.34rem .72rem; color:#9a9aae }
+    .dc-lg b{ color:#f2f2f7; font-weight:500 }
+    .dc-dot{ width:8px; height:8px; border-radius:50%; background:#5ee6c0 }
+
+    /* grid */
+    #bdGrid{ display:flex; flex-direction:column; gap:clamp(3rem,7vw,5.5rem) }
+    .pj-build{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr); gap:clamp(1.4rem,3.5vw,2.6rem); align-items:center }
+    .pj-build:nth-child(even) .pj-build__media{ order:2 }
+    .pj-build.cv{ content-visibility:auto; contain-intrinsic-size:auto 780px }
+    @media(max-width:900px){ .pj-build{ grid-template-columns:1fr !important; gap:1.4rem } .pj-build:nth-child(even) .pj-build__media{ order:0 } }
+
+    /* browser frame */
+    .pj-frame{ margin:0; border:1px solid var(--line); border-radius:var(--r-lg); overflow:hidden; background:var(--bg-2); box-shadow:0 24px 60px -28px rgba(0,0,0,.7) }
+    .pj-frame__bar{ display:flex; align-items:center; gap:.6rem; padding:.5rem .7rem; border-bottom:1px solid var(--line); background:var(--bg-1) }
+    .pj-frame__dots{ display:inline-flex; gap:.32rem } .pj-frame__dots i{ width:9px; height:9px; border-radius:50% }
+    .pj-frame__dots i:nth-child(1){ background:#3a2c2c } .pj-frame__dots i:nth-child(2){ background:#3a352c } .pj-frame__dots i:nth-child(3){ background:#2c3a30 }
+    .pj-frame__addr{ font-family:var(--mono); font-size:.7rem; color:var(--text-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    .pj-cap{ font-family:var(--mono); font-size:.72rem; color:var(--text-3); margin:.7rem .2rem 0; line-height:1.5 }
+
+    /* demo-card */
+    demo-card{ display:block }
+    .dc__badge{ margin-left:auto; font-family:var(--mono); font-size:.6rem; letter-spacing:.05em; text-transform:uppercase; border:1px solid var(--line-2); border-radius:20px; padding:.15rem .5rem; color:var(--text-2); white-space:nowrap }
+    .dc__badge[data-mode="live"]{ color:var(--green); border-color:rgba(94,230,192,.4) }
+    .dc__badge[data-mode="tour"]{ color:var(--cyan); border-color:rgba(63,224,208,.4) }
+    .dc__live{ display:none; align-items:center; gap:.4rem; font-family:var(--mono); font-size:.62rem; color:var(--green) }
+    .dc__live i{ width:7px; height:7px; border-radius:50%; background:var(--green); animation:dcPulse 1.8s var(--dcease) infinite }
+    .dc.is-live .dc__badge{ display:none } .dc.is-live .dc__live{ display:inline-flex }
+    .dc__ctl{ display:none; gap:.3rem; margin-left:auto } .dc.is-live .dc__ctl{ display:inline-flex }
+    .dc__iconbtn{ font:inherit; font-family:var(--mono); font-size:.66rem; cursor:pointer; color:var(--text-2); display:inline-flex; align-items:center; min-height:34px;
+      background:transparent; border:1px solid var(--line-2); border-radius:6px; padding:.18rem .6rem; transition:transform .18s var(--dcease), border-color .18s var(--dcease), color .18s var(--dcease) }
+    .dc__iconbtn:hover{ color:var(--text); border-color:var(--accent); transform:translateY(-1px) }
+
+    .dc__stage{ position:relative; aspect-ratio:16/10; background:var(--bg-2); overflow:hidden }
+    .dc__poster{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block }
+    .dc__fallback{ position:absolute; inset:0; display:grid; place-items:center; background:radial-gradient(120% 120% at 30% 20%, #1b1822, #0b0a10); font-family:var(--display); font-weight:800; font-size:clamp(3rem,10vw,6rem); color:rgba(237,232,224,.08) }
+    .dc__veil{ position:absolute; inset:0; display:grid; place-items:center; background:linear-gradient(180deg, rgba(11,10,16,.12), rgba(11,10,16,.66)); transition:opacity .35s var(--dcease) }
+    .dc.is-live .dc__veil{ opacity:0; pointer-events:none; visibility:hidden }
+    .dc__launch{ display:inline-flex; flex-direction:column; align-items:center; gap:.45rem; cursor:pointer; font:inherit; color:var(--text);
+      background:rgba(20,19,26,.72); backdrop-filter:blur(6px); border:1px solid var(--line-2); border-radius:12px; padding:1rem 1.4rem;
+      transition:transform .2s var(--dcease), border-color .2s var(--dcease), box-shadow .2s var(--dcease) }
+    .dc__launch:hover{ transform:translateY(-2px) scale(1.02); border-color:var(--accent); box-shadow:0 0 0 4px rgba(var(--accent-rgb),.12) }
+    .dc__launch:active{ transform:scale(.97) }
+    .dc__play{ width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background:var(--accent); color:#fff; font-size:1rem }
+    .dc__launchtxt{ font-family:var(--mono); font-size:.82rem } .dc__weight{ font-family:var(--mono); font-size:.62rem; color:var(--text-3) }
+    .dc__hint{ position:absolute; left:0; right:0; bottom:0; padding:.5rem .7rem; font-family:var(--mono); font-size:.6rem; color:var(--text-3); background:linear-gradient(0deg, rgba(11,10,16,.85), transparent); display:flex; gap:.5rem; flex-wrap:wrap }
+    .dc__hint b{ color:var(--text-2); font-weight:500 }
+    .dc__confirm{ position:absolute; inset:0; display:grid; place-items:center; padding:1.5rem; text-align:center; background:rgba(11,10,16,.86); backdrop-filter:blur(4px) }
+    .dc__confirm p{ font-family:var(--mono); font-size:.78rem; color:var(--text-2); margin:0 0 1rem }
+    .dc__host{ position:absolute; inset:0; opacity:0; background:var(--bg); transition:opacity .4s var(--dcease) }
+    .dc.is-live .dc__host{ opacity:1 } .dc.is-live .dc__poster, .dc.is-live .dc__fallback{ display:none }
+    .dc__host iframe{ width:100%; height:100%; border:0; display:block; background:var(--bg) }
+
+    .dcwrap .dc-btn,.dlg .dc-btn{ font:inherit; font-family:var(--mono); font-size:.76rem; cursor:pointer; display:inline-flex; align-items:center; gap:.5rem; border:1px solid var(--line-2); border-radius:9px; padding:.6rem 1rem; background:transparent; color:var(--text); transition:border-color .18s var(--dcease), transform .18s var(--dcease) }
+    .dcwrap .dc-btn:hover,.dlg .dc-btn:hover{ border-color:var(--accent); transform:translateY(-1px) }
+    .dc-btn--primary{ background:var(--accent); color:#fff; border-color:transparent; font-weight:600 } .dc-btn--primary:hover{ background:var(--accent-soft) }
+
+    /* ===== TOUR mode (fallback for backend-only apps) ===== */
+    .tour{ position:absolute; inset:0; display:flex; flex-direction:column; background:var(--bg) }
+    .tour__stage{ position:relative; flex:1; min-height:0; overflow:hidden }
+    .tour__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform-origin:50% 50%; transition:transform .6s var(--dceaseout) }
+    .tour.zoomed .tour__img{ transform:scale(1.85) }
+    .tour__pin{ position:absolute; transform:translate(-50%,-50%); width:26px; height:26px; border-radius:50%; cursor:pointer;
+      background:rgba(var(--accent-rgb),.95); color:#fff; border:2px solid #0b0a10; font:600 .72rem/1 var(--mono); display:grid; place-items:center;
+      box-shadow:0 0 0 4px rgba(var(--accent-rgb),.28); transition:transform .2s var(--dcease); z-index:3 }
+    .tour__pin:hover{ transform:translate(-50%,-50%) scale(1.15) }
+    .tour__pin.active{ background:var(--green); color:#0b0a10; box-shadow:0 0 0 5px rgba(94,230,192,.35); transform:translate(-50%,-50%) scale(1.18) }
+    .tour.zoomed .tour__pin:not(.active){ opacity:.32 }
+    .tour__cap{ flex:0 0 auto; border-top:1px solid var(--line); background:var(--bg-1); padding:.6rem .8rem; display:flex; align-items:center; gap:.7rem; min-height:74px }
+    .tour__capbody{ flex:1; min-width:0 }
+    .tour__capttl{ font-family:var(--mono); font-size:.74rem; color:var(--accent); margin:0 0 .15rem }
+    .tour__captxt{ font-size:.8rem; color:var(--text-2); margin:0; line-height:1.4 }
+    .tour__nav{ display:inline-flex; align-items:center; gap:.35rem }
+    .tour__count{ font-family:var(--mono); font-size:.66rem; color:var(--text-3); min-width:2.6rem; text-align:center }
+
+    /* ===== modal ===== */
+    .dlg{ position:fixed; inset:0; z-index:80; display:none; place-items:center; padding:clamp(.8rem,3vw,2.5rem) }
+    .dlg[open]{ display:grid }
+    .dlg__backdrop{ position:absolute; inset:0; background:rgba(6,5,9,.8); backdrop-filter:blur(8px) }
+    .dlg__panel{ position:relative; width:min(1180px,97vw); height:min(820px,92vh); display:flex; flex-direction:column; background:var(--bg-2); border:1px solid var(--line-2); border-radius:var(--r-lg); overflow:hidden; box-shadow:0 40px 120px -30px rgba(0,0,0,.85) }
+    .dlg__bar{ display:flex; align-items:center; gap:.7rem; padding:.7rem 1rem; border-bottom:1px solid var(--line); background:var(--bg-1) }
+    .dlg__title{ font-family:var(--mono); font-size:.78rem; color:var(--text-2) } .dlg__title b{ color:var(--text) }
+    .dlg__close{ margin-left:auto }
+    .dlg__body{ position:relative; flex:1; min-height:0; background:var(--bg) }
+    .dlg__body > *{ width:100%; height:100% }
+
+    /* body column */
+    .pj-build__cat{ font-family:var(--mono); font-size:.72rem; color:var(--text-2) } .pj-build__cat b{ color:var(--accent); font-weight:600 }
+    .pj-build__body h3{ font-family:var(--display); font-weight:700; letter-spacing:-.02em; line-height:1.05; font-size:clamp(1.5rem,3vw,2.2rem); margin:.45rem 0 .35rem; color:#fff }
+    .pj-build__tag{ color:var(--text); font-size:1.02rem; margin:0 0 .7rem }
+    .pj-build__lede{ color:var(--text-2); font-size:.94rem; margin:.2rem 0 1rem } .pj-build__lede b{ color:var(--text); font-weight:600 }
+    .pj-pills{ display:flex; flex-wrap:wrap; gap:.4rem; margin:1rem 0 .9rem }
+    .pj-pill{ font-family:var(--mono); font-size:.66rem; color:var(--text-2); border:1px solid var(--line); border-radius:6px; padding:.22rem .5rem; background:var(--bg-1) }
+    .pj-pill--lead{ color:var(--accent); border-color:rgba(var(--accent-rgb),.4) }
+    .pj-facts{ list-style:none; display:flex; flex-wrap:wrap; gap:1.1rem; padding:0; margin:.6rem 0 0 }
+    .pj-facts li{ font-family:var(--mono); font-size:.72rem; color:var(--text-3) } .pj-facts b{ color:var(--text); font-size:.95rem }
+    .pj-tech-note{ margin-top:1rem; font-family:var(--mono); font-size:.66rem; color:var(--text-3); border-left:2px solid rgba(var(--accent-rgb),.5); padding:.3rem 0 .3rem .7rem; line-height:1.55 }
+    .pj-tech-note b{ color:var(--text-2); font-weight:500 }
+    .pj-new{ display:inline-block; font-family:var(--mono); font-size:.6rem; color:var(--green); border:1px solid rgba(94,230,192,.4); border-radius:20px; padding:.1rem .45rem; margin-left:.5rem; vertical-align:middle }
+    .pj-case{ display:inline-flex; align-items:center; gap:6px; margin-top:1rem; font-family:var(--mono); font-size:.74rem; color:var(--cyan); border-bottom:1px solid rgba(63,224,208,.4); padding-bottom:2px }
+    .pj-case .pj-arr{ transition:transform .25s var(--dcease) } .pj-case:hover .pj-arr{ transform:translateX(4px) }
+    .pj-reveal{ opacity:0; transform:translateY(22px); transition:opacity .7s var(--dceaseout), transform .7s var(--dceaseout) }
+    .pj-reveal.in{ opacity:1; transform:none }
+    </style>
     <p style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.18em;color:#7c6cff;text-transform:uppercase;margin:0 0 22px;" class="fx-eb">02 / builds</p>
     <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;border-bottom:1px solid rgba(230,230,255,.1);padding-bottom:30px;margin-bottom:clamp(30px,4vw,50px);">
-      <h2 style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(34px,6vw,76px);line-height:.92;letter-spacing:-.035em;margin:0;max-width:15ch;">Things I designed &amp; shipped.</h2>
-      <p style="max-width:33ch;color:#9a9aae;font-size:clamp(14px,1.1vw,16px);line-height:1.6;margin:0;">Five products built end to end — beyond the day-job pipelines, each with the ops behind it. <a href="projects.html" style="color:#3fe0d0;border-bottom:1px solid rgba(63,224,208,.4);padding-bottom:1px;">Full case studies →</a></p>
+      <h2 id="bdHead" data-text="Things I designed & shipped." style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(34px,6vw,76px);line-height:.92;letter-spacing:-.035em;margin:0;max-width:15ch;">Things I designed &amp; shipped.</h2>
+      <p style="max-width:38ch;color:#9a9aae;font-size:clamp(14px,1.1vw,16px);line-height:1.6;margin:0;">Ten products built end to end — each one loads its <b style="color:#d4d4e0;font-weight:600;">real, deployed app</b> right here, on click. <a href="projects.html" style="color:#3fe0d0;border-bottom:1px solid rgba(63,224,208,.4);padding-bottom:1px;">Full case studies →</a></p>
     </div>
-
-    <div id="bdStage" style="position:relative;width:100%;height:clamp(420px,54vw,600px);border:1px solid rgba(230,230,255,.1);border-radius:6px;overflow:hidden;background:#0b0a10;">
-
-        <div class="bd-slide" data-i="0" style="position:absolute;inset:0;opacity:1;z-index:2;pointer-events:auto;transition:opacity .55s ease;">
-          <div class="bd-kb" style="position:absolute;inset:0;will-change:transform;">
-            <img src="assets/projects/sokoloff.jpg" alt="Anatoly Sokoloff gallery" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
-          </div>
-          <div style="position:absolute;inset:0;background:linear-gradient(125deg,rgba(124,108,255,.30),rgba(63,224,208,.12));mix-blend-mode:screen;pointer-events:none;"></div>
-          <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,6,10,.94) 0%,rgba(6,6,10,.55) 40%,rgba(6,6,10,.08) 72%);pointer-events:none;"></div>
-          <div style="position:absolute;left:0;bottom:0;padding:clamp(20px,4vw,46px);max-width:700px;">
-            <div style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(50px,8vw,108px);line-height:.78;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.4px rgba(255,255,255,.42);margin-bottom:14px;">01</div>
-            <span style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#3fe0d0;">Creative PWA</span>
-            <h3 class="bd-title" style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(27px,4vw,50px);letter-spacing:-.025em;margin:8px 0 10px;color:#fff;">Anatoly Sokoloff</h3>
-            <p style="color:#d4d4e0;font-size:clamp(14px,1.3vw,17px);line-height:1.5;margin:0 0 13px;max-width:46ch;">A data-driven artist gallery with an AI cinemagraph pipeline.</p>
-            <p style="font-family:'Geist Mono',monospace;font-size:11.5px;color:#9a9aae;margin:0 0 16px;"><span style="color:#7c6cff;">// ops</span> offline-first PWA · resumable media pipeline</p>
-            <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;">
-              <span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">React</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">PWA</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Python</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Kling AI</span>
-              <a href="projects.html#build-sokoloff" data-mag style="margin-left:8px;font-family:'Geist Mono',monospace;font-size:11.5px;color:#3fe0d0;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid rgba(63,224,208,.4);padding-bottom:2px;">case study <span class="flux-arr" style="transition:transform .25s;">→</span></a>
-            </div>
-          </div>
-        </div>
-        <div class="bd-slide" data-i="1" style="position:absolute;inset:0;opacity:0;z-index:1;pointer-events:none;transition:opacity .55s ease;">
-          <div class="bd-kb" style="position:absolute;inset:0;will-change:transform;">
-            <img src="assets/projects/freqtrade.png" alt="Freqtrade trading dashboard" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
-          </div>
-          <div style="position:absolute;inset:0;background:linear-gradient(125deg,rgba(124,108,255,.30),rgba(63,224,208,.12));mix-blend-mode:screen;pointer-events:none;"></div>
-          <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,6,10,.94) 0%,rgba(6,6,10,.55) 40%,rgba(6,6,10,.08) 72%);pointer-events:none;"></div>
-          <div style="position:absolute;left:0;bottom:0;padding:clamp(20px,4vw,46px);max-width:700px;">
-            <div style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(50px,8vw,108px);line-height:.78;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.4px rgba(255,255,255,.42);margin-bottom:14px;">02</div>
-            <span style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#3fe0d0;">Algorithmic trading</span>
-            <h3 class="bd-title" style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(27px,4vw,50px);letter-spacing:-.025em;margin:8px 0 10px;color:#fff;">Freqtrade · Hyperliquid</h3>
-            <p style="color:#d4d4e0;font-size:clamp(14px,1.3vw,17px);line-height:1.5;margin:0 0 13px;max-width:46ch;">A Dockerized crypto trading bot on the Hyperliquid DEX.</p>
-            <p style="font-family:'Geist Mono',monospace;font-size:11.5px;color:#9a9aae;margin:0 0 16px;"><span style="color:#7c6cff;">// ops</span> paper/funded isolation · idempotent operator scripts</p>
-            <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;">
-              <span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Python</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Docker</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Freqtrade</span>
-              <a href="projects.html#build-freqtrade" data-mag style="margin-left:8px;font-family:'Geist Mono',monospace;font-size:11.5px;color:#3fe0d0;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid rgba(63,224,208,.4);padding-bottom:2px;">case study <span class="flux-arr" style="transition:transform .25s;">→</span></a>
-            </div>
-          </div>
-        </div>
-        <div class="bd-slide" data-i="2" style="position:absolute;inset:0;opacity:0;z-index:1;pointer-events:none;transition:opacity .55s ease;">
-          <div class="bd-kb" style="position:absolute;inset:0;will-change:transform;">
-            <img src="assets/projects/stakeodds.png" alt="STAKE·ODDS live dashboard" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
-          </div>
-          <div style="position:absolute;inset:0;background:linear-gradient(125deg,rgba(124,108,255,.30),rgba(63,224,208,.12));mix-blend-mode:screen;pointer-events:none;"></div>
-          <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,6,10,.94) 0%,rgba(6,6,10,.55) 40%,rgba(6,6,10,.08) 72%);pointer-events:none;"></div>
-          <div style="position:absolute;left:0;bottom:0;padding:clamp(20px,4vw,46px);max-width:700px;">
-            <div style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(50px,8vw,108px);line-height:.78;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.4px rgba(255,255,255,.42);margin-bottom:14px;">03</div>
-            <span style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#3fe0d0;">Real-time data</span>
-            <h3 class="bd-title" style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(27px,4vw,50px);letter-spacing:-.025em;margin:8px 0 10px;color:#fff;">STAKE·ODDS</h3>
-            <p style="color:#d4d4e0;font-size:clamp(14px,1.3vw,17px);line-height:1.5;margin:0 0 13px;max-width:46ch;">A live odds tracker with a streaming, multi-series dashboard.</p>
-            <p style="font-family:'Geist Mono',monospace;font-size:11.5px;color:#9a9aae;margin:0 0 16px;"><span style="color:#7c6cff;">// ops</span> self-healing poller · per-feed STALE guard</p>
-            <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;">
-              <span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Node</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">WebSocket</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Charts</span>
-              <a href="projects.html#build-stakeodds" data-mag style="margin-left:8px;font-family:'Geist Mono',monospace;font-size:11.5px;color:#3fe0d0;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid rgba(63,224,208,.4);padding-bottom:2px;">case study <span class="flux-arr" style="transition:transform .25s;">→</span></a>
-            </div>
-          </div>
-        </div>
-        <div class="bd-slide" data-i="3" style="position:absolute;inset:0;opacity:0;z-index:1;pointer-events:none;transition:opacity .55s ease;">
-          <div class="bd-kb" style="position:absolute;inset:0;will-change:transform;">
-            <img src="assets/projects/loansy-admin.png" alt="Loansy admin console" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
-          </div>
-          <div style="position:absolute;inset:0;background:linear-gradient(125deg,rgba(124,108,255,.30),rgba(63,224,208,.12));mix-blend-mode:screen;pointer-events:none;"></div>
-          <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,6,10,.94) 0%,rgba(6,6,10,.55) 40%,rgba(6,6,10,.08) 72%);pointer-events:none;"></div>
-          <div style="position:absolute;left:0;bottom:0;padding:clamp(20px,4vw,46px);max-width:700px;">
-            <div style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(50px,8vw,108px);line-height:.78;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.4px rgba(255,255,255,.42);margin-bottom:14px;">04</div>
-            <span style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#3fe0d0;">Fintech bot</span>
-            <h3 class="bd-title" style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(27px,4vw,50px);letter-spacing:-.025em;margin:8px 0 10px;color:#fff;">Loansy</h3>
-            <p style="color:#d4d4e0;font-size:clamp(14px,1.3vw,17px);line-height:1.5;margin:0 0 13px;max-width:46ch;">A Telegram crypto-lending platform with a Flask admin console.</p>
-            <p style="font-family:'Geist Mono',monospace;font-size:11.5px;color:#9a9aae;margin:0 0 16px;"><span style="color:#7c6cff;">// ops</span> loan state machine · infra-isolated tests</p>
-            <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;">
-              <span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Flask</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Telegram</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">SQL</span>
-              <a href="projects.html#build-loansy" data-mag style="margin-left:8px;font-family:'Geist Mono',monospace;font-size:11.5px;color:#3fe0d0;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid rgba(63,224,208,.4);padding-bottom:2px;">case study <span class="flux-arr" style="transition:transform .25s;">→</span></a>
-            </div>
-          </div>
-        </div>
-        <div class="bd-slide" data-i="4" style="position:absolute;inset:0;opacity:0;z-index:1;pointer-events:none;transition:opacity .55s ease;">
-          <div class="bd-kb" style="position:absolute;inset:0;will-change:transform;">
-            <img src="assets/projects/claudedown.png" alt="ClaudeDown monitor" loading="lazy" decoding="async" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;" />
-          </div>
-          <div style="position:absolute;inset:0;background:linear-gradient(125deg,rgba(124,108,255,.30),rgba(63,224,208,.12));mix-blend-mode:screen;pointer-events:none;"></div>
-          <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(6,6,10,.94) 0%,rgba(6,6,10,.55) 40%,rgba(6,6,10,.08) 72%);pointer-events:none;"></div>
-          <div style="position:absolute;left:0;bottom:0;padding:clamp(20px,4vw,46px);max-width:700px;">
-            <div style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(50px,8vw,108px);line-height:.78;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1.4px rgba(255,255,255,.42);margin-bottom:14px;">05</div>
-            <span style="font-family:'Geist Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#3fe0d0;">AI-infra monitor</span>
-            <h3 class="bd-title" style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(27px,4vw,50px);letter-spacing:-.025em;margin:8px 0 10px;color:#fff;">ClaudeDown</h3>
-            <p style="color:#d4d4e0;font-size:clamp(14px,1.3vw,17px);line-height:1.5;margin:0 0 13px;max-width:46ch;">A real-time availability monitor for AI infrastructure.</p>
-            <p style="font-family:'Geist Mono',monospace;font-size:11.5px;color:#9a9aae;margin:0 0 16px;"><span style="color:#7c6cff;">// ops</span> ETag conditional-GET · tiered Postgres rollups</p>
-            <div style="display:flex;flex-wrap:wrap;gap:7px;align-items:center;">
-              <span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Node</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">Postgres</span><span class="flux-tag" style="font-family:'Geist Mono',monospace;font-size:10.5px;color:#b8b4c8;border:1px solid rgba(230,230,255,.12);border-radius:6px;padding:4px 9px;transition:color .25s,border-color .25s;" style-hover="color:#7c6cff;border-color:rgba(124,108,255,.5)">SVG</span>
-              <a href="projects.html#build-claudedown" data-mag style="margin-left:8px;font-family:'Geist Mono',monospace;font-size:11.5px;color:#3fe0d0;display:inline-flex;align-items:center;gap:6px;border-bottom:1px solid rgba(63,224,208,.4);padding-bottom:2px;">case study <span class="flux-arr" style="transition:transform .25s;">→</span></a>
-            </div>
-          </div>
-        </div>
-      <div id="bdGlitch" style="position:absolute;inset:0;pointer-events:none;opacity:0;z-index:3;background:linear-gradient(90deg,rgba(124,108,255,.55),rgba(63,224,208,.55));mix-blend-mode:screen;"></div>
-      <button id="bdPrev" data-mag type="button" aria-label="Previous build" style="position:absolute;top:16px;right:66px;z-index:4;width:42px;height:42px;border-radius:50%;border:1px solid rgba(230,230,255,.2);background:rgba(8,8,14,.5);backdrop-filter:blur(5px);color:#fff;font-size:16px;display:grid;place-items:center;">&#8592;</button>
-      <button id="bdNext" data-mag type="button" aria-label="Next build" style="position:absolute;top:16px;right:16px;z-index:4;width:42px;height:42px;border-radius:50%;border:1px solid rgba(230,230,255,.2);background:rgba(8,8,14,.5);backdrop-filter:blur(5px);color:#fff;font-size:16px;display:grid;place-items:center;">&#8594;</button>
+    <div class="dc-legend" aria-hidden="true">
+      <span class="dc-lg"><span class="dc-dot"></span><b>live</b> · nothing heavy loads until you click — then the real app mounts in a sandboxed frame</span>
     </div>
-
-    <div style="display:flex;gap:clamp(10px,2vw,26px);margin-top:18px;">
-
-        <button class="bd-tab" data-i="0" data-mag type="button" style="flex:1;min-width:0;text-align:left;border-top:2px solid #7c6cff;padding:14px 10px 0 0;transition:border-color .35s;">
-          <span class="bd-tab-n" style="display:block;font-family:'Geist Mono',monospace;font-size:10.5px;color:#7c6cff;letter-spacing:.1em;transition:color .35s;">01</span>
-          <span class="bd-tab-nm" style="display:block;font-family:'Geist',sans-serif;font-size:13px;color:#f2f2f7;margin-top:5px;transition:color .35s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Anatoly Sokoloff</span>
-        </button>
-        <button class="bd-tab" data-i="1" data-mag type="button" style="flex:1;min-width:0;text-align:left;border-top:2px solid rgba(230,230,255,.14);padding:14px 10px 0 0;transition:border-color .35s;">
-          <span class="bd-tab-n" style="display:block;font-family:'Geist Mono',monospace;font-size:10.5px;color:#7a7a90;letter-spacing:.1em;transition:color .35s;">02</span>
-          <span class="bd-tab-nm" style="display:block;font-family:'Geist',sans-serif;font-size:13px;color:#7a7a90;margin-top:5px;transition:color .35s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Freqtrade · Hyperliquid</span>
-        </button>
-        <button class="bd-tab" data-i="2" data-mag type="button" style="flex:1;min-width:0;text-align:left;border-top:2px solid rgba(230,230,255,.14);padding:14px 10px 0 0;transition:border-color .35s;">
-          <span class="bd-tab-n" style="display:block;font-family:'Geist Mono',monospace;font-size:10.5px;color:#7a7a90;letter-spacing:.1em;transition:color .35s;">03</span>
-          <span class="bd-tab-nm" style="display:block;font-family:'Geist',sans-serif;font-size:13px;color:#7a7a90;margin-top:5px;transition:color .35s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">STAKE·ODDS</span>
-        </button>
-        <button class="bd-tab" data-i="3" data-mag type="button" style="flex:1;min-width:0;text-align:left;border-top:2px solid rgba(230,230,255,.14);padding:14px 10px 0 0;transition:border-color .35s;">
-          <span class="bd-tab-n" style="display:block;font-family:'Geist Mono',monospace;font-size:10.5px;color:#7a7a90;letter-spacing:.1em;transition:color .35s;">04</span>
-          <span class="bd-tab-nm" style="display:block;font-family:'Geist',sans-serif;font-size:13px;color:#7a7a90;margin-top:5px;transition:color .35s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Loansy</span>
-        </button>
-        <button class="bd-tab" data-i="4" data-mag type="button" style="flex:1;min-width:0;text-align:left;border-top:2px solid rgba(230,230,255,.14);padding:14px 10px 0 0;transition:border-color .35s;">
-          <span class="bd-tab-n" style="display:block;font-family:'Geist Mono',monospace;font-size:10.5px;color:#7a7a90;letter-spacing:.1em;transition:color .35s;">05</span>
-          <span class="bd-tab-nm" style="display:block;font-family:'Geist',sans-serif;font-size:13px;color:#7a7a90;margin-top:5px;transition:color .35s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">ClaudeDown</span>
-        </button>
-    </div>
+    <!-- #3 · native scroll-state(stuck): flips "building" → "deployed ✓" the moment this strip pins (zero JS) -->
+    <div class="bd-stuck" aria-hidden="true"><span class="bd-stuck__in"><span class="bd-stuck__dot"></span>pipeline · <span class="bd-stuck__state"></span></span></div>
+    <div id="bdGrid" class="dcwrap"></div>
   </section>
 
-  <!-- ░░ 05 — CONTACT ░░ -->
+  <!-- ░░ 03 — CONTACT ░░ -->
   <section id="contact" data-screen-label="Contact" data-rv style="max-width:1200px;margin:clamp(72px,11vw,150px) auto 0;position:relative;z-index:2;">
     <p style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.18em;color:#7c6cff;text-transform:uppercase;margin:0 0 26px;" class="fx-eb">03 / contact</p>
-    <div style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(30px,5vw,72px);align-items:start;">
+    <div class="ct-grid" style="display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:clamp(30px,5vw,72px);align-items:start;">
 
       <div>
         <p style="font-family:'Geist Mono',monospace;font-size:13px;color:#9a9aae;margin:0 0 18px;">$ git remote add <span style="color:#7c6cff;">you</span><span style="display:inline-block;width:8px;height:15px;background:#7c6cff;margin-left:4px;vertical-align:-2px;animation:ctBlink 1.1s steps(1) infinite;"></span></p>
@@ -624,13 +631,13 @@
         </div>
         <form id="ctForm" style="padding:20px;display:flex;flex-direction:column;gap:14px;font-family:'Geist Mono',monospace;">
           <label style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11px;color:#7c6cff;">git commit -m</span><input id="ctSubj" type="text" maxlength="90" placeholder="&quot;subject — e.g. release role at Acme&quot;" style="background:#08080d;border:1px solid rgba(230,230,255,.14);border-radius:6px;padding:11px 13px;color:#f2f2f7;font-family:inherit;font-size:13px;outline:none;" /></label>
-          <textarea id="ctBody" rows="3" placeholder="message body — details, timeline, anything you like" style="background:#08080d;border:1px solid rgba(230,230,255,.14);border-radius:6px;padding:11px 13px;color:#f2f2f7;font-family:inherit;font-size:13px;outline:none;resize:vertical;"></textarea>
+          <textarea id="ctBody" rows="3" aria-label="message body" placeholder="message body — details, timeline, anything you like" style="background:#08080d;border:1px solid rgba(230,230,255,.14);border-radius:6px;padding:11px 13px;color:#f2f2f7;font-family:inherit;font-size:13px;outline:none;resize:vertical;"></textarea>
           <label style="display:flex;flex-direction:column;gap:7px;"><span style="font-size:11px;color:#7c6cff;">--author</span><input id="ctEmail" type="email" placeholder="you@email.com  (so I can reply)" style="background:#08080d;border:1px solid rgba(230,230,255,.14);border-radius:6px;padding:11px 13px;color:#f2f2f7;font-family:inherit;font-size:13px;outline:none;" /></label>
           <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
             <button type="submit" data-mag style="background:linear-gradient(180deg,#7c6cff,#6a58f0);color:#fff;border-radius:6px;padding:11px 18px;font-family:inherit;font-size:13px;font-weight:500;box-shadow:0 8px 24px -10px rgba(124,108,255,.8);">git push →</button>
-            <span style="font-size:10.5px;color:#7a7a90;">sends to my inbox · falls back to your mail client</span>
+            <span style="font-size:10.5px;color:#7a7a90;">opens a pre-filled email to my inbox in your mail client</span>
           </div>
-          <pre id="ctOut" style="margin:0;font-family:inherit;font-size:11.5px;line-height:1.7;color:#5ee6c0;white-space:pre-wrap;min-height:8px;"></pre>
+          <pre id="ctOut" role="status" aria-live="polite" style="margin:0;font-family:inherit;font-size:11.5px;line-height:1.7;color:#5ee6c0;white-space:pre-wrap;min-height:8px;"></pre>
         </form>
       </div>
     </div>
@@ -643,7 +650,18 @@
     <p style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.18em;color:#7c6cff;text-transform:uppercase;margin:0 0 26px;" class="fx-eb">// system status</p>
     <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;border-bottom:1px solid rgba(230,230,255,.1);padding-bottom:26px;margin-bottom:18px;">
       <h2 style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(26px,4vw,48px);letter-spacing:-.03em;margin:0;display:inline-flex;align-items:center;"><span id="fxStatDot" style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#5ee6c0;box-shadow:0 0 12px #5ee6c0;margin-right:16px;animation:fxPulse 2.5s ease-out infinite;"></span>All systems operational</h2>
-      <span style="font-family:'Geist Mono',monospace;font-size:12.5px;color:#9a9aae;">90-day window · <span id="fxStatClock" style="color:#f2f2f7;">--:-- PT</span></span>
+      <span style="font-family:'Geist Mono',monospace;font-size:12.5px;color:#9a9aae;display:inline-flex;align-items:center;gap:.6ch;">90-day window · <span id="fxStatClock" style="color:#f2f2f7;">--:-- PT</span>
+        <!-- #5 · native Popover API tethered with CSS anchor positioning + a hover/focus tooltip (zero JS) -->
+        <span class="fx-infowrap"><button class="fx-info" id="fxStatusInfo" type="button" popovertarget="fxStatusPop" aria-label="How uptime is measured">i</button><span class="fx-tip" aria-hidden="true">how is this measured?</span></span>
+      </span>
+    </div>
+    <div id="fxStatusPop" popover class="fx-pop">
+      <strong>90-day uptime.</strong> It's a static site on a CDN — there's no server to fall over. This panel reflects the share of synthetic checks that returned <code>200</code> over a rolling 90-day window. The only real outage risk is my Wi-Fi.
+    </div>
+    <!-- #6 · raw-WebGL "security scan" beam — a light sweep develops a dot-grid where it passes (degrades to a static gradient panel; never errors) -->
+    <div class="scanpanel" aria-hidden="true">
+      <canvas id="scanCanvas"></canvas>
+      <span class="scanpanel__lbl mono"><i></i>security scan · trivy image · sbom · secret-scan — continuous</span>
     </div>
     <div id="fxStatus"></div>
     <div id="fxTip" style="position:fixed;z-index:9997;transform:translate(-50%,-100%);pointer-events:none;opacity:0;transition:opacity .15s;font-family:'Geist Mono',monospace;font-size:10.5px;color:#06060a;background:#5ee6c0;padding:4px 8px;border-radius:5px;white-space:nowrap;"></div>
@@ -807,7 +825,7 @@
     /* ============ selection ============ */
     function setActive(i){
       focusT=[0.1,0.3,0.5,0.7,0.9][i];
-      stations.forEach((s,k)=>{ const ring=$('.flux-ring',s),num=$('.flux-num',s),lab=$('.flux-lab',s); const on=k===i,live=k===4; const col=live?'#5ee6c0':'#7c6cff';
+      stations.forEach((s,k)=>{ const ring=$('.flux-ring',s),num=$('.flux-num',s),lab=$('.flux-lab',s); const on=k===i,live=k===4; const col=live?'#5ee6c0':'#7c6cff'; s.setAttribute('aria-current', on?'true':'false');
         ring.style.background= on?col:'rgba(8,8,14,.5)'; ring.style.borderColor= on?col:'#44445a';
         ring.style.boxShadow= on?('0 0 0 5px '+(live?'rgba(94,230,192,.14)':'rgba(124,108,255,.16)')+',0 0 22px '+(live?'rgba(94,230,192,.7)':'rgba(124,108,255,.7)')):'none';
         ring.style.transform= on?'scale(1.2)':'scale(1)'; num.style.color= on?col:'#7a7a90'; lab.style.color= on?'#f2f2f7':'#7a7a90';
@@ -818,6 +836,23 @@
     stations.forEach((s,i)=>{ s.addEventListener('mouseenter',()=>setActive(i)); s.addEventListener('focus',()=>setActive(i)); s.addEventListener('click',()=>setActive(i)); });
     setActive(3);
 
+    /* ====== auto-tour the timeline 01 → 05 (2.7s each, looping) once the stage is in view.
+       A hover steers it; selecting (clicking) a station holds it 7s, then the sequence continues in order. ====== */
+    (function(){
+      var ci=0, started=false, inView=false, timer=null;
+      function clearT(){ if(timer){ clearTimeout(timer); timer=null; } }
+      function arm(delay){ clearT(); if(reduce||!inView) return; timer=setTimeout(function(){ ci=(ci+1)%stations.length; setActive(ci); arm(2700); }, delay); }
+      stations.forEach(function(s,i){
+        s.addEventListener('pointerenter',function(){ ci=i; arm(2700); });   // hover steers the tour
+        s.addEventListener('focus',function(){ ci=i; arm(2700); });
+        s.addEventListener('click',function(){ ci=i; arm(7000); });          // select → hold 7s, then continue
+      });
+      try{ new IntersectionObserver(function(es){ es.forEach(function(e){
+        inView=e.isIntersecting;
+        if(inView){ if(!started){ started=true; ci=0; setActive(0); } arm(2700); } else clearT();
+      }); },{ threshold:0.3 }).observe(stage); }catch(e){}
+    })();
+
     /* skill chips light to their brand colour on hover */
     $$('.flux-sk').forEach(chip=>{ const ic=$('.flux-sk__i',chip); const b=chip.getAttribute('data-brand'); chip.addEventListener('pointerenter',()=>{ if(ic) ic.style.background=b; chip.style.borderColor=b; chip.style.background=b+'18'; }); chip.addEventListener('pointerleave',()=>{ if(ic) ic.style.background='#9a9aae'; chip.style.borderColor='rgba(230,230,255,.12)'; chip.style.background='transparent'; }); });
 
@@ -827,9 +862,10 @@
     /* scroll progress bar */
     const sbar=$('#fluxScroll'); if(sbar){ const upd=()=>{ const h=document.documentElement.scrollHeight-window.innerHeight; sbar.style.transform='scaleX('+(h>0?clamp(window.scrollY/h,0,1):0)+')'; }; window.addEventListener('scroll',upd,{passive:true}); window.addEventListener('resize',upd); upd(); }
 
-    /* ============ per-letter headline repel ============ */
-    const head=$('#fluxHead');
-    if(head){
+    /* ============ per-letter headline repel (hover scatters the letters) — used on BOTH the
+       "Selected experience" and the "Things I designed & shipped" headings ============ */
+    function letterRepel(head){
+      if(!head || head.dataset.repel) return; head.dataset.repel='1';
       const text=head.dataset.text||head.textContent; head.textContent='';
       const spans=[];
       const words=text.split(' ');
@@ -845,20 +881,25 @@
         head.addEventListener('pointerleave',()=>{ spans.forEach(sp=>{ sp.style.transform='none'; sp.style.color=''; }); });
       }
     }
+    letterRepel($('#fluxHead'));
+    letterRepel($('#bdHead'));
 
     /* ============ 03 builds — cinematic showcase ============ */
     (()=>{
       const stage=$('#bdStage'); if(!stage) return;
       const slides=$$('.bd-slide'), tabs=$$('.bd-tab'), glitch=$('#bdGlitch'); let cur=0, timer=null;
+      slides.forEach((s,k)=>s.setAttribute('aria-hidden', k===0?'false':'true')); tabs.forEach((t,k)=>t.setAttribute('aria-current', k===0?'true':'false'));
       function go(i){ i=(i+slides.length)%slides.length; if(i===cur && slides[i].style.opacity==='1') return; cur=i;
-        slides.forEach((s,k)=>{ const on=k===i; s.style.opacity=on?'1':'0'; s.style.zIndex=on?'2':'1'; s.style.pointerEvents=on?'auto':'none'; if(on){ if(!reduce){ s.style.animation='bdReveal .7s cubic-bezier(.16,1,.3,1)'; const kb=$('.bd-kb',s); if(kb){ kb.style.animation='none'; void kb.offsetWidth; kb.style.animation='bdKen 9s ease-out forwards'; } } scramble($('.bd-title',s)); } });
-        tabs.forEach((t,k)=>{ const on=k===i; t.style.borderTopColor=on?'#7c6cff':'rgba(230,230,255,.14)'; const n=$('.bd-tab-n',t),nm=$('.bd-tab-nm',t); if(n)n.style.color=on?'#7c6cff':'#7a7a90'; if(nm)nm.style.color=on?'#f2f2f7':'#7a7a90'; });
+        slides.forEach((s,k)=>{ const on=k===i; s.style.opacity=on?'1':'0'; s.style.zIndex=on?'2':'1'; s.style.pointerEvents=on?'auto':'none'; s.setAttribute('aria-hidden', on?'false':'true'); if(on){ if(!reduce){ s.style.animation='bdReveal .7s cubic-bezier(.16,1,.3,1)'; const kb=$('.bd-kb',s); if(kb){ kb.style.animation='none'; void kb.offsetWidth; kb.style.animation='bdKen 9s ease-out forwards'; } } scramble($('.bd-title',s)); } });
+        tabs.forEach((t,k)=>{ const on=k===i; t.setAttribute('aria-current', on?'true':'false'); t.style.borderTopColor=on?'#7c6cff':'rgba(230,230,255,.14)'; const n=$('.bd-tab-n',t),nm=$('.bd-tab-nm',t); if(n)n.style.color=on?'#7c6cff':'#7a7a90'; if(nm)nm.style.color=on?'#f2f2f7':'#7a7a90'; });
         if(glitch&&!reduce){ glitch.style.animation='none'; void glitch.offsetWidth; glitch.style.animation='bdGlitch .5s ease-out'; }
       }
       function restart(){ if(reduce) return; clearInterval(timer); timer=setInterval(()=>go(cur+1),6000); }
       tabs.forEach((t,i)=> t.addEventListener('click',()=>{ go(i); restart(); }));
       const pv=$('#bdPrev'),nx=$('#bdNext'); if(pv)pv.addEventListener('click',()=>{ go(cur-1); restart(); }); if(nx)nx.addEventListener('click',()=>{ go(cur+1); restart(); });
-      if(!reduce){ const kb0=$('.bd-kb',slides[0]); if(kb0) kb0.style.animation='bdKen 9s ease-out forwards'; restart(); stage.addEventListener('pointerenter',()=>clearInterval(timer)); stage.addEventListener('pointerleave',restart); }
+      if(!reduce){ const kb0=$('.bd-kb',slides[0]); if(kb0) kb0.style.animation='bdKen 9s ease-out forwards'; restart(); stage.addEventListener('pointerenter',()=>clearInterval(timer)); stage.addEventListener('pointerleave',restart);
+        /* WCAG 2.2.2: pause the auto-advance while a keyboard user has focus anywhere in the Builds section */
+        var bsec=$('#builds')||stage; bsec.addEventListener('focusin',()=>clearInterval(timer)); bsec.addEventListener('focusout',(ev)=>{ if(!bsec.contains(ev.relatedTarget)) restart(); }); }
       // cursor 3D tilt on the active slide
       if(!reduce){ let tr=null; stage.addEventListener('pointermove',(e)=>{ if(tr)return; tr=requestAnimationFrame(()=>{ tr=null; const r=stage.getBoundingClientRect(); const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5; const sl=slides[cur]; if(sl) sl.style.transform='perspective(1300px) rotateX('+(y*-3.2)+'deg) rotateY('+(x*3.2)+'deg)'; }); }); stage.addEventListener('pointerleave',()=>{ const sl=slides[cur]; if(sl) sl.style.transform=''; }); }
       // keyboard arrows when the stage is in view
@@ -923,6 +964,7 @@
     var N=58;
     rows.forEach(function(r,ri){
       var row=document.createElement('div');
+      row.className='fx-strow';
       row.style.cssText='display:grid;grid-template-columns:140px 1fr auto;gap:20px;align-items:center;padding:16px 6px;border-bottom:1px solid rgba(230,230,255,.07);transition:background .25s;';
       var lab=document.createElement('span'); lab.textContent=r.name;
       lab.style.cssText="font-family:'Geist Mono',monospace;font-size:11.5px;letter-spacing:.06em;color:#9a9aae;text-transform:uppercase;";
@@ -938,7 +980,7 @@
         b.addEventListener('pointerleave',function(ev){ var el=ev.currentTarget; el.style.opacity=el.getAttribute('data-warn')==='1'?'0.92':'0.5'; if(tip) tip.style.opacity='0'; });
         bars.appendChild(b);
       }
-      var val=document.createElement('span'); val.textContent=r.val;
+      var val=document.createElement('span'); val.textContent=r.val; val.className='fx-stval';
       val.style.cssText="font-family:'Geist Mono',monospace;font-size:13px;color:"+r.vc+";min-width:72px;text-align:right;font-weight:500;";
       row.appendChild(lab); row.appendChild(bars); row.appendChild(val);
       row.addEventListener('pointerenter',function(){ row.style.background='rgba(124,108,255,.05)'; });
@@ -982,6 +1024,336 @@
 </script>
 <script>
 (function(){ document.addEventListener('click',function(e){ var it=e.target.closest&&e.target.closest('.tui-item[data-cmd]'); if(it&&typeof window.__heroRun==='function'){ window.__heroRun(it.getAttribute('data-cmd')); } }); })();
+</script>
+<script>
+/* ====================== <demo-card> live demos — Builds section ====================== */
+(function(){
+  "use strict";
+  /* ---------- project data ---------- */
+  var PROJECTS = [
+    { num:"01", slug:"sokoloff", mode:"live", isNew:false, caseId:"build-sokoloff",
+      title:"Anatoly Sokoloff: A&nbsp;Visual&nbsp;Journey", cat:"Creative web app · PWA gallery + Python media pipeline",
+      tag:"A data-driven artist gallery with an AI cinemagraph pipeline.",
+      lede:"An installable <b>PWA</b> presenting a 150+ work catalogue as a horizontally-scrolling timeline; a sibling <b>Python pipeline</b> turns stills into looping AI cinemagraphs with zero per-view inference cost.",
+      pills:["React (SPA)","PWA / Web Manifest","Supabase storage","Python 3","Kling image2video","Pillow / PIL"],
+      facts:["<b>150+</b> works","<b>4</b> series","<b>30</b> cinemagraphs"],
+      addr:"anatoly-sokoloff · a visual journey", poster:"assets/projects/sokoloff-1280.webp", src:"demos/sokoloff/",
+      note:"Live embed of the real PWA, served same-origin from /demos/sokoloff/ — gallery data seeded client-side, no secrets.",
+      tour:[
+        {x:6,y:5,t:"Bilingual EN / RU",c:"The whole gallery ships in English and Russian — toggle top-left."},
+        {x:21,y:36,t:"Period collections",c:"The 150+ catalogue grouped into themed series — United States, Troikas, Europe, Portraits…"},
+        {x:13,y:52,t:"Per-collection timeline",c:"Each card opens a horizontally-scrolling timeline of that series' works."},
+        {x:97,y:50,t:"Immersive scroll nav",c:"A single-page immersive scroll with section dots — built as an installable, offline-capable PWA."}
+      ] },
+    { num:"02", slug:"freqtrade", mode:"live", isNew:false, caseId:"build-freqtrade",
+      title:"Freqtrade · Hyperliquid", cat:"Algorithmic trading · Dockerized bot",
+      tag:"A Dockerized crypto trading bot on the Hyperliquid DEX.",
+      lede:"A <b>freqtrade</b> stack wired to Hyperliquid with a REST/WS control UI (FreqUI), running a dry-run strategy with backtests persisted to Feather.",
+      pills:["Python 3","freqtrade","pandas","CCXT","Hyperliquid DEX","Docker Compose"],
+      facts:["<b>FreqUI</b> REST/WS","dry-run paper","feather backtests"],
+      addr:"127.0.0.1:8080 — frequi", poster:"assets/projects/freqtrade-1280.webp", src:"demos/freqtrade/",
+      note:"Live embed of the REAL upstream FreqUI (built from source). Its API is intercepted client-side with believable dry-run data (seeded JWT bypasses login, WebSocket stubbed) — no bot, no exchange keys.",
+      tour:[
+        {x:23,y:19,t:"Live bot state",c:"Running in dry-run (paper) mode — strategy, timeframe and market at a glance."},
+        {x:55,y:19,t:"P&L + win rate",c:"Closed profit +6.82 USDC, 17/9 win-loss across 26 trades, open positions and stake."},
+        {x:40,y:42,t:"Equity curve",c:"Cumulative profit since inception, charted live from the trade database."},
+        {x:82,y:40,t:"Performance",c:"Best/worst pair, avg trade duration and profit per trade."},
+        {x:50,y:72,t:"Open & closed trades",c:"Every position with entry/exit, profit % and the exit reason (ROI / trailing / stoploss)."}
+      ] },
+    { num:"03", slug:"stakeodds", mode:"live", isNew:false, caseId:"build-stakeodds",
+      title:"STAKE·ODDS — Live Odds Tracker", cat:"Real-time data · dual-feed odds engine",
+      tag:"A dual-feed live sports-odds tracking &amp; movement engine.",
+      lede:"Two independent odds feeds reconciled into one movement view, driven over the <b>Chrome DevTools Protocol</b> against a real book, with inline-SVG dashboards and JSONL persistence.",
+      pills:["Node.js","Chrome DevTools Protocol","GraphQL","Browserbase","JSONL","Vanilla JS"],
+      facts:["<b>2</b> feeds","live movement","CDP-driven"],
+      addr:"localhost — stake·odds tracker", poster:"assets/projects/stakeodds-1280.webp", src:"demos/stakeodds/#demo",
+      note:"Live embed of the real tracker UI in its built-in demo mode — the actual board animating from self-seeded fixtures (no scraper, no secrets).",
+      tour:[
+        {x:80,y:4,t:"Session telemetry",c:"Live status — poll cadence (10s), boards, events, selections and moves/poll."},
+        {x:40,y:34,t:"Odds-movement chart",c:"Real-time price lines per market — watch each selection drift tick by tick."},
+        {x:83,y:34,t:"Reconciled stream",c:"The dual-feed movement stream: every up/down tick with its delta, 30/min."},
+        {x:33,y:73,t:"Per-event boards",c:"1/X/2 prices per live event with inline movement sparklines."},
+        {x:28,y:98,t:"CDP engine",c:"Driven by the Chrome DevTools Protocol against a real sportsbook — DOM-poll extractor v3."}
+      ] },
+    { num:"04", slug:"loansy", mode:"live", isNew:false, caseId:"build-loansy",
+      title:"Loansy", cat:"Fintech ops · Telegram bot + 60-view Flask console",
+      tag:"A Telegram P2P crypto-lending bot with a 60-view Flask ops console.",
+      lede:"An admin console over a Mongo/Redis lending core, with multi-chain payouts (<b>TON</b>, <b>Solana</b>), scheduled jobs and a live activity stream.",
+      pills:["Python","Flask + Jinja2","MongoDB","Redis","TON · pytoniq","Solana"],
+      facts:["<b>60</b> admin views","<b>2</b> chains","248 active loans"],
+      addr:"loansy-admin · flask ops console", poster:"assets/projects/loansy-admin-1280.webp", src:"demos/loansy/",
+      note:"Live embed of the REAL 15k-line Flask/Jinja console, statically baked against an in-memory DB (mongomock + fakeredis) seeded with sample data, login bypassed — no real Mongo/Redis, no secrets.",
+      tour:[
+        {x:75,y:18,t:"Portfolio KPIs",c:"248 active loans, $1.28M volume, $38K platform take — with 24h deltas."},
+        {x:18,y:28,t:"Risk monitor",c:"Overdue, pending and loss loans flagged on every sweep."},
+        {x:40,y:46,t:"Loan ledger",c:"Every P2P loan: borrower, lender, group, daily rate, due date and status."},
+        {x:83,y:46,t:"Live activity feed",c:"Real-time event stream — repayments, new loans, deposits, IP verifications."},
+        {x:25,y:88,t:"Advanced analytics",c:"Repayment rate 92.4%, avg loan, avg interest + volume-trend chart."}
+      ] },
+    { num:"05", slug:"claudedown", mode:"live", isNew:false, caseId:"build-claudedown",
+      title:"ClaudeDown", cat:"Monitoring · status page",
+      tag:"A real-time availability monitor for AI infrastructure.",
+      lede:"A no-framework <b>Node</b> service polling provider status into Postgres, charted with inline SVG and a Statuspage-style timeline.",
+      pills:["Node.js (ESM)","node:http","PostgreSQL","Redis","Railway","Playwright"],
+      facts:["<b>11</b> providers","live latency","99.90% uptime"],
+      addr:"claudedown — infrastructure monitor", poster:"assets/projects/claudedown-1280.webp", src:"demos/claudedown/",
+      note:"Live embed of the real single-file monitor UI, fed believable 11-provider data via a tiny client-side mock (no Postgres, no scan loop, no secrets).",
+      tour:[
+        {x:35,y:24,t:"Rolled-up health",c:"Availability 99.90%, endpoint health 8/8, avg latency 314ms across all probes."},
+        {x:11,y:50,t:"Per-provider card",c:"Live UP/DOWN, edge-probe latency and status-page state for each provider."},
+        {x:14,y:74,t:"Uptime + history",c:"Last-hour uptime ring and a latency history sparkline from real probes."},
+        {x:55,y:50,t:"11 providers side by side",c:"Claude, OpenAI, Gemini, GitHub, Cursor… sortable by status, latency or name."},
+        {x:30,y:78,t:"Latency distribution",c:"P50 / P95 latency distribution per provider."}
+      ] },
+    { num:"06", slug:"flex-lane", mode:"live", isNew:false, caseId:"build-baytoolmap",
+      title:"Flex Lane Fare Console", cat:"Civic data · express-lane pricing",
+      tag:"What every Bay Area express lane costs — live, with honest fallbacks.",
+      lede:"A <b>React + Vite</b> front-end over a small <b>Express</b> reader of the 511 Toll Data API, designed to degrade honestly when the upstream feed is missing.",
+      pills:["TypeScript","React 18","Vite","Express","511 Toll Data API","Playwright"],
+      facts:["<b>honest</b> fallbacks","live pricing","MapLibre map"],
+      addr:"flex-lane · bay area express lanes", poster:"assets/projects/baytoolmap-1280.webp", src:"demos/flex-lane/",
+      note:"Live embed of the real Vite build. Live 511 pricing needs the backend, so embedded it shows its designed no-data fallback." },
+    { num:"07", slug:"renovation-watchlist", mode:"live", isNew:false, caseId:"build-sfopendata",
+      title:"The Renovation Watchlist", cat:"Civic data · DataSF pipeline + MapLibre editorial site",
+      tag:"The earliest public signal of renovation-driven displacement in San Francisco — ranked.",
+      lede:"A <b>Python</b> pipeline scores DataSF building-permit records for displacement risk; a <b>MapLibre GL</b> editorial front-end maps and ranks them. No build step, no backend on the page.",
+      pills:["Python (stdlib)","DataSF / SODA API","MapLibre GL","GSAP + Lenis","Vanilla JS","No build"],
+      facts:["<b>985</b> flagged","<b>1,449</b> violations","34 neighborhoods"],
+      addr:"renovation-watchlist · datasf", poster:"assets/projects/sfopendata-1280.webp", src:"demos/renovation-watchlist/",
+      note:"Live embed of the real, fully-static MapLibre app — read-only baked DataSF snapshot." },
+    { num:"08", slug:"urbanforest", mode:"live", isNew:true, caseId:"",
+      title:"The Urban Forest", cat:"Civic data · DataSF pipeline + deck.gl map",
+      tag:"An art-directed botanical map of every street tree San Francisco keeps a record of.",
+      lede:"A pure-Python pipeline pulls the DPW Street Tree List; a <b>195K-point deck.gl</b> map renders every tree, colored by genus, on a deep-ink ground — a sibling of the Renovation Watchlist in a forest palette.",
+      pills:["Python (stdlib)","DataSF","deck.gl","Vanilla JS","No build"],
+      facts:["<b>198,435</b> trees","<b>586</b> species","195,309 mapped"],
+      addr:"the-urban-forest · datasf", poster:"assets/projects/urbanforest-poster.jpeg", src:"demos/urbanforest/",
+      note:"Live embed of the real, fully-static deck.gl app." },
+    { num:"09", slug:"hidden-sf", mode:"live", isNew:true, caseId:"",
+      title:"Hidden SF", cat:"Civic data · DataSF + MapLibre field guide",
+      tag:"A field guide to San Francisco's 81 privately-owned public open spaces.",
+      lede:"The rooftop terraces and atriums downtown developers owe the public under <b>Planning Code §138</b> — mapped, with a brass / petrol duotone keyed to whether each space is open all day or business hours only.",
+      pills:["Python","DataSF 65ik-7wqd","MapLibre GL","Vanilla JS","No build"],
+      facts:["<b>81</b> POPOS","Planning §138","since 1959"],
+      addr:"hidden-sf · popos field guide", poster:"assets/projects/hiddensf-poster.png", src:"demos/hidden-sf/",
+      note:"Live embed of the real, fully-static MapLibre app." },
+    { num:"10", slug:"sf-on-screen", mode:"live", isNew:true, caseId:"",
+      title:"SF on Screen", cat:"Civic data · SF Film Commission + MapLibre",
+      tag:"A century of film &amp; television shot on location in San Francisco.",
+      lede:"Every location the SF Film Commission has logged since 1915, pinned to the corner it was filmed on; press <b>Play</b> to watch the century fill in, decade by decade.",
+      pills:["Python","SF Film locations","MapLibre GL","Vanilla JS","No build"],
+      facts:["<b>2,118</b> locations","<b>295</b> productions","1915–2025"],
+      addr:"sf-on-screen · film locations", poster:"assets/projects/sfonscreen-poster.jpeg", src:"demos/sf-on-screen/",
+      note:"Live embed of the real, fully-static MapLibre app." }
+  ];
+
+  var conn = navigator.connection || navigator.webkitConnection || null;
+  function isDataSaver(){ return !!(conn && (conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType||""))); }
+  function deferMount(fn){
+    if (window.scheduler && typeof scheduler.postTask === "function") scheduler.postTask(fn, { priority:"user-blocking" });
+    else if (typeof window.requestIdleCallback === "function") requestIdleCallback(function(){ fn(); }, { timeout:300 });
+    else setTimeout(fn, 0);
+  }
+  function esc(s){ return String(s).replace(/"/g,"&quot;"); }
+  function plain(s){ return String(s).replace(/&nbsp;/g," "); }
+
+  /* ---------- focus-trapped modal ---------- */
+  var Modal = (function(){
+    var dlg, panel, body, titleEl, lastFocused, onClose=null;
+    function ensure(){
+      if (dlg) return;
+      dlg = document.createElement("div");
+      dlg.className="dlg"; dlg.setAttribute("role","dialog"); dlg.setAttribute("aria-modal","true");
+      dlg.innerHTML = '<div class="dlg__backdrop" data-close></div><div class="dlg__panel" role="document">'+
+        '<div class="dlg__bar"><span class="dlg__title"></span><button class="dc-btn dlg__close" type="button" data-close>Close ✕</button></div>'+
+        '<div class="dlg__body"></div></div>';
+      document.body.appendChild(dlg);
+      panel=dlg.querySelector(".dlg__panel"); body=dlg.querySelector(".dlg__body"); titleEl=dlg.querySelector(".dlg__title");
+      dlg.addEventListener("mousedown", function(e){ if (e.target.hasAttribute("data-close")) close(); });
+      dlg.addEventListener("keydown", onKey);
+    }
+    function onKey(e){
+      if (e.key==="Escape"){ e.preventDefault(); close(); return; }
+      if (e.key!=="Tab") return;
+      var f = panel.querySelectorAll('a[href],button:not([disabled]),input,select,textarea,iframe,[tabindex]:not([tabindex="-1"])');
+      f = Array.prototype.filter.call(f, function(el){ return el.offsetParent!==null || el.tagName==="IFRAME"; });
+      if (!f.length) return;
+      var first=f[0], last=f[f.length-1];
+      if (e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+    }
+    function open(node, labelHtml, closeCb, returnFocusEl){
+      ensure(); lastFocused = returnFocusEl || document.activeElement; onClose = closeCb || null;
+      titleEl.innerHTML = labelHtml || "Live demo"; dlg.setAttribute("aria-label", titleEl.textContent||"Live demo");
+      body.innerHTML=""; body.appendChild(node); dlg.setAttribute("open","");
+      var c=dlg.querySelector(".dlg__close"); if(c) c.focus();
+      document.documentElement.style.overflow="hidden";
+      if (window.__lenis && window.__lenis.stop) window.__lenis.stop();
+    }
+    function close(){
+      if (!dlg || !dlg.hasAttribute("open")) return;
+      if (onClose){ try{ onClose(); }catch(e){} onClose=null; }
+      dlg.removeAttribute("open"); body.innerHTML="";
+      document.documentElement.style.overflow="";
+      if (window.__lenis && window.__lenis.start) window.__lenis.start();
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
+    }
+    return { open:open, close:close };
+  })();
+
+  /* ---------- LIVE iframe (real app, same-origin) ---------- */
+  function mountLive(host, p){
+    var f = document.createElement("iframe");
+    f.src = p.src; f.title = plain(p.title) + " — live app";
+    f.loading = "lazy"; f.setAttribute("allow","fullscreen; geolocation; clipboard-write");
+    f.setAttribute("sandbox","allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-downloads allow-pointer-lock");
+    host.appendChild(f);
+  }
+
+  /* ---------- TOUR (guided hotspots over a real screenshot) ---------- */
+  function mountTour(host, p){
+    var wrap = document.createElement("div"); wrap.className="tour";
+    var pins = p.tour.map(function(h,i){
+      return '<button class="tour__pin" type="button" data-i="'+i+'" style="left:'+h.x+'%;top:'+h.y+'%" '+
+        'aria-label="Feature '+(i+1)+': '+esc(h.t)+'">'+(i+1)+'</button>';
+    }).join("");
+    wrap.innerHTML =
+      '<div class="tour__stage"><img class="tour__img" src="'+p.poster+'" alt="'+esc(plain(p.title))+' — real interface" decoding="async">'+pins+'</div>'+
+      '<div class="tour__cap"><div class="tour__capbody"><p class="tour__capttl"></p><p class="tour__captxt"></p></div>'+
+      '<div class="tour__nav"><button class="dc__iconbtn" type="button" data-nav="prev" aria-label="Previous feature">‹</button>'+
+      '<span class="tour__count"></span>'+
+      '<button class="dc__iconbtn" type="button" data-nav="next" aria-label="Next feature">›</button></div></div>';
+    host.appendChild(wrap);
+    var img=wrap.querySelector(".tour__img"), ttl=wrap.querySelector(".tour__capttl"), txt=wrap.querySelector(".tour__captxt"),
+        count=wrap.querySelector(".tour__count"), pinEls=wrap.querySelectorAll(".tour__pin");
+    var n=p.tour.length, cur=-1;
+    function select(i){
+      cur=(i+n)%n; var h=p.tour[cur];
+      img.style.transformOrigin = h.x+"% "+h.y+"%"; wrap.classList.add("zoomed");
+      ttl.textContent = h.t; txt.textContent = h.c; count.textContent = (cur+1)+" / "+n;
+      Array.prototype.forEach.call(pinEls, function(el,idx){ el.classList.toggle("active", idx===cur); });
+    }
+    Array.prototype.forEach.call(pinEls, function(el){ el.addEventListener("click", function(){ select(+el.dataset.i); }); });
+    wrap.querySelector('[data-nav="prev"]').addEventListener("click", function(){ select(cur<0?0:cur-1); });
+    wrap.querySelector('[data-nav="next"]').addEventListener("click", function(){ select(cur+1); });
+    count.textContent = "tap a pin";
+    ttl.textContent = "Guided tour"; txt.textContent = "Click a numbered hotspot (or ›) to zoom into each real feature.";
+  }
+
+  /* ---------- <demo-card> ---------- */
+  var proto = {};
+  proto.connectedCallback = function(){
+    if (this._init) return; this._init=true;
+    this.p = PROJECTS[+this.getAttribute("data-i")];
+    this.activated=false; this.renderPoster();
+  };
+  proto.renderPoster = function(){
+    var p=this.p, mode=p.mode;
+    var poster = p.poster
+      ? '<img class="dc__poster" src="'+p.poster+'" alt="'+esc(plain(p.title))+' — preview" loading="lazy" decoding="async" '+
+        'onerror="this.style.display=\'none\';this.nextElementSibling&&(this.nextElementSibling.style.display=\'grid\')"><div class="dc__fallback" style="display:none">'+p.num+'</div>'
+      : '<div class="dc__fallback">'+p.num+'</div>';
+    var launchTxt = mode==="live" ? "Launch live app" : "Explore the real UI";
+    var weight = mode==="live" ? "real app · loads on click" : "guided tour · real screenshot";
+    this.innerHTML =
+      '<figure class="pj-frame dc">'+
+        '<figcaption class="pj-frame__bar"><span class="pj-frame__dots"><i></i><i></i><i></i></span>'+
+          '<span class="pj-frame__addr">'+p.addr+'</span>'+
+          '<span class="dc__badge" data-mode="'+mode+'">'+mode+'</span>'+
+          '<span class="dc__live"><i></i> '+(mode==="live"?"live":"tour")+'</span>'+
+          '<span class="dc__ctl">'+
+            '<button class="dc__iconbtn" type="button" data-act="expand" aria-label="Expand to full size">Expand ⤢</button>'+
+            '<button class="dc__iconbtn" type="button" data-act="close" aria-label="Close and restore preview">Close ✕</button>'+
+          '</span>'+
+        '</figcaption>'+
+        '<div class="dc__stage">'+ poster +
+          '<div class="dc__host"></div>'+
+          '<div class="dc__veil"><button class="dc__launch" type="button" aria-label="'+launchTxt+' for '+esc(plain(p.title))+'">'+
+            '<span class="dc__play" aria-hidden="true">▶</span><span class="dc__launchtxt">'+launchTxt+'</span><span class="dc__weight">'+weight+'</span></button></div>'+
+          '<div class="dc__hint" aria-hidden="true"><b>'+mode+'</b> · nothing loads until you click</div>'+
+        '</div>'+
+      '</figure>';
+    this.frame=this.querySelector(".dc"); this.stage=this.querySelector(".dc__stage"); this.host=this.querySelector(".dc__host");
+    var card=this;
+    this.querySelector(".dc__launch").addEventListener("click", function(){ card.activate(); });
+    this.querySelector(".dc__ctl").addEventListener("click", function(e){
+      var b=e.target.closest("[data-act]"); if(!b) return;
+      if (b.getAttribute("data-act")==="expand") card.expand(); else card.close();
+    });
+  };
+  proto.activate = function(){
+    if (this.activated) return;
+    if (isDataSaver() && !this._confirmed){ this.showConfirm(); return; }
+    this.activated=true; var card=this;
+    var h=this.querySelector(".dc__hint"); if(h) h.remove();
+    deferMount(function(){ card.mount(); });
+  };
+  proto.showConfirm = function(){
+    var card=this, c=document.createElement("div"); c.className="dc__confirm";
+    c.innerHTML='<div><p>Data Saver is on — this loads the real app.</p><button class="dc-btn dc-btn--primary" type="button">Load it anyway</button></div>';
+    c.querySelector("button").addEventListener("click", function(){ card._confirmed=true; c.remove(); card.activate(); });
+    this.stage.appendChild(c);
+  };
+  proto.mount = function(){
+    this.frame.classList.add("is-live");
+    if (this.p.mode==="live") mountLive(this.host, this.p); else mountTour(this.host, this.p);
+  };
+  proto.expand = function(){
+    var returnTo=this.querySelector(".dc__launch");
+    if (this.activated) this.close();
+    var mhost=document.createElement("div"); mhost.className="dc__host"; mhost.style.opacity="1";
+    if (this.p.mode==="live") mountLive(mhost, this.p); else mountTour(mhost, this.p);
+    Modal.open(mhost, "<b>"+plain(this.p.title)+"</b> · "+(this.p.mode==="live"?"live app":"guided tour"), null, returnTo);
+  };
+  proto.close = function(){
+    var hadFocus=this.contains(document.activeElement);
+    this.frame.classList.remove("is-live");
+    this.host.innerHTML=""; this.activated=false;
+    if (!this.querySelector(".dc__hint")){
+      var h=document.createElement("div"); h.className="dc__hint"; h.setAttribute("aria-hidden","true");
+      h.innerHTML='<b>'+this.p.mode+'</b> · nothing loads until you click'; this.stage.appendChild(h);
+    }
+    var lb=this.querySelector(".dc__launch"); if (lb && hadFocus) lb.focus({preventScroll:true});
+  };
+  if ("customElements" in window && !customElements.get("demo-card")){
+    var El = class extends HTMLElement {}; Object.assign(El.prototype, proto); customElements.define("demo-card", El);
+  }
+
+  /* ---------- render cards into the Builds grid ---------- */
+  function render(){
+    var grid = document.getElementById("bdGrid");
+    if (!grid || grid.dataset.rendered) return;
+    grid.dataset.rendered = "1";
+    PROJECTS.forEach(function(p, i){
+      var art=document.createElement("article");
+      art.className="pj-build pj-reveal"+(i>0?" cv":"");
+      var caseLink = p.caseId
+        ? '<a class="pj-case" href="projects.html#'+p.caseId+'">read the case study <span class="pj-arr">→</span></a>'
+        : '<a class="pj-case" href="projects.html">see all case studies <span class="pj-arr">→</span></a>';
+      art.innerHTML =
+        '<div class="pj-build__media"><demo-card data-i="'+i+'"></demo-card>'+
+          '<p class="pj-cap">'+(p.mode==="live"?"Click to load the real, deployed app in a sandboxed iframe.":"Click for a guided hotspot tour over the real interface.")+'</p></div>'+
+        '<div class="pj-build__body">'+
+          '<span class="pj-build__cat"><b>'+p.num+'</b> · '+p.cat+'</span>'+
+          '<h3>'+p.title+(p.isNew?'<span class="pj-new">new</span>':'')+'</h3>'+
+          '<p class="pj-build__tag">'+p.tag+'</p>'+
+          '<p class="pj-build__lede">'+p.lede+'</p>'+
+          '<div class="pj-pills">'+ p.pills.map(function(t,j){ return '<span class="pj-pill'+(j===0?' pj-pill--lead':'')+'">'+t+'</span>'; }).join("") +'</div>'+
+          '<ul class="pj-facts">'+ p.facts.map(function(f){ return '<li>'+f+'</li>'; }).join("") +'</ul>'+
+          '<p class="pj-tech-note"><b>'+(p.mode==="live"?"live embed →":"tour →")+'</b> '+p.note+'</p>'+
+          caseLink+
+        '</div>';
+      grid.appendChild(art);
+    });
+    /* reveal on scroll (motion always-on) */
+    if ("IntersectionObserver" in window){
+      var io=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } }); }, { rootMargin:"0px 0px -10% 0px" });
+      grid.querySelectorAll(".pj-reveal").forEach(function(el){ io.observe(el); });
+    } else { grid.querySelectorAll(".pj-reveal").forEach(function(el){ el.classList.add("in"); }); }
+  }
+  if (document.readyState!=="loading") render();
+  else document.addEventListener("DOMContentLoaded", render);
+})();
 </script>
 </body>
 </html>

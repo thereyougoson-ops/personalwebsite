@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Philip Toulinov — Selected Builds</title>
-<meta name="description" content="Five systems Philip Toulinov designed, built and shipped end to end: real-time data infrastructure, an algorithmic trading bot, a Telegram crypto-lending platform, an AI-infrastructure monitor, and a creative web app — each with a live screenshot and the engineering behind it." />
+<meta name="description" content="Seven systems Philip Toulinov designed, built and shipped end to end: real-time data infrastructure, an algorithmic trading bot, a Telegram crypto-lending platform, an AI-infrastructure monitor, a creative web app, a live Bay Area express-lane toll console, and an open-data SF renovation/displacement watchlist — each with a live screenshot and the engineering behind it." />
 <meta name="author" content="Philip Toulinov" />
 <meta name="theme-color" content="#0c0b10" />
 
@@ -15,14 +15,14 @@
 <meta property="og:url" content="https://philiptoulinov.com/projects.html" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:title" content="Philip Toulinov — Selected Builds" />
-<meta property="og:description" content="Five systems, designed and built end to end. Real-time data pipelines, trading infra, a fintech bot, an AI-infra monitor and a creative web app." />
+<meta property="og:description" content="Seven systems, designed and built end to end. Real-time data pipelines, trading infra, a fintech bot, an AI-infra monitor, a creative web app, a live Bay Area toll console, and an open-data SF displacement watchlist." />
 <meta property="og:image" content="https://philiptoulinov.com/assets/og.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 <meta property="og:image:type" content="image/png" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Philip Toulinov — Selected Builds" />
-<meta name="twitter:description" content="Five systems, designed and built end to end — with the engineering behind each." />
+<meta name="twitter:description" content="Seven systems, designed and built end to end — with the engineering behind each." />
 <meta name="twitter:image" content="https://philiptoulinov.com/assets/og.png" />
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
@@ -272,10 +272,26 @@ html.js .pj-reveal:target{ opacity:1; transform:none; }
 .pj-detail__in{ overflow:hidden; min-height:0; }
 .pj-build.is-open .pj-detail{ grid-template-rows:1fr; }
 .pj-detail .pj-build__lede{ margin-top:1.15rem; }
+
+/* #4 · thumbnails "compile" from grayscale → colour as they scroll in (one-shot) and stay lit on hover/focus.
+   GPU-composited filter (cheap, no extra WebGL contexts on a 7-image content page). Gated behind html.js so
+   no-JS / unsupported simply shows the full-colour image — never a stuck-grey thumbnail. */
+html.js .pj-frame__img{ filter:grayscale(1) contrast(1.03) brightness(.97); transition:filter .85s var(--ease-out,ease); will-change:filter; }
+html.js .pj-frame.pj-lit .pj-frame__img,
+html.js .pj-frame:hover .pj-frame__img,
+html.js .pj-frame:focus-within .pj-frame__img,
+html.js .pj-build:target .pj-frame .pj-frame__img{ filter:grayscale(0) contrast(1) brightness(1) saturate(1.02); }
+/* one-shot diagonal "compile" light sweep on first reveal */
+.pj-frame__img{ position:relative; }
+.pj-frame .pj-compile-sweep{ position:absolute; inset:0; z-index:5; pointer-events:none; opacity:0; mix-blend-mode:screen;
+  background:linear-gradient(105deg, transparent 42%, rgba(var(--accent-rgb),.22) 50%, transparent 58%); transform:translateX(-30%); }
+.pj-frame.pj-lit .pj-compile-sweep{ animation:pjCompileSweep 1s var(--ease-out,ease) 1 both; }
+@keyframes pjCompileSweep{ 0%{opacity:0;transform:translateX(-35%)} 22%{opacity:1} 100%{opacity:0;transform:translateX(38%)} }
 </style>
 </head>
 <body>
 <div class="pj-codefield" id="pjCodefield" aria-hidden="true"><pre class="pj-codefield__base" id="pjCodeBase"></pre><pre class="pj-codefield__glow" id="pjCodeGlow"></pre></div>
+<div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__dot"></span><span class="cursor__ring"></span></div>
 <div class="pj-wrap">
 <a class="pj-skip" href="#builds">Skip to projects</a>
 
@@ -298,11 +314,11 @@ html.js .pj-reveal:target{ opacity:1; transform:none; }
   <!-- ░░ INTRO ░░ -->
   <section class="pj-section pj-hero">
     <p class="pj-hero__eyebrow pj-reveal mono"><span class="g">philip@toulinov</span> ~ $ <span class="a">ls</span> --systems ./builds</p>
-    <h1 class="pj-reveal">Five systems, <em>built end to end.</em></h1>
+    <h1 class="pj-reveal">Seven systems, <em>built end to end.</em></h1>
     <p class="pj-hero__lede pj-reveal">
-      Beyond release pipelines, I design and ship complete products. These are five independent builds —
+      Beyond release pipelines, I design and ship complete products. These are seven independent builds —
       <b>real-time data infrastructure</b>, an <b>algorithmic trading bot</b>, a <b>Telegram crypto-lending platform</b>,
-      an <b>AI-infrastructure monitor</b>, and a <b>creative web app</b>. Each one below is a system I designed and shipped,
+      an <b>AI-infrastructure monitor</b>, a <b>creative web app</b>, a <b>live Bay Area toll console</b>, and an <b>open-data SF displacement watchlist</b>. Each one below is a system I designed and shipped,
       shown with a live screenshot of its UI and the engineering behind it.
     </p>
 
@@ -313,6 +329,8 @@ html.js .pj-reveal:target{ opacity:1; transform:none; }
       <li><a href="#build-stakeodds"><span class="pj-index__n">03</span><span class="pj-index__name">STAKE·ODDS</span><span class="pj-index__cat">Real-time data infrastructure</span></a></li>
       <li><a href="#build-loansy"><span class="pj-index__n">04</span><span class="pj-index__name">Loansy</span><span class="pj-index__cat">Full-stack fintech bot</span></a></li>
       <li><a href="#build-claudedown"><span class="pj-index__n">05</span><span class="pj-index__name">ClaudeDown</span><span class="pj-index__cat">Observability · monitoring</span></a></li>
+      <li><a href="#build-baytoolmap"><span class="pj-index__n">06</span><span class="pj-index__name">Flex Lane Fare Console</span><span class="pj-index__cat">Real-time civic data · Bay Area tolls</span></a></li>
+      <li><a href="#build-sfopendata"><span class="pj-index__n">07</span><span class="pj-index__name">The Renovation Watchlist</span><span class="pj-index__cat">Civic open data · SF displacement signal</span></a></li>
     </ul>
   </section>
 
@@ -326,10 +344,10 @@ html.js .pj-reveal:target{ opacity:1; transform:none; }
           <div class="pj-frame__bar"><span class="pj-frame__dots"><i></i><i></i><i></i></span><span class="pj-frame__addr">anatoly-sokoloff · a visual journey</span></div>
           <picture>
             <source type="image/webp" srcset="assets/projects/sokoloff-640.webp 640w, assets/projects/sokoloff-1280.webp 1280w" sizes="(max-width:900px) 92vw, 560px" />
-            <img class="pj-frame__img" src="assets/projects/sokoloff.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="The Anatoly Sokoloff gallery: a museum-style hero with a featured painting and a horizontally scrolling timeline of real artworks with title/year captions." />
+            <img class="pj-frame__img" src="assets/projects/sokoloff.jpg" width="1440" height="900" loading="lazy" decoding="async" alt="The Anatoly Sokoloff gallery in dark mode — 'The Galleria' collection grid: the painter's works grouped by period (United States, Troikas, Europe, Argentina, Russia, Portraits) as cards on a near-black background." />
           </picture>
         </figure>
-        <p class="pj-cap">Reconstructed from the app's real artwork library and copy: a horizontally-scrolling timeline of the painter's catalogue.</p>
+        <p class="pj-cap">The dark "Galleria" view — the painter's catalogue grouped into period collections, reconstructed from the app's real artwork library.</p>
       </div>
       <div class="pj-build__body">
         <header class="pj-build__head">
@@ -550,6 +568,89 @@ html.js .pj-reveal:target{ opacity:1; transform:none; }
       </div>
     </article>
 
+    <!-- 06 · Flex Lane Fare Console -->
+    <article class="pj-build pj-reveal" id="build-baytoolmap">
+      <div class="pj-build__media">
+        <figure class="pj-frame">
+          <div class="pj-frame__bar"><span class="pj-frame__dots"><i></i><i></i><i></i></span><span class="pj-frame__addr">flex-lanes · I-880 express · LIVE</span></div>
+          <picture>
+            <source type="image/webp" srcset="assets/projects/baytoolmap-640.webp 640w, assets/projects/baytoolmap-1280.webp 1280w" sizes="(max-width:900px) 92vw, 560px" />
+            <img class="pj-frame__img" src="assets/projects/baytoolmap.png" width="1280" height="843" loading="lazy" decoding="async" alt="The Flex Lane Fare Console: a dark schematic map of the Bay Area express-lane network with the I-880 corridor selected, a zone-by-zone fare breakdown totalling $4.25, a FasTrak occupancy switch, and an amber DMS-style live-price console." />
+          </picture>
+        </figure>
+        <p class="pj-cap">The I-880 corridor selected: the live 511 posted price, the zone-by-zone breakdown, and the FasTrak Flex occupancy rule — all from the real toll feed.</p>
+      </div>
+      <div class="pj-build__body">
+        <header class="pj-build__head">
+          <span class="pj-build__cat"><b>06</b> · Real-time civic data · live fare console</span>
+          <h2>Flex Lane Fare Console</h2>
+          <p class="pj-build__tag">What every Bay Area express lane costs — live, with honest fallbacks.</p>
+          <p class="pj-ops"><span class="pj-ops__k">how it stays reliable</span> every price is labelled LIVE / SAMPLE / ESTIMATE · stale 511 readings fall back to a modelled curve with a "last reported" timestamp — it never guesses silently</p>
+        </header>
+        <p class="pj-build__lede">
+          A dark, single-purpose console that congregates <b>all 8 express ("flex") lane corridors</b> in the greater Bay Area
+          and tells you what a trip will cost — <b>live from the official 511 toll feed</b> where prices are posted, and a
+          transparent <b>time-of-day estimate</b> everywhere else.
+        </p>
+        <div class="pj-pa">
+          <div class="pj-pa__cell"><div class="pj-pa__k">The problem</div><div class="pj-pa__v">Bay Area flex-lane pricing is scattered across operators and corridor-specific carpool rules, posted on dynamic signs — and the 511 API returns only the <i>current</i> price, with no history to model from.</div></div>
+          <div class="pj-pa__cell"><div class="pj-pa__k is-amber">The build</div><div class="pj-pa__v">A React + TypeScript front end over a small Node/Express proxy that polls the 511 SF Bay Toll Data API. A start→exit calculator sums real gantry zones; a per-corridor occupancy engine applies the correct FasTrak Flex carpool rule; a freshness threshold decides LIVE vs ESTIMATE.</div></div>
+        </div>
+        <ul class="pj-feat">
+          <li>A bespoke <b>schematic network map</b> of all 8 corridors at real coordinates — click a line to switch corridors; the trip highlights with start/exit markers.</li>
+          <li>A <b>start → exit calculator</b> on a real gantry-zone track: the toll is the sum of the zones you cross.</li>
+          <li>A <b>FasTrak Flex occupancy</b> switch (1 / 2 / 3+) that applies each corridor's carpool rule — 2-person free on I-580/I-680, half-price elsewhere; 3+/transit free everywhere.</li>
+          <li>An amber <b>DMS-style console</b> shows the price as LIVE, SAMPLE, or a clearly-labelled ESTIMATE — plus a drag-to-pick time-of-day curve and a live Bay-bridge tolls panel.</li>
+        </ul>
+        <div class="pj-pills">
+          <span class="pj-pill pj-pill--lead">TypeScript</span><span class="pj-pill">React 18</span><span class="pj-pill">Vite</span><span class="pj-pill">Node / Express</span><span class="pj-pill">511 Toll Data API</span><span class="pj-pill">Playwright</span>
+        </div>
+        <ul class="pj-facts">
+          <li><b>8</b> express-lane corridors</li><li><b>live</b> 511 feed + bridges</li><li>LIVE · SAMPLE · ESTIMATE</li><li>honest fallbacks</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="pj-build pj-reveal" id="build-sfopendata">
+      <div class="pj-build__media">
+        <figure class="pj-frame">
+          <div class="pj-frame__bar"><span class="pj-frame__dots"><i></i><i></i><i></i></span><span class="pj-frame__addr">renovation-watchlist · DataSF · 985 buildings</span></div>
+          <picture>
+            <source type="image/webp" srcset="assets/projects/sfopendata-640.webp 640w, assets/projects/sfopendata-1280.webp 1280w" sizes="(max-width:900px) 92vw, 560px" />
+            <img class="pj-frame__img" src="assets/projects/sfopendata.jpg" width="1280" height="900" loading="lazy" decoding="async" alt="The Renovation Watchlist: a cream editorial homepage with a giant serif headline reading 'The Renovation Watchlist', a lede framing unpermitted construction as the earliest displacement signal, and three headline figures — 985 protected buildings flagged, 1,449 permit-required violations, and 34 neighborhoods touched." />
+          </picture>
+        </figure>
+        <p class="pj-cap">The editorial opening: the thesis, then the three numbers that frame it — 985 flagged buildings, 1,449 permit-required violations, across 34 SF neighborhoods, all from DataSF open data.</p>
+      </div>
+      <div class="pj-build__body">
+        <header class="pj-build__head">
+          <span class="pj-build__cat"><b>07</b> · Civic open data · displacement early-warning</span>
+          <h2>The Renovation Watchlist</h2>
+          <p class="pj-build__tag">The earliest public signal of renovation-driven displacement in San Francisco — ranked.</p>
+          <p class="pj-ops"><span class="pj-ops__k">how it stays reliable</span> a pure-stdlib pipeline (zero pip installs) rebuilds the whole snapshot from raw DataSF on any machine · every score traces back to its source rows · the method's limits are stated on the page, not hidden</p>
+        </header>
+        <p class="pj-build__lede">
+          A reproducible data pipeline and a cinematic editorial site that rank <b>rent-controlled San Francisco buildings by unpermitted-renovation pressure</b> — because protected buildings are rarely emptied by mass eviction; more often they go quiet, renovated one unit at a time, and <b>unpermitted construction is the earliest public signal</b>. Built entirely from DataSF open data.
+        </p>
+        <div class="pj-pa">
+          <div class="pj-pa__cell"><div class="pj-pa__k">The problem</div><div class="pj-pa__v">SF's building-inspection data has no "work without permit" flag — the signal is buried in the free-text violation <i>item</i> field — and rent-control eligibility isn't a column anywhere. The displacement signal lives in the open data, but only if you can join and read it.</div></div>
+          <div class="pj-pa__cell"><div class="pj-pa__k is-amber">The build</div><div class="pj-pa__v">A dependency-free Python pipeline pulls permit-required Notices of Violation, joins them on block+lot to pre-1979 multi-unit parcels from the latest Assessor roll, scores each building 0–100 (weighted toward repeat violations, recency and assessed value), and writes a ranked snapshot. A no-build vanilla site renders it.</div></div>
+        </div>
+        <ul class="pj-feat">
+          <li>A dependency-free <b>SODA / Socrata client</b> (retry + pagination, pure stdlib) so the whole snapshot rebuilds from raw DataSF with <b>zero pip installs</b>.</li>
+          <li>A <b>scrollytelling explainer</b> that walks the signal — how a free-text violation item becomes a displacement-pressure score.</li>
+          <li>An <b>interactive MapLibre map</b> of all 985 flagged buildings — dot size and colour encode the score; click any dot for the record.</li>
+          <li>A sortable, searchable <b>ranked table linked to the map</b> (table ↔ map selection stays in sync) and an honest methodology section that states the proxy's limits up front.</li>
+        </ul>
+        <div class="pj-pills">
+          <span class="pj-pill pj-pill--lead">Python (stdlib)</span><span class="pj-pill">DataSF / SODA API</span><span class="pj-pill">MapLibre GL</span><span class="pj-pill">GSAP + Lenis</span><span class="pj-pill">Vanilla JS</span><span class="pj-pill">No build step</span>
+        </div>
+        <ul class="pj-facts">
+          <li><b>985</b> buildings flagged</li><li><b>1,449</b> permit-required violations</li><li><b>34</b> neighborhoods</li><li><b>0</b> pip installs</li>
+        </ul>
+      </div>
+    </article>
+
   </div>
 
   <!-- ░░ CTA ░░ -->
@@ -597,6 +698,15 @@ html.js .pj-reveal:target{ opacity:1; transform:none; }
       }, { passive:true });
     });
   }
+
+  // #4 · grayscale→colour "compile" reveal: light each thumbnail once as it scrolls in (CSS owns hover/focus).
+  var frames=[].slice.call(d.querySelectorAll('.pj-frame'));
+  frames.forEach(function(f){ var s=d.createElement('span'); s.className='pj-compile-sweep'; s.setAttribute('aria-hidden','true'); f.appendChild(s); });
+  if('IntersectionObserver' in window){
+    var lio=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('pj-lit'); lio.unobserve(en.target); } }); }, { rootMargin:'0px 0px -12% 0px', threshold:0.12 });
+    frames.forEach(function(f){ lio.observe(f); });
+  } else { frames.forEach(function(f){ f.classList.add('pj-lit'); }); }
+  window.__pjThumbReveal={ active:true, count:frames.length };
 })();
 
 // reactive code-field flashlight: faint CI/CD code revealed by the cursor (self-contained, matches the index bg)
@@ -634,6 +744,24 @@ html.js .pj-reveal:target{ opacity:1; transform:none; }
     lx=nx; ly=ny;
     field.style.setProperty('--mx', nx+'px'); field.style.setProperty('--my', ny+'px');
   })();
+})();
+
+// custom cursor — dot follows instantly, ring trails (main.css hides the OS cursor + supplies .cursor styles;
+// the homepage drives this from main.js/GSAP, which this page doesn't load — so a small vanilla version here)
+(function(){
+  if(!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches)) return;
+  var cur=document.getElementById('cursor'); if(!cur) return;
+  var dot=cur.querySelector('.cursor__dot'), ring=cur.querySelector('.cursor__ring');
+  cur.style.opacity='0';
+  var mx=innerWidth/2, my=innerHeight/2, rx=mx, ry=my, seen=false;
+  addEventListener('mousemove', function(e){
+    mx=e.clientX; my=e.clientY;
+    if(!seen){ seen=true; rx=mx; ry=my; cur.style.opacity='1'; }
+    if(dot) dot.style.transform='translate('+mx+'px,'+my+'px) translate(-50%,-50%)';
+  }, {passive:true});
+  (function loop(){ requestAnimationFrame(loop); if(document.hidden) return; rx+=(mx-rx)*0.2; ry+=(my-ry)*0.2; if(ring) ring.style.transform='translate('+rx.toFixed(1)+'px,'+ry.toFixed(1)+'px) translate(-50%,-50%)'; })();
+  var add=function(){document.body.classList.add('cursor-hover');}, rm=function(){document.body.classList.remove('cursor-hover');};
+  [].slice.call(document.querySelectorAll('a,button,[data-magnetic]')).forEach(function(el){ el.addEventListener('mouseenter',add); el.addEventListener('mouseleave',rm); });
 })();
 
 // ── terminal-dossier restructure: window header + screenshot|spec grid + `$ cat {slug}.md` expand ──

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" class="is-loading">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SF on Screen — A century of film &amp; TV shot in San Francisco</title>
+  <meta name="description" content="Every filming location the San Francisco Film Commission has logged since 1915 — 2,118 shoot locations from 295 productions, mapped across the city, from Chaplin to Vertigo to The Last Black Man in San Francisco." />
+  <meta name="theme-color" content="#0b0b0d" />
+  <meta property="og:title" content="SF on Screen" />
+  <meta property="og:description" content="A century of film &amp; TV shot in San Francisco, mapped — 2,118 locations, 295 productions, 1915–2025." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b0b0d'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%23e8b54a' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='2.4' fill='%23e8b54a'/%3E%3Ccircle cx='16' cy='9' r='1.7' fill='%23e8b54a'/%3E%3Ccircle cx='16' cy='23' r='1.7' fill='%23e8b54a'/%3E%3Ccircle cx='9' cy='16' r='1.7' fill='%23e8b54a'/%3E%3Ccircle cx='23' cy='16' r='1.7' fill='%23e8b54a'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./vendor/maplibre-gl.css" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Dataset","name":"Film Locations in San Francisco","description":"Filming locations for movies and television shot in San Francisco, maintained by the San Francisco Film Commission.","url":"https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am","creator":{"@type":"GovernmentOrganization","name":"San Francisco Film Commission"},"isAccessibleForFree":true,"license":"https://datasf.org/opendata/"}
+  </script>
+</head>
+<body class="is-loading">
+  <div class="scroll-progress" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" id="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+  <div class="fx-status" id="fx-status" aria-hidden="true"></div>
+
+  <!-- ============================== TOP BAR ============================== -->
+  <header class="topbar" data-reveal>
+    <a class="brand magnetic" data-magnetic="0.3" href="#top" data-cursor="Top" aria-label="SF on Screen — home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span class="brand-text">SF&nbsp;on&nbsp;Screen</span>
+    </a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="#explore" data-cursor="Map">Explore</a>
+      <a href="#century" data-cursor="Scroll">The Century</a>
+      <a href="#films" data-cursor="Scroll">Films</a>
+    </nav>
+    <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">Motion: on</button>
+  </header>
+
+  <!-- ============================== HERO ============================== -->
+  <main id="top">
+    <section class="hero" id="hero">
+      <div class="hero-inner">
+        <p class="eyebrow" data-reveal data-reveal-y="14">San Francisco Film Commission · 1915&ndash;2025</p>
+        <h1 class="hero-title" data-split-lines>The city has<br />always been<br />on screen.</h1>
+        <p class="hero-sub" data-scramble="A century of film and television, shot on location in San Francisco.">A century of film and television, shot on location in San Francisco.</p>
+        <p class="lede" data-reveal data-reveal-y="24" data-speed="1.12">
+          Every shoot the Film Commission has logged since 1915 — a Chaplin two-reeler to last
+          year's streaming dramas — pinned to the corner it was filmed on.
+        </p>
+        <div class="hero-cta" data-reveal data-reveal-y="20">
+          <span class="magnetic" data-magnetic="0.5"><a class="btn" href="#explore" data-cursor="Open">Open the map ↓</a></span>
+          <a class="link-quiet" href="#century" data-cursor="Scroll">or scroll the timeline</a>
+        </div>
+      </div>
+
+      <div class="hero-marquee ty-marquee" aria-hidden="true">
+        <div class="mq-track" id="hero-marquee"><!-- film titles injected --></div>
+      </div>
+      <div class="scroll-cue" aria-hidden="true"><span></span></div>
+    </section>
+
+    <!-- ============================== STAT BAND ============================== -->
+    <section class="stats" id="stats" aria-label="By the numbers">
+      <ul class="stat-row">
+        <li class="stat" data-reveal data-reveal-y="20">
+          <span class="stat-num" data-count id="stat-locations">0</span>
+          <span class="stat-label">shoot locations mapped</span>
+        </li>
+        <li class="stat" data-reveal data-reveal-y="20">
+          <span class="stat-num" data-count id="stat-titles">0</span>
+          <span class="stat-label">films &amp; TV productions</span>
+        </li>
+        <li class="stat" data-reveal data-reveal-y="20">
+          <span class="stat-num" data-count id="stat-years">0</span>
+          <span class="stat-label">years, 1915&ndash;2025</span>
+        </li>
+        <li class="stat" data-reveal data-reveal-y="20">
+          <span class="stat-num" data-count id="stat-hoods">0</span>
+          <span class="stat-label">SF neighborhoods used</span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============================== MAP / EXPLORE ============================== -->
+    <section class="explore" id="explore">
+      <div class="explore-head" data-reveal>
+        <p class="eyebrow">The map</p>
+        <h2 class="section-title">Every frame has an address</h2>
+        <p class="section-lede">Each dot is one logged location, colored by the decade it was shot.
+          Tap one to read the scene. Search a title, or press play to watch the century fill in.</p>
+      </div>
+
+      <div class="map-wrap">
+        <div id="map" role="application" aria-label="Map of San Francisco filming locations"></div>
+        <div class="map-loading" id="map-loading"><span class="spinner"></span> Loading the city…</div>
+
+        <!-- search -->
+        <div class="map-search">
+          <input id="search" type="search" autocomplete="off" spellcheck="false"
+                 role="combobox" aria-expanded="false" aria-controls="search-results" aria-autocomplete="list"
+                 placeholder="Search a film or show…" aria-label="Search a film or show" />
+          <ul class="search-results" id="search-results" role="listbox" aria-label="Matching films and shows" hidden></ul>
+        </div>
+
+        <!-- decade scrubber -->
+        <div class="map-timeline" data-lenis-prevent>
+          <div class="tl-caption" id="tl-caption">
+            <span class="tl-decade" id="tl-decade">All decades</span>
+            <span class="tl-meta" id="tl-meta">2,118 locations · 295 productions</span>
+          </div>
+          <div class="tl-controls">
+            <button class="tl-play" id="tl-play" type="button" aria-label="Play the century">▶ Play</button>
+            <input id="tl-scrub" type="range" min="0" max="12" value="12" step="1"
+                   aria-label="Reveal locations up to a decade" />
+            <button class="tl-reset" id="tl-reset" type="button">All</button>
+          </div>
+        </div>
+
+        <!-- legend -->
+        <div class="legend" id="legend" aria-hidden="true"></div>
+
+        <!-- film card -->
+        <aside class="film-card" id="film-card" role="dialog" aria-modal="false"
+               aria-labelledby="card-title-h" tabindex="-1" hidden>
+          <button class="card-close" id="card-close" type="button" aria-label="Close film details">✕</button>
+          <div class="card-body" id="card-body"></div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============================== THE CENTURY (scrollytelling) ============================== -->
+    <section class="century" id="century">
+      <div class="century-head" data-reveal>
+        <p class="eyebrow">The century</p>
+        <h2 class="section-title">From two reels to a streaming boom</h2>
+        <p class="section-lede">The Commission's logbook is lopsided — a thin reel of classics, then an
+          explosion once prestige TV discovered the city. Here is each decade, and the production that
+          left the deepest footprint on it.</p>
+      </div>
+      <ol class="decade-rail" id="decade-rail"><!-- decade panels injected --></ol>
+    </section>
+
+    <!-- ============================== FILMS + NEIGHBORHOODS ============================== -->
+    <section class="films" id="films">
+      <div class="films-grid">
+        <div class="films-col" data-reveal>
+          <h3 class="col-title">Most-filmed productions</h3>
+          <p class="col-note">Ranked by number of distinct SF locations logged.</p>
+          <ol class="rank-list" id="top-titles"><!-- injected --></ol>
+        </div>
+        <div class="films-col" data-reveal>
+          <h3 class="col-title">Most-filmed neighborhoods</h3>
+          <p class="col-note">Where the cameras keep coming back.</p>
+          <ol class="bar-list" id="top-hoods"><!-- injected --></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== METHOD ============================== -->
+    <section class="method" id="method">
+      <div class="method-grid">
+        <div class="method-col" data-reveal>
+          <h3>The source</h3>
+          <p>“Film Locations in San Francisco” — dataset <code>yitu-d5am</code> on
+            <a href="https://data.sfgov.org/Culture-and-Recreation/Film-Locations-in-San-Francisco/yitu-d5am" data-cursor="Open">DataSF</a>,
+            maintained by the San Francisco Film Commission. One row per logged location per production.</p>
+        </div>
+        <div class="method-col" data-reveal>
+          <h3>What's mapped</h3>
+          <p>The <span id="m-loc">2,118</span> rows that carry coordinates, across
+            <span id="m-titles">295</span> productions. A handful of un-geocoded entries and
+            off-map outliers are set aside. Decade is taken from each title's earliest release year.</p>
+        </div>
+        <div class="method-col" data-reveal>
+          <h3>Honest gaps</h3>
+          <p>This is a permit-and-publicity logbook, not a complete filmography — older films are
+            sparsely recorded and many shoots never make it in. It shows where the city <em>let itself
+            be filmed</em>, not every frame ever shot here. Last refreshed <time id="refreshed">—</time>.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <p>SF on Screen · built from open data · third in a series after
+          <span class="sib">Renovation Watchlist</span> and
+          <span class="sib">The Urban Forest</span>.</p>
+        <p class="footer-meta">No tracking. Fully static. <a href="https://datasf.org/opendata/" data-cursor="Open">DataSF open data</a>.</p>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ============================== SCRIPTS ============================== -->
+  <!-- vendor: GSAP core before its plugins; lenis + maplibre anytime before app -->
+  <script src="./vendor/gsap.min.js"></script>
+  <script src="./vendor/ScrollTrigger.min.js"></script>
+  <script src="./vendor/SplitText.min.js"></script>
+  <script src="./vendor/ScrambleTextPlugin.min.js"></script>
+  <script src="./vendor/Observer.min.js"></script>
+  <script src="./vendor/lenis.min.js"></script>
+  <script src="./vendor/maplibre-gl.js"></script>
+  <!-- app: core.js FIRST (defines window.FX), then effect modules + our modules -->
+  <script src="./js/core.js"></script>
+  <script src="./js/scroll.js"></script>
+  <script src="./js/type.js"></script>
+  <script src="./js/cursor.js"></script>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

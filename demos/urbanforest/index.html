@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Urban Forest — San Francisco's 198,435 street trees</title>
+  <meta name="description" content="An interactive botanical map of every street tree in San Francisco — 198,435 trees across 586 species, colored by genus. Built from DataSF open data." />
+  <link rel="canonical" href="./" />
+  <meta property="og:title" content="The Urban Forest — San Francisco" />
+  <meta property="og:description" content="195,364 street trees mapped, colored by genus. A botanical portrait of the city, from open data." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23efe9d8'/%3E%3Ccircle cx='50' cy='40' r='26' fill='%232f5d3a'/%3E%3Crect x='46' y='58' width='8' height='30' fill='%235e4630'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Dataset","name":"The Urban Forest — San Francisco street trees",
+   "description":"Every geocoded San Francisco street tree, colored by genus, from the DPW Street Tree List.",
+   "isBasedOn":"https://data.sfgov.org/d/tkzw-k3nq","license":"https://datasf.org/opendata/terms/"}
+  </script>
+</head>
+
+<body class="is-loading">
+  <a class="skip-link" href="#map">Skip to the map</a>
+  <div class="cursor" aria-hidden="true"></div>
+
+  <header class="topbar" data-reveal>
+    <a class="brand" href="#top"><span class="brand-mark">❦</span><span class="brand-text">Urban&nbsp;Forest</span></a>
+    <nav class="topnav" aria-label="Primary">
+      <a href="#explore">Map</a>
+      <a href="#species">Species</a>
+      <a href="#method">Method</a>
+    </nav>
+    <button class="motion-toggle" type="button" aria-pressed="false" title="Toggle motion">
+      <span class="motion-dot"></span><span class="motion-label">Motion</span>
+    </button>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <canvas class="canopy" aria-hidden="true"></canvas>
+      <div class="hero-inner">
+        <p class="eyebrow" data-reveal>San Francisco · Street-tree record</p>
+        <h1 class="hero-title" data-split-lines>The Urban Forest</h1>
+        <p class="hero-count" data-scramble aria-label="198,435 street trees">198,435</p>
+        <p class="hero-count-label" data-reveal>street trees on record · <span data-fact="mapped">195,364</span> mapped · <span data-fact="species">586</span> species</p>
+        <p class="lede" data-reveal>
+          Every London plane, lemon-scented gum and flowering cherry the city keeps a record of —
+          <b>San Francisco traced in its street trees.</b> Each dot is one tree, colored by genus. Wander it.
+        </p>
+        <a class="scroll-cue" href="#explore" data-reveal><span>Enter the forest</span><span class="cue-line"></span></a>
+      </div>
+    </section>
+
+    <!-- MAP -->
+    <section class="map-section" id="explore">
+      <div class="map-head">
+        <p class="eyebrow" data-reveal>Explore</p>
+        <h2 data-reveal data-reveal-y="24">The city, drawn by its trees</h2>
+        <p data-reveal>Nothing here but the trees — yet the grid, the hills and the shoreline surface on their own.
+          Color is genus; tap a tree for its species and the year it was planted. Filter by genus, scrub the
+          planting years, or find your street.</p>
+      </div>
+      <div class="map-shell">
+        <div class="map-loading" id="map-loading"><span class="ml-leaf">❦</span>Growing the forest…</div>
+        <div id="map" tabindex="0" role="application"
+             aria-label="Map of San Francisco street trees. Each point is one tree, colored by botanical genus. Drag to pan, double-click or use the buttons to zoom, and click a tree for details. Use the legend to filter, the year slider to scrub planting years, or search a street. A list of species follows below."></div>
+        <div class="zoom-ctrl">
+          <button class="zbtn" id="zin" type="button" aria-label="Zoom in">+</button>
+          <button class="zbtn" id="zout" type="button" aria-label="Zoom out">−</button>
+        </div>
+        <div class="map-ui">
+          <div class="panel legend" aria-label="Genus legend">
+            <p class="legend-title">Genus — tap to isolate</p>
+            <div class="legend-grid" id="legend"></div>
+          </div>
+          <div class="panel controls">
+            <p class="map-readout" role="status" aria-live="polite"><b id="count">…</b> <span>trees shown</span></p>
+            <div class="scrubber">
+              <label for="scrub">Planting year <span class="scrub-year" id="scrub-year">all</span></label>
+              <input id="scrub" type="range" min="1955" max="2026" value="2026" step="1" aria-label="Planting year" />
+            </div>
+            <div class="search">
+              <label for="street">Find your street</label>
+              <input id="street" type="search" placeholder="e.g. Dolores, Fulton, 24th…" aria-label="Search a street name" />
+            </div>
+            <div class="btn-row">
+              <button class="btn" id="grow" type="button" aria-pressed="false">▶ Watch it grow</button>
+              <button class="btn" id="reset" type="button">Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPECIES -->
+    <section class="species" id="species">
+      <div class="section-head">
+        <p class="eyebrow" data-reveal>The species</p>
+        <h2 class="section-title" data-reveal data-reveal-y="24"><span data-fact="species">586</span> species line the streets</h2>
+        <p class="section-intro" data-reveal>From the ubiquitous London plane to one-of-a-kind specimens. Pick a genus to
+          paint the map; the most common species are listed below.</p>
+      </div>
+      <div class="genus-wall" id="genus-wall" role="group" aria-label="Filter the map by genus"></div>
+      <div class="species-list" id="species-list" aria-label="Most common species"></div>
+    </section>
+
+    <!-- METHOD -->
+    <section class="method" id="method">
+      <div class="section-head">
+        <p class="eyebrow" data-reveal>Method &amp; notes</p>
+        <h2 class="section-title" data-reveal data-reveal-y="24">How this is made</h2>
+      </div>
+      <div class="method-grid">
+        <div class="method-col" data-reveal>
+          <h3>The data</h3>
+          <p>Every tree comes from the Public Works <a href="https://data.sfgov.org/d/tkzw-k3nq" target="_blank" rel="noopener">Street Tree List</a> —
+            DPW-maintained street trees, updated daily.</p>
+          <p class="refreshed">Snapshot refreshed <time id="refreshed">—</time>. Re-run <code>pipeline/build_forest.py</code> to update.</p>
+        </div>
+        <div class="method-col" data-reveal>
+          <h3>The colors</h3>
+          <p>Each tree is colored by its botanical <strong>genus</strong> (the first word of its species name).
+            The most common genera get a hand-picked hue; the long tail shares a muted sage.</p>
+          <h3>The timeline</h3>
+          <p>“Watch it grow” shows only the <span data-fact="dated">70,065</span> trees with a recorded planting date
+            (1955–present) appearing year by year.</p>
+        </div>
+        <div class="method-col" data-reveal>
+          <h3>Read with care</h3>
+          <p class="caveat">This is the city's <strong>record</strong> of street trees, not a tree census — it omits
+            park trees, yard trees, and anything unrecorded.</p>
+          <p class="caveat">About <span data-fact="unrecorded">12,303</span> trees have no species logged; they show as
+            “unidentified.”</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- tree / species detail drawer -->
+  <div class="detail-backdrop" id="detail-backdrop"></div>
+  <aside class="detail" id="detail" role="dialog" aria-modal="true" aria-label="Tree details" aria-hidden="true" inert>
+    <button class="detail-close" id="detail-close" type="button" aria-label="Close details">×</button>
+    <div class="detail-body" id="detail-body"></div>
+  </aside>
+
+  <footer class="footer">
+    <p>A botanical portrait built from <a href="https://datasf.org" target="_blank" rel="noopener">San Francisco open data</a>.
+       Independent project — a sibling to the Renovation Watchlist.</p>
+    <p class="foot-mono">data.sfgov.org · tkzw-k3nq</p>
+  </footer>
+
+  <!-- vendored libraries (UMD globals) -->
+  <script src="./vendor/gsap.min.js"></script>
+  <script src="./vendor/ScrollTrigger.min.js"></script>
+  <script src="./vendor/SplitText.min.js"></script>
+  <script src="./vendor/ScrambleTextPlugin.min.js"></script>
+  <script src="./vendor/lenis.min.js"></script>
+  <script src="./vendor/deck.gl.min.js"></script>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
