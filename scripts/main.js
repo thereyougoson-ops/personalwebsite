@@ -352,7 +352,7 @@ function revealHero(){
 /* =====================  LENIS  ===================== */
 function initLenis(){
   if (typeof window.Lenis === 'undefined') return;
-  lenis = new Lenis({ lerp: .095, wheelMultiplier: 1, smoothWheel: true, touchMultiplier: 1.4 });
+  lenis = new Lenis({ lerp: .11, wheelMultiplier: 1, smoothWheel: true, touchMultiplier: 1.4 });   // .11 settles faster — content feels attached to the wheel (premium-tight), not floaty
   window.__lenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((t) => lenis.raf(t * 1000));
@@ -764,7 +764,7 @@ function activateCard(i, animate){
   const isMonitor = (i === NODE_N - 1);
   stage.classList.add('is-live');
   if (chip && !chip.hasAttribute('data-live')){ chip.textContent = 'running'; chip.classList.remove('pass'); chip.classList.add('live'); }
-  if (animate && hasGSAP) gsap.to(points, { opacity: 1, y: 0, duration: .6, stagger: .08, ease: 'power3.out' });
+  if (animate && hasGSAP) gsap.to(points, { opacity: 1, y: 0, duration: .6, stagger: .08, ease: 'expo.out' });   // unified entrance ease (matches every other reveal)
   else points.forEach(p => { p.style.opacity = 1; p.style.transform = 'none'; });
 
   // build-log micro-stream
@@ -1195,6 +1195,10 @@ function initCompilerLens(field, codeText){
     // GL owns the reveal now — hide the CSS lit/base layers (their TEXT stays in the DOM for the self-test)
     const cg = document.getElementById('codeGlow'); if (cg) cg.style.opacity = '0';
     const cb = document.getElementById('codeBase'); if (cb) cb.style.opacity = '0';
+    // …and kill the .codefield --mx-driven radial BACKGROUND: with codeGlow hidden the lens is the only
+    // visible reveal, so that gradient now repaints the full fixed viewport every frame for nothing.
+    // Removing it means the per-frame --mx write (still read by the lens uniform) drives ZERO paint.
+    field.style.background = 'none';
 
     let mx = window.innerWidth * 0.7, my = window.innerHeight * 0.32, t0 = performance.now(), paused = false, inView = true;
     const rv = (name, fb) => { const v = parseFloat(field.style.getPropertyValue(name)); return isNaN(v) ? fb : v; };
@@ -1213,9 +1217,13 @@ function initCompilerLens(field, codeText){
     // Drive the lens from its OWN rAF, NOT gsap.ticker — the ticker also runs lenis.raf(), and adding
     // per-frame GPU work ahead of it jitters Lenis's scrollTo (it was destabilizing the dock's exact
     // scroll-restore). This is not the forbidden double-rAF: that rule is only about driving lenis twice.
-    requestAnimationFrame(function loop(){ render(); requestAnimationFrame(loop); });
-    // pause the field's GPU work while the experience section is off-screen (battery/CPU)
-    try { new IntersectionObserver((es) => { inView = es[0].isIntersecting; }, { rootMargin: '160px' }).observe(canvas); } catch (_) {}
+    let rafId = 0;
+    const loop = () => { render(); rafId = (paused || document.hidden || !inView) ? 0 : requestAnimationFrame(loop); };
+    const kick = () => { if (!rafId && !paused && !document.hidden && inView) rafId = requestAnimationFrame(loop); };
+    kick();
+    // pause the field's GPU work — and stop the rAF heartbeat entirely — while the field is off-screen (battery/CPU)
+    try { new IntersectionObserver((es) => { inView = es[0].isIntersecting; kick(); }, { rootMargin: '160px' }).observe(canvas); } catch (_) {}
+    document.addEventListener('visibilitychange', kick);
     window.addEventListener('resize', debounce(() => { try { resize(); } catch (_) {} }, 200));
     document.addEventListener('visibilitychange', () => { paused = document.hidden; });
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); paused = true; }, false);
@@ -2130,12 +2138,18 @@ function initThesisAutoScroll(){
   const thesis = document.getElementById('thesis');
   const target = document.getElementById('work') || (document.querySelector('#fluxStage') && document.querySelector('#fluxStage').closest('section'));
   if (!thesis || !target || !lenis || reduceQuery.matches || !motionOn) return;   // now runs on touch too (user wanted the desktop auto-ride on mobile)
-  let armed = true, running = false;
-  const stop = () => { if (!running) return; running = false; try { lenis.scrollTo(window.scrollY, { immediate: true, force: true }); } catch (e) {} };
+  let armed = true, running = false, riding = false;
+  const easeInOutCubic = (t) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;   // smooth in/out — replaces the mechanical linear ride
+  const stop = () => { if (!running) return; running = false; riding = false; try { lenis.scrollTo(window.scrollY, { immediate: true, force: true }); } catch (e) {} };
   // Escape (or any ⌘/Ctrl shortcut) bails out of the guided ride — but the WHEEL that brought the visitor
   // here must NOT cancel it (that was the bug: the reaching-scroll instantly aborted the auto-scroll).
   window.addEventListener('keydown', (e) => { if (running && (e.key === 'Escape' || e.metaKey || e.ctrlKey)) stop(); });
   window.addEventListener('touchstart', () => { if (running) stop(); }, { passive: true });   // a deliberate touch bails out of the ride on phones
+  // Apple rule: the user always drives. A DELIBERATE wheel/trackpad delta during the ride hands control
+  // back instantly. The high threshold (50) ignores the residual entry-momentum tail that the lock exists
+  // to survive — only a real scroll attempt (mouse notch ~100, firm swipe) bails. `riding` gates out the
+  // 320ms settle window entirely, so the flick that brought them in can never trip it.
+  window.addEventListener('wheel', (e) => { if (running && riding && Math.abs(e.deltaY) >= 50) stop(); }, { passive: true });
   const begin = () => {
     if (!armed || running) return;
     const r = thesis.getBoundingClientRect();
@@ -2148,7 +2162,8 @@ function initThesisAutoScroll(){
       const endY = Math.round(target.getBoundingClientRect().top + window.scrollY - 64);
       if (endY - window.scrollY < 120){ running = false; return; }
       const dur = Math.min(5.5, Math.max(3, (endY - window.scrollY) / 620));   // ~1.7x faster guided ride
-      lenis.scrollTo(endY, { duration: dur, easing: (t) => t, lock: true, force: true, onComplete: () => { running = false; } });
+      riding = true;   // arm the deliberate-wheel bail only now — past the entry-momentum settle window
+      lenis.scrollTo(endY, { duration: dur, easing: easeInOutCubic, lock: true, force: true, onComplete: () => { running = false; riding = false; } });
     }, 320);
   };
   if (lenis.on) lenis.on('scroll', begin);
