@@ -1053,6 +1053,7 @@ function initCodeField(){
     field.style.setProperty('--mx', '76%'); field.style.setProperty('--my', '260px'); return;   // static for reduced-motion + data-saver only
   }
   const mob = isTouch;
+  const cfGlow = document.getElementById('cfGlow');   // mobile: a composited blob moved via translate3d (no --mx/--my repaint)
   const targ = { x: window.innerWidth * .7, y: window.innerHeight * .32 };
   const cur = { x: targ.x, y: targ.y };
   let t = 0, lastActive = -1e9, lastScroll = -1e9;   // start idle-drifting immediately on load
@@ -1084,8 +1085,12 @@ function initCodeField(){
     // dirty-check: skip the write (and the repaint it triggers) only when truly converged & still.
     if (nx === lastX && ny === lastY) return;
     lastX = nx; lastY = ny;
-    field.style.setProperty('--mx', nx + 'px');
-    field.style.setProperty('--my', ny + 'px');
+    if (mob && cfGlow){                       // mobile: GPU-composited transform — no full-screen repaint
+      cfGlow.style.transform = 'translate3d(' + nx + 'px,' + ny + 'px,0)';
+    } else {                                  // desktop: the --mx/--my mask + WebGL lens (unchanged)
+      field.style.setProperty('--mx', nx + 'px');
+      field.style.setProperty('--my', ny + 'px');
+    }
   };
   requestAnimationFrame(loop);
   if (!mob) initCompilerLens(field, txt);   // desktop only — the per-frame WebGL lens janks mobile scrolling; touch keeps the CSS flashlight

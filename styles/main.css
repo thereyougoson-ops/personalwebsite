@@ -105,6 +105,16 @@ body::after{
 .codefield__glow{ color:var(--accent); opacity:.27; text-shadow:0 0 12px rgba(var(--accent-rgb),.16);
   -webkit-mask-image:radial-gradient(240px circle at var(--mx,-900px) var(--my,-900px), #000 0%, #000 12%, transparent 68%);
           mask-image:radial-gradient(240px circle at var(--mx,-900px) var(--my,-900px), #000 0%, #000 12%, transparent 68%); }
+/* Mobile-only transform-composited flashlight: a translucent amber blob moved via translate3d (GPU
+   composite, NO repaint) instead of the desktop --mx/--my mask, which repainted the full-screen
+   #codeGlow <pre> + .codefield bg every frame behind the floating cards (the measured lag source).
+   Hidden on desktop; enabled + the moving mask layers disabled in the (pointer:coarse) block below. */
+.codefield__cfglow{ display:none; position:absolute; top:0; left:0; width:440px; height:440px;
+  margin-left:-220px; margin-top:-220px; border-radius:50%; pointer-events:none; will-change:transform;
+  transform:translate3d(-900px,-900px,0); contain:strict;
+  /* gradient reaches transparent near the rect edge (~88%) so almost no dead fill is blended each frame
+     — at DPR 3 the rasterised layer is the dominant per-frame cost on a real mobile GPU. */
+  background:radial-gradient(circle, rgba(var(--accent-rgb),.17) 0%, rgba(var(--accent-rgb),.08) 42%, transparent 88%); }
 
 /* Readability: the cursor-lit code stays a TEXTURE behind copy. A soft bg-coloured halo
    wraps each glyph so the code never bleeds through the gaps and muddies the text. */
@@ -1020,4 +1030,14 @@ body.term-frozen{ overflow:hidden; }
    semi-opaque backgrounds (just unfrosted). Measured ~3x FPS recovery on the V8u section. */
 @media (pointer:coarse){
   *{ backdrop-filter:none!important; -webkit-backdrop-filter:none!important; }
+}
+
+/* MOBILE PERF: the moving flashlight. Desktop drives --mx/--my, which repaints the full-screen
+   #codeGlow <pre> mask + the .codefield radial bg every frame — measured as the dominant cost behind
+   the floating V8u cards (8fps → 42fps when paused). On touch we instead move a composited blob
+   (#cfGlow via translate3d), so kill the two per-frame repaint layers and enable the blob. */
+@media (pointer:coarse){
+  .codefield{ background:none; }            /* the --mx/--my radial bg no longer animates here */
+  .codefield__glow{ display:none; }         /* its moving 240px mask was the full-screen repaint */
+  .codefield__cfglow{ display:block; }      /* the transform-composited replacement (GPU, no repaint) */
 }
