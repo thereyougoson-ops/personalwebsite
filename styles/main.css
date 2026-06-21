@@ -999,3 +999,18 @@ body.term-frozen{ overflow:hidden; }
   font-size:11px; letter-spacing:.04em; color:var(--text-3,#9a9aae); pointer-events:none; }
 .scanpanel__lbl i{ width:7px; height:7px; border-radius:50%; background:var(--green,#5ee6c0); box-shadow:0 0 8px var(--green,#5ee6c0);
   animation:fxPulse 2.5s ease-out infinite; }
+
+/* =========================================================================
+   TOUCH TAP-TARGET HARDENING — coarse pointers only (zero desktop/mouse impact).
+   Placed last so it wins the cascade over base component rules of equal specificity.
+   ========================================================================= */
+@media (pointer:coarse){
+  .terminal__line{ min-height:40px; }                                  /* the input row: easy tap-to-focus */
+  .terminal__input{ min-height:34px; }
+  .fx-info{ width:30px; height:30px; }                                 /* was 20x20 → meets tap-target min */
+  .nav__brand{ min-height:42px; min-width:42px; justify-content:center; }
+  .ct-copy{ min-height:40px; display:inline-flex; align-items:center; justify-content:center; }
+  .heroterm__ctl{ min-height:36px; }
+  .heroterm__ctl--close{ min-width:36px; justify-content:center; }
+  .pj-case{ display:inline-flex; align-items:center; min-height:36px; }
+}

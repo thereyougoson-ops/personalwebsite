@@ -1938,10 +1938,14 @@ function initHeroDock(){
 
   // float the live shell once the hero scrolls out of view (was a tiny pill; now the full mini terminal);
   // returning to the hero tucks it back into the page. IntersectionObserver survives lenis + deep-link jumps.
+  // On phones the auto-floated mini shell overlapped interactive sections (V8u deck, live demos), so
+  // there we DON'T auto-float — only the small bottom-right dock pill shows (syncDock), and tapping it
+  // opens the terminal as a full overlay. Desktop keeps the auto-floating mini. (User decision 2026-06-21.)
+  const isMobile = () => window.matchMedia('(max-width:760px)').matches;
   const onHeroVis = () => {
     if (heroInView){ if (state === 'mini') close(true); }                          // back at the hero → dock home
-    else if (state === 'closed' && !document.body.classList.contains('is-loading')) openMini(false);  // float it (no focus steal)
-    syncDock();   // the pill remains as a fallback launcher only after the visitor closes the floating shell
+    else if (state === 'closed' && !document.body.classList.contains('is-loading') && !isMobile()) openMini(false);  // desktop: float the mini; mobile: pill only
+    syncDock();   // desktop: fallback launcher after close · mobile: the primary launcher
   };
   if ('IntersectionObserver' in window){
     new IntersectionObserver((entries) => {
@@ -2057,7 +2061,7 @@ function initHeroDock(){
     reduceQuery.matches ? settle() : setTimeout(settle, 300);
   }
 
-  dock.addEventListener('click', openMini);
+  dock.addEventListener('click', () => isMobile() ? expand() : openMini());   // mobile pill → full overlay; desktop → floating mini
   expandBtn.addEventListener('click', () => state === 'expanded' ? collapse() : expand());
   closeBtn.addEventListener('click', close);
   backdrop.addEventListener('click', close);
