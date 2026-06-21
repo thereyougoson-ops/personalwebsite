@@ -1047,24 +1047,28 @@ function initCodeField(){
   // the field is position:fixed at 100dvh (see .codefield in main.css), so it can never
   // inflate the document height or spill below the footer — robust against resize/zoom.
 
-  // flashlight: mask in VIEWPORT coords (the field is fixed), so the light tracks the cursor on screen
-  if (reduceQuery.matches || isTouch || (navigator.connection && navigator.connection.saveData)){
-    field.style.setProperty('--mx', '76%'); field.style.setProperty('--my', '260px'); return;   // static for reduced-motion, touch, and data-saver
+  // flashlight: mask in VIEWPORT coords (the field is fixed). Desktop tracks the cursor; touch has no
+  // cursor so it runs the autonomous scroll-sweep + idle-orbit (capped ~30fps, no WebGL lens — keeps it moving on phones).
+  if (reduceQuery.matches || (navigator.connection && navigator.connection.saveData)){
+    field.style.setProperty('--mx', '76%'); field.style.setProperty('--my', '260px'); return;   // static for reduced-motion + data-saver only
   }
+  const mob = isTouch;
   const targ = { x: window.innerWidth * .7, y: window.innerHeight * .32 };
   const cur = { x: targ.x, y: targ.y };
   let t = 0, lastActive = -1e9, lastScroll = -1e9;   // start idle-drifting immediately on load
   let lastX = NaN, lastY = NaN;             // last values written to --mx/--my (dirty-check)
   const IDLE_MS = 2000;                      // resume the autonomous orbit 2s after the last mouse move
   const bump = () => { lastActive = performance.now(); };
-  window.addEventListener('mousemove', (e) => { targ.x = e.clientX; targ.y = e.clientY; bump(); }, { passive: true });
+  if (!mob) window.addEventListener('mousemove', (e) => { targ.x = e.clientX; targ.y = e.clientY; bump(); }, { passive: true });
   window.addEventListener('scroll', () => { lastScroll = performance.now(); }, { passive: true });   // scrolling DRIVES the light (below)
-  const loop = () => {
+  let lastFrame = 0;
+  const loop = (now) => {
     requestAnimationFrame(loop);
     if (window.__motionPaused || document.hidden) return;   // pause only when the tab is backgrounded (battery/CPU); never "off"
-    t += .024;                               // a touch faster than before (was .016)
-    const now = performance.now();
-    const mouseActive = (now - lastActive) < IDLE_MS;                  // following the cursor
+    if (mob && now - lastFrame < 32) return;   // ~30fps on phones — halve the mask repaints
+    lastFrame = now;
+    t += mob ? .03 : .024;                   // larger step on mobile keeps the orbit speed at the 30fps cap
+    const mouseActive = (now - lastActive) < IDLE_MS;                  // following the cursor (now = rAF timestamp, same timebase as performance.now())
     const scrollActive = !mouseActive && (now - lastScroll) < 700;     // scrolling → sweep the light so it highlights code as you scroll
     if (scrollActive){                       // tie the flashlight to the scroll position so it visibly travels through the code while scrolling
       const sy = window.scrollY || window.pageYOffset || 0;
@@ -1084,7 +1088,7 @@ function initCodeField(){
     field.style.setProperty('--my', ny + 'px');
   };
   requestAnimationFrame(loop);
-  initCompilerLens(field, txt);   // upgrade the reveal to a GPU phosphor "compiler lens" if WebGL is available; the CSS flashlight above is the silent fallback
+  if (!mob) initCompilerLens(field, txt);   // desktop only — the per-frame WebGL lens janks mobile scrolling; touch keeps the CSS flashlight
 }
 
 /* =====================  WEBGL "COMPILER LENS"  =====================
