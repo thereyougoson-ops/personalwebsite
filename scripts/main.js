@@ -2137,7 +2137,7 @@ function initThesisAutoScroll(){
       if (!running) return;
       const endY = Math.round(target.getBoundingClientRect().top + window.scrollY - 64);
       if (endY - window.scrollY < 120){ running = false; return; }
-      const dur = Math.min(9, Math.max(5, (endY - window.scrollY) / 560));   // slow; scaled to the distance
+      const dur = Math.min(5.5, Math.max(3, (endY - window.scrollY) / 620));   // ~1.7x faster guided ride
       lenis.scrollTo(endY, { duration: dur, easing: (t) => t, lock: true, force: true, onComplete: () => { running = false; } });
     }, 320);
   };
@@ -2165,7 +2165,7 @@ function initThesis(){
   gsap.set([b1, b2], { autoAlpha: 0, y: 24 });
   gsap.set(b0, { autoAlpha: 1 });
   w0.forEach((w, i) => gsap.set(w, { x: sa[i].x + 'vw', y: sa[i].y + 'vh', rotation: sa[i].r, autoAlpha: 0.12, filter: 'blur(8px)' }));
-  gsap.timeline({ scrollTrigger: { trigger: sec, start: 'top top', end: '+=300%', pin: true, scrub: 0.6, anticipatePin: 1,
+  gsap.timeline({ scrollTrigger: { trigger: sec, start: 'top top', end: '+=176%', pin: true, scrub: 0.5, anticipatePin: 1,
     onUpdate: (self) => {
       const p = self.progress;
       if (barFill) barFill.style.width = (p*100).toFixed(1) + '%';
