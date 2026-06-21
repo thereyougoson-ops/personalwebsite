@@ -771,11 +771,12 @@ body.rollback::before{ content:"⟲ rollback mode · git revert HEAD~1 — press
 .termoverlay.is-mini{ pointer-events:none; padding:0; }   /* container passes clicks through to the page */
 .termoverlay.is-mini .heroterm{
   position:fixed; right:clamp(.8rem,2vw,1.4rem); bottom:clamp(.8rem,2vw,1.4rem); top:auto; left:auto;
-  width:min(440px,92vw); max-height:min(58vh,540px); max-height:min(58dvh,540px);
+  width:min(300px,84vw); max-height:min(38vh,330px); max-height:min(38dvh,330px);
   transform-origin:bottom right; box-shadow:0 24px 70px rgba(0,0,0,.55); }
 .termoverlay.is-mini .heroterm__banner{ display:none; }            /* the big name banner is for the expanded view */
 @media (max-width:760px){
-  .termoverlay.is-mini .heroterm{ left:.55rem; right:.55rem; bottom:.55rem; width:auto; max-height:64dvh; }   /* bottom sheet */
+  /* compact bottom-right window (was a full-width 64dvh bottom sheet — too large) */
+  .termoverlay.is-mini .heroterm{ left:auto; right:.6rem; bottom:.6rem; width:min(280px,80vw); max-height:min(42dvh,300px); }
 }
 /* terminal window controls (created in JS): expand ⤢ + close × in the bar */
 .heroterm__ctl{ display:none; align-items:center; gap:.34rem; margin-left:auto; font-family:var(--term); font-size:11px;
@@ -787,7 +788,7 @@ body.rollback::before{ content:"⟲ rollback mode · git revert HEAD~1 — press
 .heroterm.is-floating .terminal__bar,
 .heroterm.is-floating .term-chips,
 .heroterm.is-floating .heroterm__banner{ flex:0 0 auto; }
-.heroterm.is-floating .terminal__scroll{ height:auto; flex:1 1 auto; min-height:96px; }
+.heroterm.is-floating .terminal__scroll{ height:auto; flex:1 1 auto; min-height:64px; }
 @media (max-height:430px){ .heroterm.is-floating .heroterm__banner{ display:none; } }   /* tiny landscape — name banner yields to the shell */
 body.term-frozen{ overflow:hidden; }
 
@@ -800,7 +801,7 @@ body.term-frozen{ overflow:hidden; }
 @media (max-width:760px){
   .termdock{ min-height:44px; }
   .termoverlay{ padding:1rem .7rem; align-items:stretch; }
-  .heroterm.is-floating .terminal__scroll{ height:min(52vh,460px); }
+  .heroterm.is-floating .terminal__scroll{ height:min(26vh,200px); }
 }
 
 /* pinned ASCII name banner — stays visible while the live tour scrolls below it */
