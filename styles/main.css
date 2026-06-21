@@ -113,9 +113,14 @@ body::after{
 .codefield__cfglow{ display:none; position:absolute; top:0; left:0; width:440px; height:440px;
   margin-left:-220px; margin-top:-220px; border-radius:50%; pointer-events:none; will-change:transform;
   transform:translate3d(-900px,-900px,0); contain:strict;
-  /* gradient reaches transparent near the rect edge (~88%) so almost no dead fill is blended each frame
-     — at DPR 3 the rasterised layer is the dominant per-frame cost on a real mobile GPU. */
-  background:radial-gradient(circle, rgba(var(--accent-rgb),.17) 0%, rgba(var(--accent-rgb),.08) 42%, transparent 88%); }
+  /* A focused warm LIGHT (not fog): a tight brighter core + a long soft falloff that reaches transparent
+     near the rect edge so almost no dead fill is blended each frame (at DPR 3 the rasterised layer is the
+     per-frame cost). It lights the static amber code field enabled in the (pointer:coarse) block below. */
+  background:radial-gradient(circle,
+    rgba(var(--accent-rgb),.20) 0%,
+    rgba(var(--accent-rgb),.11) 26%,
+    rgba(var(--accent-rgb),.04) 56%,
+    transparent 84%); }
 
 /* Readability: the cursor-lit code stays a TEXTURE behind copy. A soft bg-coloured halo
    wraps each glyph so the code never bleeds through the gaps and muddies the text. */
@@ -1041,6 +1046,10 @@ body.term-frozen{ overflow:hidden; }
   .codefield{ background:none; }            /* the --mx/--my radial bg no longer animates here */
   .codefield__glow{ display:none; }         /* its moving 240px mask was the full-screen repaint */
   .codefield__cfglow{ display:block; }      /* the transform-composited replacement (GPU, no repaint) */
+  /* Give the flashlight something to light: a faint STATIC code field instead of a black void.
+     .codefield is position:fixed, so this layer is painted ONCE — zero per-frame cost — and the
+     composited blob reads as a warm light gliding over real code (and isn't a dead smudge when paused). */
+  .codefield__base{ opacity:.05; }
 }
 
 /* MOBILE SMOOTHNESS: the thesis words animate transform (not filter) on touch — filter is forced to
