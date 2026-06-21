@@ -778,7 +778,11 @@
     if(ok){
       size();
       if(window.ResizeObserver){ new ResizeObserver(size).observe(stage); } else { window.addEventListener('resize',size); }
+      // idle the WebGL field's GPU work whenever it is paused OR scrolled off-screen — otherwise this
+      // fluid shader renders forever in the background and starves every other section on mobile.
+      let onScreen = !('IntersectionObserver' in window);
       const render=(now)=>{
+        if(!running || !onScreen){ raf=null; return; }
         if(!W||!cv.width){ size(); if(!W||!cv.width){ raf=requestAnimationFrame(render); return; } }
         mouse.x=lerp(mouse.x,mouse.tx,0.08); mouse.y=lerp(mouse.y,mouse.ty,0.08);
         focus=lerp(focus,focusT,0.06);
@@ -787,8 +791,10 @@
         gl.uniform2f(uni.mouse,mouse.x,mouse.y);
         gl.uniform1f(uni.focus,focus);
         gl.drawArrays(gl.TRIANGLES,0,3);
-        if(running) raf=requestAnimationFrame(render); 
+        raf=requestAnimationFrame(render);
       };
+      const kick=()=>{ if(running && onScreen && raf==null) raf=requestAnimationFrame(render); };
+      try{ new IntersectionObserver((es)=>{ onScreen=es[0].isIntersecting; kick(); },{rootMargin:'150px'}).observe(stage); }catch(e){ onScreen=true; }
       if(reduce){
         const drawStatic=()=>{ size(); if(!W||!cv.width){ return setTimeout(drawStatic,100); } gl.uniform2f(uni.res,cv.width,cv.height); gl.uniform1f(uni.time,7.5); gl.uniform2f(uni.mouse,0.5,0.55); gl.uniform1f(uni.focus,focusT); gl.drawArrays(gl.TRIANGLES,0,3); };
         drawStatic(); setTimeout(drawStatic,300); setTimeout(drawStatic,900);
@@ -796,7 +802,7 @@
         raf=requestAnimationFrame(render);
       }
       const mtoggle=$('#fluxMotion');
-      if(mtoggle){ mtoggle.addEventListener('click',()=>{ running=!running; if(running){ mtoggle.innerHTML='&#9673; motion'; mtoggle.style.color='#cfcfe0'; raf=requestAnimationFrame(render); } else { if(raf) cancelAnimationFrame(raf); mtoggle.innerHTML='&#9676; paused'; mtoggle.style.color='#7c6cff'; } }); }
+      if(mtoggle){ mtoggle.addEventListener('click',()=>{ running=!running; if(running){ mtoggle.innerHTML='&#9673; motion'; mtoggle.style.color='#cfcfe0'; kick(); } else { if(raf) cancelAnimationFrame(raf); raf=null; mtoggle.innerHTML='&#9676; paused'; mtoggle.style.color='#7c6cff'; } }); }
     } else {
       // CSS fallback
       cv.style.display='none';
@@ -807,7 +813,7 @@
 
     /* ============ custom cursor ============ */
     const cur=$('#fluxCursor'), dot=$('#fluxDot');
-    if(cur && !reduce){
+    if(cur && !reduce && matchMedia('(pointer:fine)').matches){   // touch devices have no cursor — skip the perpetual follow rAF
       const c={x:innerWidth/2,y:innerHeight/2,tx:innerWidth/2,ty:innerHeight/2};
       window.addEventListener('pointermove',(e)=>{ c.tx=e.clientX; c.ty=e.clientY; dot.style.transform='translate('+e.clientX+'px,'+e.clientY+'px) translate(-50%,-50%)'; },{passive:true});
       const follow=()=>{ c.x=lerp(c.x,c.tx,0.18); c.y=lerp(c.y,c.ty,0.18); cur.style.transform='translate('+c.x+'px,'+c.y+'px) translate(-50%,-50%)'; requestAnimationFrame(follow); };
