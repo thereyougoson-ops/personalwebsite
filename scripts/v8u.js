@@ -334,11 +334,11 @@ fn ringedPlanet(rd:vec3<f32>, ro:vec3<f32>, c:vec3<f32>, rad:f32, tint:vec3<f32>
       // SCROLL-POSITION based (not wheel) so it fires identically on desktop + touch; it fires once
       // and RESETS on scroll-back, so the section is replayable. No scroll-lock / pin — kept light
       // for mobile (the prior heavy scroll-jack pattern was rejected; this just plays as you leave).
-      let dominoing = false, dominoCap = null, leftView = false;
+      let dominoing = false, dominoCap = null, dominoStart = 0;
       function step(d) { if (dominoing) return; cur += d; cosmosTarget += d * 0.5; spin(); }
       function resetDeck() {
         if (!dominoing) return;
-        dominoing = false; leftView = false; cosmosFade = 1; dStreaks.length = 0;
+        dominoing = false; cosmosFade = 1; dStreaks.length = 0;
         if (dominoCap) { dominoCap.remove(); dominoCap = null; }
         cards.forEach((c, i) => { const b = 'rotateY(' + (i * 360 / N) + 'deg) translateZ(' + R + 'px)'; c.style.transition = 'transform .6s cubic-bezier(.16,1,.3,1),opacity .6s'; c.style.transform = b; c.style.opacity = '1'; c.style.zIndex = ''; });
       }
@@ -347,7 +347,7 @@ fn ringedPlanet(rd:vec3<f32>, ro:vec3<f32>, c:vec3<f32>, rad:f32, tint:vec3<f32>
       // the next section (#fluxStage sits directly below). No forced auto-scroll — a fixed-delay
       // scrollTo fought continued input and yanked fast / through-scrollers backward.
       function domino() {
-        if (dominoing || intro) return; dominoing = true; const SLOW = 55;
+        if (dominoing || intro) return; dominoing = true; dominoStart = performance.now(); const SLOW = 55;
         cards.forEach((c, k) => { setTimeout(() => { if (!dominoing) return; c.style.transition = 'transform .7s cubic-bezier(.5,0,.8,1),opacity .7s'; c.style.transform += ' translateY(260px) rotateX(82deg)'; c.style.opacity = '0'; }, k * SLOW); });
         dominoCap = self.h('div', 'position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);z-index:7;font-family:' + F.disp + ';font-weight:700;font-size:clamp(18px,3vw,26px);color:#5ee6c0;text-shadow:0 0 16px #5ee6c0;opacity:0;transition:opacity .5s;pointer-events:none;', { text: '↓ next section' }); wrap.appendChild(dominoCap);
         setTimeout(() => { if (dominoCap) dominoCap.style.opacity = '1'; }, cards.length * SLOW);
@@ -365,11 +365,13 @@ fn ringedPlanet(rd:vec3<f32>, ro:vec3<f32>, c:vec3<f32>, rad:f32, tint:vec3<f32>
         if (Math.abs(dy) < 0.5) return;   // ignore no-op duplicates: window + lenis 'scroll' both fire per frame
         lastY = y; const down = dy > 0;
         const r = stage.getBoundingClientRect(), vh = window.innerHeight || 1;
-        if (!dominoing) { if (down && !intro && r.top <= vh * 0.05 && r.bottom > vh * 0.55) domino(); return; }
-        // dominoing: arm reset only after the stage has actually scrolled mostly off the top
-        // (the hand-off scroll to #fluxStage), then reset when the user scrolls back up into it.
-        if (r.top < -vh * 0.5) leftView = true;
-        else if (leftView && r.top > -vh * 0.4) resetDeck();
+        // NON-OVERLAPPING hysteresis (no leftView latch needed): domino fires only once the carousel is
+        // clearly LEAVING (top scrolled past -15%vh while going down); reset fires once it RETURNS past
+        // -5%vh while going up. The 10%vh gap is the latch — crucially it sits BELOW the deck-view position
+        // (r.top≈0), so a momentum settle/jitter there can never re-trigger the domino (the bug that left
+        // cards stuck/flickering on scroll-up). A short post-domino debounce guards the boundary.
+        if (!dominoing) { if (down && !intro && r.top <= -vh * 0.15 && r.bottom > vh * 0.45) domino(); return; }
+        if (!down && (performance.now() - dominoStart) > 300 && r.top > -vh * 0.05) resetDeck();
       };
       window.addEventListener('scroll', onScrollDom, { passive: true });
       // Lenis may init after this mounts — attach to its scroll stream as soon as it exists.

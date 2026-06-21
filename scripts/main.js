@@ -2149,7 +2149,10 @@ function initThesisAutoScroll(){
   // Escape (or any ⌘/Ctrl shortcut) bails out of the guided ride — but the WHEEL that brought the visitor
   // here must NOT cancel it (that was the bug: the reaching-scroll instantly aborted the auto-scroll).
   window.addEventListener('keydown', (e) => { if (running && (e.key === 'Escape' || e.metaKey || e.ctrlKey)) stop(); });
-  window.addEventListener('touchstart', () => { if (running) stop(); }, { passive: true });   // a deliberate touch bails out of the ride on phones
+  // Bail only once the ride is actually GLIDING (`riding`), mirroring the desktop wheel-bail. The finger
+  // that scrolls the visitor INTO the thesis fires touchstart during the 320ms arming window — gating on
+  // `running` alone let that entry touch kill the ride before it ever moved (it never auto-played on phones).
+  window.addEventListener('touchstart', () => { if (running && riding) stop(); }, { passive: true });
   // Apple rule: the user always drives. A DELIBERATE wheel/trackpad delta during the ride hands control
   // back instantly. The high threshold (50) ignores the residual entry-momentum tail that the lock exists
   // to survive — only a real scroll attempt (mouse notch ~100, firm swipe) bails. `riding` gates out the
