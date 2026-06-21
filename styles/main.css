@@ -1042,3 +1042,9 @@ body.term-frozen{ overflow:hidden; }
   .codefield__glow{ display:none; }         /* its moving 240px mask was the full-screen repaint */
   .codefield__cfglow{ display:block; }      /* the transform-composited replacement (GPU, no repaint) */
 }
+
+/* MOBILE SMOOTHNESS: the thesis words animate transform (not filter) on touch — filter is forced to
+   `none` there, so `will-change:transform,filter` was reserving a filter compositing layer for nothing. */
+@media (pointer:coarse){
+  .thesis__line .tw{ will-change:transform; }
+}

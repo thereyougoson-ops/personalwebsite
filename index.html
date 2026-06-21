@@ -880,6 +880,9 @@
        "Selected experience" and the "Things I designed & shipped" headings ============ */
     function letterRepel(head){
       if(!head || head.dataset.repel) return; head.dataset.repel='1';
+      // Touch: there is no cursor to repel from, so the per-char split is pure cost — it leaves ~50
+      // permanent will-change GPU layers (measured pressure). Leave the headline as plain text on phones.
+      if(window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return;
       const text=head.dataset.text||head.textContent; head.textContent='';
       const spans=[];
       const words=text.split(' ');

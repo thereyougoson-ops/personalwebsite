@@ -677,6 +677,7 @@ function compileHeadline(el){
    CSS uses to swell the running monitor-node glow + the banner sweep. Rides the existing ticker. */
 function initThroughput(){
   if (!hasGSAP) return;
+  if (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) return;   // touch: skip the per-scroll-frame --throughput write + the glow/banner repaints it drives (desktop-only, like the velocity-skew)
   const root = document.documentElement;
   let last = window.scrollY, val = 0, lastWritten = -1;
   gsap.ticker.add(() => {
@@ -1067,6 +1068,10 @@ function initCodeField(){
     requestAnimationFrame(loop);
     if (window.__motionPaused || document.hidden) return;   // pause only when the tab is backgrounded (battery/CPU); never "off"
     if (mob && now - lastFrame < 32) return;   // ~30fps on phones — halve the mask repaints
+    // MOBILE SMOOTHNESS: don't composite the glow WHILE the user is actively scrolling — the per-frame
+    // layer composite was ~halving the scroll framerate (measured). Nobody watches the background mid-scroll;
+    // the orbit resumes ~140ms after they stop. (Frozen `t` means it resumes from the same phase — no jump.)
+    if (mob && (now - lastScroll) < 140) return;
     lastFrame = now;
     t += mob ? .03 : .024;                   // larger step on mobile keeps the orbit speed at the 30fps cap
     const mouseActive = (now - lastActive) < IDLE_MS;                  // following the cursor (now = rAF timestamp, same timebase as performance.now())
