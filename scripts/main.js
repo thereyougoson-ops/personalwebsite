@@ -212,12 +212,12 @@ function initShortcuts(){
     if (e.key === 'Escape'){ closeSheet(); }
     if (e.metaKey || e.ctrlKey || e.altKey || typing(e)) return;
     if (e.key === '?'){ e.preventDefault(); toggleSheet(); return; }
-    if (e.key === '/'){ e.preventDefault(); scrollToId('#stack'); setTimeout(() => document.getElementById('termInput')?.focus(), 700); return; }
+    if (e.key === '/'){ e.preventDefault(); scrollToId('#top'); setTimeout(() => document.getElementById('heroTermInput')?.focus(), 700); return; }
     const k = e.key.toLowerCase();
     if (k === 'g'){ gPending = true; clearTimeout(gTimer); gTimer = setTimeout(() => gPending = false, 1200); return; }
     if (gPending){
       gPending = false; clearTimeout(gTimer);
-      const map = { p:'#work', s:'#stack', b:'#transitMap', a:'#about', c:'#contact', h:'#top', m:'#metrics' };
+      const map = { p:'#work', b:'#transitMap', c:'#contact', h:'#top' };
       if (map[k]){ e.preventDefault(); scrollToId(map[k]); }
     }
   });
@@ -1374,10 +1374,8 @@ let paletteItems = [], paletteSel = 0;
 function buildPaletteItems(){
   return [
     { ico:'→', t:'Go to Pipeline', d:'01', run:() => scrollToId('#work') },
-    { ico:'→', t:'Go to Stack (terminal)', d:'02', run:() => { scrollToId('#stack'); setTimeout(()=>document.getElementById('termInput')?.focus(),700); } },
-    { ico:'→', t:'Go to Builds', d:'03', run:() => scrollToId('#transitMap') },
-    { ico:'→', t:'Go to About', d:'04', run:() => scrollToId('#about') },
-    { ico:'→', t:'Go to Contact', d:'05', run:() => scrollToId('#contact') },
+    { ico:'→', t:'Go to Builds', d:'02', run:() => scrollToId('#transitMap') },
+    { ico:'→', t:'Go to Contact', d:'03', run:() => scrollToId('#contact') },
     { ico:'⌘', t:'Run ./deploy --prod', d:'demo', run:() => deployOverlay() },
     { ico:'@', t:'Copy email address', d:'copy', run:() => { if (navigator.clipboard){ navigator.clipboard.writeText('toulinov.philip@yahoo.com').then(()=>toast('email copied')).catch(()=>toast('email: toulinov.philip@yahoo.com')); } else { toast('email: toulinov.philip@yahoo.com'); } } },
     { ico:'↗', t:'Open LinkedIn', d:'in/ptoulinov', run:() => window.open('https://www.linkedin.com/in/ptoulinov','_blank','noopener') },
@@ -1887,10 +1885,8 @@ function makeShell(cfg){
 }
 
 function initTerminal(){
-  // the explorable "stack" shell — behaviour-identical to the original
-  makeShell({ rootId:'terminal', bodyId:'termBody', inputId:'termInput', scrollId:'termScroll', chipsId:'termChips' });
-  // the hero shell — the ASCII name banner is pinned in the markup; this runs the SAME full feature
-  // tour as the stack shell (help → whoami → git log → kubectl → top → cat) but never wipes itself,
+  // the hero shell — the ASCII name banner is pinned in the markup; this runs the full feature
+  // tour (help → whoami → git log → kubectl → top → cat) but never wipes itself,
   // so the hero always shows a live, fully-populated terminal that invites you to take over.
   makeShell({ rootId:'heroTerm', bodyId:'heroTermBody', inputId:'heroTermInput', scrollId:'heroTermScroll', chipsId:'heroTermChips',
     heroStatic: true, clearAfterDemo: false,
