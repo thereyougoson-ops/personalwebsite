@@ -1958,16 +1958,15 @@ function initHeroDock(){
     dock.tabIndex = show ? 0 : -1;
   };
 
-  // float the live shell once the hero scrolls out of view (was a tiny pill; now the full mini terminal);
-  // returning to the hero tucks it back into the page. IntersectionObserver survives lenis + deep-link jumps.
-  // On phones the auto-floated mini shell overlapped interactive sections (V8u deck, live demos), so
-  // there we DON'T auto-float — only the small bottom-right dock pill shows (syncDock), and tapping it
-  // opens the terminal as a full overlay. Desktop keeps the auto-floating mini. (User decision 2026-06-21.)
+  // SINGLE LAUNCHER (both viewports, user decision 2026-06-21): once the hero scrolls out of view we no
+  // longer auto-float the mini terminal — it overlapped every section (V8u deck, live demos, contact).
+  // Instead only the small bottom-right dock pill shows (syncDock); tapping it opens the terminal on
+  // demand (desktop → floating mini, mobile → full overlay). Returning to the hero tucks any open shell
+  // back home. IntersectionObserver survives lenis + deep-link jumps.
   const isMobile = () => window.matchMedia('(max-width:760px)').matches;
   const onHeroVis = () => {
-    if (heroInView){ if (state === 'mini') close(true); }                          // back at the hero → dock home
-    else if (state === 'closed' && !document.body.classList.contains('is-loading') && !isMobile()) openMini(false);  // desktop: float the mini; mobile: pill only
-    syncDock();   // desktop: fallback launcher after close · mobile: the primary launcher
+    if (heroInView){ if (state === 'mini') close(true); }   // back at the hero → tuck the shell home
+    syncDock();                                             // the dock pill is now the launcher on both viewports
   };
   if ('IntersectionObserver' in window){
     new IntersectionObserver((entries) => {

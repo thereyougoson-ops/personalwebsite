@@ -325,18 +325,19 @@
     <p data-rv style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.18em;color:#7c6cff;text-transform:uppercase;margin:0 0 26px;" class="fx-eb">01 / experience</p>
     <div data-rv style="display:flex;justify-content:space-between;align-items:flex-end;gap:40px;flex-wrap:wrap;border-bottom:1px solid rgba(230,230,255,.1);padding-bottom:30px;margin-bottom:clamp(20px,3vw,40px);">
       <h2 id="fluxHead" data-text="Selected experience." style="font-family:'Geist',sans-serif;font-weight:600;font-size:clamp(40px,7.5vw,98px);line-height:.9;letter-spacing:-.04em;margin:0;max-width:13ch;">Selected experience.</h2>
-      <p data-mag style="max-width:33ch;color:#9a9aae;font-size:clamp(14px,1.1vw,16px);line-height:1.6;margin:0;">A live fluid field, rendered on the GPU. Push your cursor through it — it ripples and warps. Tap a station to decode the work.</p>
+      <p data-mag style="max-width:33ch;color:#9a9aae;font-size:clamp(14px,1.1vw,16px);line-height:1.6;margin:0;">Two views of the same story. Spin the <strong style="color:#e878f5;font-weight:600;">deck</strong> for every role, build, and contact — or wander the live GPU <strong style="color:#7c6cff;font-weight:600;">field</strong> below, where the roles resurface as stations you can decode.</p>
     </div>
   </div>
 
   <!-- V8u — Orbital Carousel (imported from Claude Design "Personal website redesign" · build_7_20) -->
   <section data-screen-label="Orbital deck" data-rv style="margin:clamp(8px,2vw,26px) 0 clamp(40px,6vw,80px);position:relative;z-index:2;">
-    <p data-mag style="max-width:1200px;margin:0 auto 14px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.14em;color:#e878f5;text-transform:uppercase;">orbital deck · 5 roles · 10 builds · contact</p>
+    <p data-mag style="max-width:1200px;margin:0 auto 14px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.14em;color:#e878f5;text-transform:uppercase;">the deck · spin through every role, build &amp; contact</p>
     <div id="v8uStage" style="position:relative;width:100vw;margin-left:calc(50% - 50vw);height:100vh;height:100svh;min-height:600px;overflow:hidden;background:transparent;contain:layout paint style;"></div>
   </section>
 
   <!-- THE FLUX STAGE -->
   <section data-screen-label="Flux — experience" data-rv style="max-width:1200px;margin:0 auto;position:relative;z-index:2;">
+    <p data-mag style="margin:0 0 14px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.14em;color:#7c6cff;text-transform:uppercase;">the field · the same roles as live stations — hover one to decode</p>
     <div id="fluxStage" style="position:relative;width:100%;height:clamp(400px,48vw,560px);border:1px solid rgba(230,230,255,.09);border-radius:4px;overflow:hidden;background:#06060a;">
       <canvas id="fluxCanvas" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
       <div id="fluxNoise" style="position:absolute;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E&quot;);"></div>
