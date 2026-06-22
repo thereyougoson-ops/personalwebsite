@@ -483,7 +483,10 @@ function initHeroLinks(){
    in CI semantics: pending letters sit dim (source), the cursor is the amber compile head, and the mint
    trail it leaves is "✓ passed", with a live `compiling NN% → ✓ ready to ship` readout. Pointer-only. */
 function initContactHeadline(){
-  const h = document.getElementById('ctHead');
+  ['ctHead', 'fluxHead'].forEach(initCompileSweep);   // contact + experience headlines both compile-by-sweep
+}
+function initCompileSweep(id){
+  const h = document.getElementById(id);
   if (!h || isTouch || reduceQuery.matches) return;
   const text = h.dataset.text || h.textContent; h.dataset.text = text;
   h.textContent = '';
@@ -638,11 +641,11 @@ function initFlowRails(){
    (that would read as a template). Each clones the canonical terminal markup with UNIQUE ids,
    gets an aria-labelled input, and inherits the looping + off-screen-pause demo. */
 function initSectionShells(){
-  if (!document.getElementById('terminal')) return;        // engine present?
+  if (typeof makeShell !== 'function' || !document.getElementById('heroTerm')) return;   // engine present?
   const SHELLS = [
-    { sec: 'about', path: '~/about', label: '// the human behind the pipeline — ask away',
+    { sec: 'work', path: '~/about', label: '// the human behind the pipeline — ask away',
       demo: ['whoami', 'cat about.txt', 'bonjour'], chips: ['whoami', 'cat about.txt', 'education', 'bonjour', 'help'] },
-    { sec: 'builds', path: '~/builds', label: '// the shipping record — read it as commits',
+    { sec: 'transitMap', path: '~/builds', label: '// the shipping record — read it as commits',
       demo: ['git log', 'experience', 'kubectl get skills'], chips: ['git log', 'experience', 'git show a1c2d3e', 'top', 'help'] },
     { sec: 'contact', path: '~/contact', label: '// open to the next deploy — reach me here',
       demo: ['hire', 'contact'], chips: ['hire', 'contact', 'cat contact.txt', 'deploy', 'help'] },
@@ -1592,9 +1595,10 @@ function deployOverlay(){
 let paletteItems = [], paletteSel = 0;
 function buildPaletteItems(){
   return [
-    { ico:'→', t:'Go to Pipeline', d:'01', run:() => scrollToId('#work') },
-    { ico:'→', t:'Go to Builds', d:'02', run:() => scrollToId('#transitMap') },
-    { ico:'→', t:'Go to Contact', d:'03', run:() => scrollToId('#contact') },
+    { ico:'→', t:'Go to Home', d:'01', run:() => scrollToId('#top') },
+    { ico:'→', t:'Go to Experience', d:'02', run:() => scrollToId('#work') },
+    { ico:'→', t:'Go to Builds', d:'03', run:() => scrollToId('#transitMap') },
+    { ico:'→', t:'Go to Contact', d:'04', run:() => scrollToId('#contact') },
     { ico:'⌘', t:'Run ./deploy --prod', d:'demo', run:() => deployOverlay() },
     { ico:'@', t:'Copy email address', d:'copy', run:() => { if (navigator.clipboard){ navigator.clipboard.writeText('toulinov.philip@yahoo.com').then(()=>toast('email copied')).catch(()=>toast('email: toulinov.philip@yahoo.com')); } else { toast('email: toulinov.philip@yahoo.com'); } } },
     { ico:'↗', t:'Open LinkedIn', d:'in/ptoulinov', run:() => window.open('https://www.linkedin.com/in/ptoulinov','_blank','noopener') },
@@ -2298,79 +2302,79 @@ function initBanner(){
   try { frames = JSON.parse(tag.textContent); } catch(e){ return; }
   if (frames.length < 2) return;
 
-  // a fun-but-pro caption under each banner: a rotating greeting + a blinking block cursor
-  const caps = els.map(el => {
-    let cap = el.parentNode && el.parentNode.querySelector(':scope > .term-cap');
-    if (!cap){ cap = document.createElement('div'); cap.className = 'term-cap mono'; cap.setAttribute('aria-hidden', 'true'); el.insertAdjacentElement('afterend', cap); }
-    return cap;
-  });
-
-  const paint = (el, cap, fr) => {
+  const paint = (el, fr) => {
     el.textContent = fr.art;
     const stops = (fr.colors && fr.colors.length ? fr.colors : ['#f5b642']);
     // multi-stop gradient, wrapped so the CSS flow animation loops seamlessly → "moving colours"
     el.style.backgroundImage = `linear-gradient(108deg, ${stops.concat(stops[0]).join(', ')})`;
     el.style.filter = `drop-shadow(0 0 14px ${stops[0]}2e)`;
-    if (cap){ cap.innerHTML = (fr.cap ? escapeHtml(fr.cap) : '') + ' <i class="term-cap__cur" aria-hidden="true">▌</i>'; cap.style.color = stops[0]; }
   };
 
-  els.forEach((el, k) => paint(el, caps[k], frames[0]));   // first paint (caption + colours show immediately)
+  els.forEach(el => paint(el, frames[0]));   // first paint (colours show immediately; caption removed)
 
   if (reduceQuery.matches || !motionOn) return;   // reduced-motion / motion-off: static frame, no flow, no cycling
 
   els.forEach(el => { el.style.transition = 'opacity .5s var(--ease-out, ease)'; el.classList.add('term-banner--flow'); });
-  caps.forEach(c => { if (c) c.style.transition = 'opacity .5s var(--ease-out, ease)'; });
   let i = 0;
   setInterval(() => {
     if (window.__motionPaused || document.hidden) return;   // pause while motion is off or the tab is backgrounded
     i = (i + 1) % frames.length;
     const fr = frames[i];
-    els.forEach((el, k) => {
-      el.style.opacity = '0'; if (caps[k]) caps[k].style.opacity = '0';
-      setTimeout(() => { paint(el, caps[k], fr); el.style.opacity = '1'; if (caps[k]) caps[k].style.opacity = '1'; }, 500);
+    els.forEach(el => {
+      el.style.opacity = '0';
+      setTimeout(() => { paint(el, fr); el.style.opacity = '1'; }, 500);
     });
   }, 4200);
 }
 
-/* When the visitor first reaches the thesis, gently auto-scroll through its beats all the way into the
-   Experience section (slow, hands-off). One-shot, and any wheel/touch/key/click hands control back. */
+/* Hands-off guided ride between the home landing and the Experience section, BOTH directions, EVERY time:
+   - at home: scroll down 20% of the viewport → glide through the 3 thesis beats into Experience
+   - in Experience: scroll up until the "Learn more about me" title has dropped ~20% down the viewport → reverse home
+   Locked while riding so the triggering scroll momentum can't cancel it; re-arms after each ride. Esc bails. */
 function initThesisAutoScroll(){
   const thesis = document.getElementById('thesis');
   const target = document.getElementById('work') || (document.querySelector('#fluxStage') && document.querySelector('#fluxStage').closest('section'));
-  if (!thesis || !target || !lenis || reduceQuery.matches || !motionOn) return;   // now runs on touch too (user wanted the desktop auto-ride on mobile)
-  let armed = true, running = false, riding = false;
-  const easeInOutCubic = (t) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;   // smooth in/out — replaces the mechanical linear ride
-  const stop = () => { if (!running) return; running = false; riding = false; try { lenis.scrollTo(window.scrollY, { immediate: true, force: true }); } catch (e) {} };
-  // Escape (or any ⌘/Ctrl shortcut) bails out of the guided ride — but the WHEEL that brought the visitor
-  // here must NOT cancel it (that was the bug: the reaching-scroll instantly aborted the auto-scroll).
+  if (!thesis || !target || !lenis || reduceQuery.matches || !motionOn) return;
+  let running = false, zone = 'home', cooldownUntil = 0, rideGuard = 0;   // zone: 'home' (above) ⇄ 'work' (parked in Experience)
+  const nowT = () => (window.performance && performance.now) ? performance.now() : Date.now();
+  const easeInOutCubic = (t) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  // release the lock + settle, used by both the keyboard bail and the safety backstop
+  const release = () => { try { lenis.scrollTo(window.scrollY, { immediate: true, force: true }); } catch (e) {} };
+  const stop = () => { if (!running) return; running = false; if (rideGuard) clearTimeout(rideGuard); cooldownUntil = nowT() + 1200; release(); };
+  // keyboard escape hatch only — the wheel/touch that TRIGGERS the ride must never cancel it (that was the
+  // "only works once / gets stuck" bug). `lock:true` below keeps the ride immune to scroll input anyway.
   window.addEventListener('keydown', (e) => { if (running && (e.key === 'Escape' || e.metaKey || e.ctrlKey)) stop(); });
-  // Bail only once the ride is actually GLIDING (`riding`), mirroring the desktop wheel-bail. The finger
-  // that scrolls the visitor INTO the thesis fires touchstart during the 320ms arming window — gating on
-  // `running` alone let that entry touch kill the ride before it ever moved (it never auto-played on phones).
-  window.addEventListener('touchstart', () => { if (running && riding) stop(); }, { passive: true });
-  // Apple rule: the user always drives. A DELIBERATE wheel/trackpad delta during the ride hands control
-  // back instantly. The high threshold (50) ignores the residual entry-momentum tail that the lock exists
-  // to survive — only a real scroll attempt (mouse notch ~100, firm swipe) bails. `riding` gates out the
-  // 320ms settle window entirely, so the flick that brought them in can never trip it.
-  window.addEventListener('wheel', (e) => { if (running && riding && Math.abs(e.deltaY) >= 50) stop(); }, { passive: true });
+  const workY = () => Math.round(target.getBoundingClientRect().top + window.scrollY - 64);
+  const ride = (endY, doneZone) => {
+    if (running) return;
+    running = true;
+    if (rideGuard) clearTimeout(rideGuard);
+    if (Math.abs(endY - window.scrollY) < 80){ running = false; zone = doneZone; cooldownUntil = nowT() + 500; return; }
+    const dur = Math.min(5, Math.max(2.6, Math.abs(endY - window.scrollY) / 640));
+    let fin = false;
+    const finish = () => { if (fin) return; fin = true; running = false; zone = doneZone; cooldownUntil = nowT() + 600; };
+    try { lenis.scrollTo(endY, { duration: dur, easing: easeInOutCubic, lock: true, force: true, onComplete: finish }); }
+    catch(e){ try { window.scrollTo(0, endY); } catch(_){} finish(); }
+    // safety backstop: if onComplete never fires, release the lock and settle so the page can NEVER freeze
+    rideGuard = setTimeout(() => { if (fin) return; release(); finish(); }, dur * 1000 + 700);
+  };
   const begin = () => {
-    if (!armed || running) return;
-    const r = thesis.getBoundingClientRect();
-    if (!(r.top <= window.innerHeight * 0.30 && r.bottom > window.innerHeight * 0.4)) return;   // arrived at the thesis
-    armed = false; running = true;
-    // let the reaching flick settle, then take over with a LOCKED smooth scroll so the visitor's own wheel
-    // can't fight it off — it glides through the 3 beats and into Experience hands-free.
-    setTimeout(() => {
-      if (!running) return;
-      const endY = Math.round(target.getBoundingClientRect().top + window.scrollY - 64);
-      if (endY - window.scrollY < 120){ running = false; return; }
-      const dur = Math.min(5.5, Math.max(3, (endY - window.scrollY) / 620));   // ~1.7x faster guided ride
-      riding = true;   // arm the deliberate-wheel bail only now — past the entry-momentum settle window
-      lenis.scrollTo(endY, { duration: dur, easing: easeInOutCubic, lock: true, force: true, onComplete: () => { running = false; riding = false; } });
-    }, 320);
+    if (running || nowT() < cooldownUntil) return;
+    const wy = workY();
+    if (wy < 200) return;                  // layout not ready yet
+    const vh = window.innerHeight;
+    if (zone === 'home'){
+      // scrolled down 20% of the viewport from the home landing → run the sequence into Experience
+      if (window.scrollY >= vh * 0.20) ride(wy, 'work');
+    } else {
+      // scrolled up 20% of the viewport from the Experience landing → reverse the sequence back home
+      if (window.scrollY <= wy - vh * 0.20) ride(0, 'home');
+    }
   };
   if (lenis.on) lenis.on('scroll', begin);
   window.addEventListener('scroll', begin, { passive: true });
+  // let an instant jump (⌘K palette) park the ride at the destination so it doesn't immediately fire
+  window.__autoRideSync = (destY) => { cooldownUntil = nowT() + 1500; zone = (destY <= window.innerHeight * 0.20) ? 'home' : 'work'; };
 }
 
 /* =====================  THESIS — pinned kinetic interstitial (hero → pipeline)  ===================== */

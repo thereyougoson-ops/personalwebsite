@@ -295,11 +295,22 @@ section{ position:relative; padding:clamp(4.5rem,10vw,9rem) var(--pad); }
 .btn--primary:hover{ background:var(--accent-soft); } .btn--primary:hover svg{ transform:translateX(3px); }
 .btn--ghost{ color:var(--text); } .btn--ghost:hover{ background:rgba(255,255,255,.05); border-color:var(--text-3); }
 .btn.mono{ font-size:.84rem; }
-.hero__scroll{ position:absolute; bottom:1.6rem; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:.5rem;
-  font-size:.62rem; letter-spacing:.22em; text-transform:uppercase; color:var(--text-3); }
-.hero__scroll i{ width:1px; height:40px; background:linear-gradient(var(--accent),transparent); position:relative; overflow:hidden; }
+/* desktop: a deliberate, BIG cue in the right rail under the side text — 2x bold, pulsing + bouncing */
+.hero__scroll{ display:flex; flex-direction:column; align-items:center; gap:.6rem; margin-top:1.8rem; text-decoration:none;
+  font-size:1.2rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--accent);
+  animation:heroScrollCue 1.7s var(--ease) infinite; }
+.hero__scroll:hover{ color:var(--accent-soft); }
+.hero__scroll i{ width:2px; height:46px; background:linear-gradient(var(--accent),transparent); position:relative; overflow:hidden; border-radius:2px; }
 .hero__scroll i::after{ content:""; position:absolute; top:-50%; left:0; width:100%; height:50%; background:var(--text); animation:scrolldrip 2s var(--ease) infinite; }
 @keyframes scrolldrip{ 0%{top:-50%} 60%,100%{top:100%} }
+@keyframes heroScrollCue{ 0%,100%{ transform:translateY(0); opacity:.72; } 50%{ transform:translateY(8px); opacity:1; } }
+@keyframes heroScrollCueM{ 0%,100%{ transform:translateX(-50%) translateY(0); opacity:.7; } 50%{ transform:translateX(-50%) translateY(5px); opacity:1; } }
+/* mobile: a small, unobtrusive cue centred at the bottom */
+@media (max-width:880px){
+  .hero__scroll{ position:absolute; bottom:1.4rem; left:50%; margin-top:0; gap:.5rem;
+    font-size:.62rem; font-weight:400; letter-spacing:.22em; color:var(--text-3); animation-name:heroScrollCueM; }
+  .hero__scroll i{ width:1px; height:40px; }
+}
 
 /* =====================  PIPELINE DAG  ===================== */
 .pipe{ }
