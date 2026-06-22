@@ -63,20 +63,29 @@ for (const d of DEMOS) {
     const resp = await page.goto(url, { waitUntil: 'load', timeout: 30000 });
     status = resp ? resp.status() : 0;
     await page.waitForTimeout(2800);     // let the SPA/map/console boot + mocks settle
-    const probe = await page.evaluate(() => ({
-      nodes: document.querySelectorAll('*').length,
-      text: (document.body && document.body.innerText || '').trim().length,
-      canvas: !!document.querySelector('canvas'),
-      title: document.title || '',
-      crash: /Traceback \(most recent|Cannot GET|Internal Server Error|werkzeug|<pre>/i
-        .test(document.body && document.body.innerHTML.slice(0, 4000) || ''),
-    }));
-    // "booted" = healthy 2xx, a non-trivial DOM, and visible text OR a render canvas (maps),
-    // and not a server error/stack-trace page
-    rendered = status >= 200 && status < 300 && probe.nodes > 40 &&
-               (probe.text > 20 || probe.canvas) && !probe.crash;
+    const probe = await page.evaluate(() => {
+      const ifr = document.querySelector('iframe');
+      return {
+        nodes: document.querySelectorAll('*').length,
+        text: (document.body && document.body.innerText || '').trim().length,
+        canvas: !!document.querySelector('canvas'),
+        title: document.title || '',
+        iframeSrc: (ifr && ifr.src) || '',
+        crash: /Traceback \(most recent|Cannot GET|Internal Server Error|werkzeug|<pre>/i
+          .test(document.body && document.body.innerHTML.slice(0, 4000) || ''),
+      };
+    });
+    // A live-embed shim (e.g. civicquery) is a thin same-origin wrapper around a
+    // cross-origin <iframe> of the real deployed app; that content can't be counted
+    // from here, so it "boots" on the presence of an external http(s) iframe.
+    const isEmbed = /^https?:\/\//i.test(probe.iframeSrc) && !probe.iframeSrc.startsWith(BASE);
+    // "booted" = healthy 2xx, not a crash page, and EITHER a non-trivial DOM with
+    // visible text / a render canvas (baked demos) OR a live external embed.
+    rendered = status >= 200 && status < 300 && !probe.crash &&
+               ((probe.nodes > 40 && (probe.text > 20 || probe.canvas)) || isEmbed);
     detail = `${status} · ${probe.nodes} nodes · ${probe.text} chars` +
-             (probe.canvas ? ' · canvas' : '') + (probe.crash ? ' · CRASH-PAGE' : '');
+             (probe.canvas ? ' · canvas' : '') + (isEmbed ? ' · live-embed' : '') +
+             (probe.crash ? ' · CRASH-PAGE' : '');
   } catch (e) {
     detail = 'navigation error: ' + e.message;
   }

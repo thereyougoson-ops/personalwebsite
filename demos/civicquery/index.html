@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CivicQuery — live agent over DataSF</title>
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; height: 100%; background: #0d0b12; color: #ede8e0;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  #wrap { position: fixed; inset: 0; display: flex; flex-direction: column; }
+  #bar { flex: 0 0 auto; display: flex; align-items: center; gap: 10px;
+    padding: 8px clamp(10px, 2vw, 18px); font-size: 12.5px;
+    border-bottom: 1px solid rgba(237,232,224,.10); background: #110e16; }
+  #dot { width: 8px; height: 8px; border-radius: 50%; background: #5ee6c0;
+    box-shadow: 0 0 0 0 rgba(94,230,192,.6); animation: pulse 2.4s ease-out infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(94,230,192,.5); }
+    70% { box-shadow: 0 0 0 7px rgba(94,230,192,0); } 100% { box-shadow: 0 0 0 0 rgba(94,230,192,0); } }
+  #bar b { font-weight: 600; letter-spacing: .2px; }
+  #bar .muted { color: #9a9488; }
+  #bar a { margin-left: auto; color: #8fd9ff; text-decoration: none;
+    border: 1px solid rgba(143,217,255,.35); border-radius: 7px; padding: 4px 10px; }
+  #bar a:hover { background: rgba(143,217,255,.12); }
+  #frameHost { position: relative; flex: 1 1 auto; min-height: 0; }
+  iframe { width: 100%; height: 100%; border: 0; display: block; background: #0d0b12; }
+  #fail { position: absolute; inset: 0; display: none; flex-direction: column;
+    align-items: center; justify-content: center; gap: 14px; text-align: center;
+    padding: 24px; background: #0d0b12; }
+  #fail.show { display: flex; }
+  #fail h2 { margin: 0; font-size: 17px; font-weight: 600; }
+  #fail p { margin: 0; max-width: 30rem; color: #b6afa3; font-size: 13.5px; line-height: 1.5; }
+  #fail .btns { display: flex; gap: 10px; margin-top: 4px; }
+  #fail a, #fail button { font: inherit; font-size: 13px; cursor: pointer;
+    color: #ede8e0; background: rgba(237,232,224,.06); border: 1px solid rgba(237,232,224,.18);
+    border-radius: 8px; padding: 7px 14px; text-decoration: none; }
+  #fail a.primary { color: #0d0b12; background: #5ee6c0; border-color: #5ee6c0; font-weight: 600; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="bar">
+    <span id="dot" aria-hidden="true"></span>
+    <b>CivicQuery</b>
+    <span class="muted">· live agent querying real <a style="all:unset;color:#9a9488" >DataSF</a> open data — every answer shows the queries it ran</span>
+    <a id="open" href="#" target="_blank" rel="noopener">Open full app ↗</a>
+  </div>
+  <div id="frameHost">
+    <iframe id="frame" title="CivicQuery live app"
+      referrerpolicy="no-referrer"
+      allow="clipboard-write"></iframe>
+    <div id="fail" role="alert">
+      <h2>The live agent isn’t reachable right now</h2>
+      <p>CivicQuery runs as a live service. If it’s sleeping, redeploying, or the network is
+         blocked, it can take a moment — or it may be briefly down. The app itself is unaffected.</p>
+      <div class="btns">
+        <button id="retry" type="button">Retry</button>
+        <a id="openTab" class="primary" href="#" target="_blank" rel="noopener">Open in a new tab ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+(function () {
+  // ── The one place the live URL lives. Swap to the production Railway URL. ──
+  // (A ?url= override is supported so the embed can be pointed at a local dev
+  //  instance during verification without editing this file.)
+  var LIVE_URL = 'https://civicquery-production.up.railway.app';
+  try {
+    var q = new URLSearchParams(location.search).get('url');
+    if (q && /^https?:\/\//.test(q)) LIVE_URL = q;
+  } catch (e) {}
+
+  var frame = document.getElementById('frame');
+  var fail  = document.getElementById('fail');
+  var open  = document.getElementById('open');
+  var openTab = document.getElementById('openTab');
+  open.href = LIVE_URL; openTab.href = LIVE_URL;
+
+  var loaded = false;
+  // Cross-origin iframes still fire `load` on the parent (content stays opaque),
+  // so a load event = reachable; a timeout with no load = treat as unreachable.
+  frame.addEventListener('load', function () { loaded = true; fail.classList.remove('show'); });
+  var TIMEOUT = 14000;
+  function arm() {
+    loaded = false; fail.classList.remove('show');
+    frame.src = LIVE_URL;
+    setTimeout(function () { if (!loaded) fail.classList.add('show'); }, TIMEOUT);
+  }
+  document.getElementById('retry').addEventListener('click', arm);
+  arm();
+})();
+</script>
+</body>
+</html>

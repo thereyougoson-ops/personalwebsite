@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="popup.css" />
+  <title>CookieLens</title>
+  <!-- DEMO: in-memory chrome.* shim, classic script so it runs before the
+       deferred popup.js module. Makes the real popup run with no chrome APIs. -->
+  <script src="shim.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="9" cy="9" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="7" cy="7" r="1.1" fill="currentColor"/><circle cx="11" cy="10" r="1" fill="currentColor"/><circle cx="8" cy="11.5" r="0.8" fill="currentColor"/><path d="M14.5 14.5l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </span>
+      <span class="brand-name">Cookie<b>Lens</b></span>
+    </div>
+    <div class="topbar-actions">
+      <button id="report-btn" class="ghost-btn rec-btn" title="Long Exposure — a timed tracking report" aria-haspopup="dialog">
+        <span class="rec-dot" aria-hidden="true"></span><span class="rec-label">Report</span>
+      </button>
+      <button id="reveal-toggle" class="ghost-btn" title="Reveal cookie values" aria-pressed="false">Reveal values</button>
+      <button id="rescan" class="ghost-btn" title="Rescan this page">↻</button>
+    </div>
+  </header>
+
+  <div id="report-sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-label="Long Exposure report">
+    <div class="sheet-card">
+      <div class="sheet-head">
+        <span class="sheet-title">◉ Long Exposure</span>
+        <button id="sheet-close" class="ghost-btn" title="Close">✕</button>
+      </div>
+      <div id="sheet-body"></div>
+    </div>
+  </div>
+
+  <div id="site-bar" class="site-bar">
+    <img id="favicon" class="favicon" alt="" />
+    <div class="site-meta">
+      <div id="site-domain" class="site-domain">Scanning…</div>
+      <div id="site-status" class="site-status">Reading cookies & trackers</div>
+    </div>
+  </div>
+
+  <section id="hero" class="hero" hidden>
+    <div class="exposure-top">
+      <span class="exposure-label">Exposure</span>
+      <span id="exposure-level" class="exposure-level">—</span>
+      <span class="exposure-score">reading <b id="exposure-score">0</b>/100</span>
+    </div>
+    <div class="meter" id="meter">
+      <div class="meter-track">
+        <div class="meter-veil" id="meter-veil"></div>
+        <div class="meter-marker" id="meter-marker"></div>
+      </div>
+      <div class="meter-scale" aria-hidden="true">
+        <span>private</span><span>low</span><span>mod</span><span>high</span><span>exposed</span>
+      </div>
+    </div>
+    <div id="verdict" class="verdict">Reading this page…</div>
+    <div id="readout" class="readout"></div>
+    <button id="risk-toggle" class="risk-toggle" aria-expanded="false" aria-controls="risk-detail">
+      What's driving this <span class="rt-caret" aria-hidden="true">▾</span>
+    </button>
+  </section>
+
+  <nav class="tabs" id="tabs" role="tablist" hidden>
+    <button class="tab active" role="tab" aria-selected="true" data-tab="cookies">Cookies <span class="tab-count" id="c-cookies">0</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="trackers">Trackers <span class="tab-count" id="c-trackers">0</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="data">Data <span class="tab-count" id="c-data">0</span></button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="brokers">Brokers <span class="tab-count" id="c-brokers">0</span></button>
+  </nav>
+
+  <main id="content" class="content">
+    <div id="risk-detail" class="risk-detail" hidden></div>
+    <div id="panel-cookies" class="panel"></div>
+    <div id="panel-trackers" class="panel" hidden></div>
+    <div id="panel-data" class="panel" hidden></div>
+    <div id="panel-brokers" class="panel" hidden></div>
+  </main>
+
+  <div id="message" class="message" hidden></div>
+  <div id="toast" class="toast" hidden></div>
+
+  <div id="actionbar" class="actionbar" hidden>
+    <button id="copy-report" class="action-btn" title="Copy a text summary of these findings">📋 Copy</button>
+    <button id="export-json" class="action-btn" title="Download the full findings as JSON">⬇ JSON</button>
+    <button id="clear-trackers" class="action-btn danger" title="Delete advertising/analytics cookies; keeps your logins">🧹 Clear trackers</button>
+  </div>
+
+  <footer class="footer">
+    <span>Analysis runs locally · no network code · only links you click open</span>
+  </footer>
+
+  <div id="report-view" class="report-view" hidden></div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

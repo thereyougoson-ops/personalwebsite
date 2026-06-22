@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UserScriptPro — live demo</title>
+    <!-- Static-showcase shim. These are classic scripts: they execute during
+         HTML parse, BEFORE the deferred ES module below, so chrome.* is defined
+         and seeded by the time the real React bundle evaluates. -->
+    <script src="./seed.js"></script>
+    <script src="./chrome-stub.js"></script>
+    <!-- The REAL built UserScriptPro options bundle (WXT build, chrome-mv3). -->
+    <script type="module" crossorigin src="./chunks/options-Dd7Qu9Xz.js"></script>
+    <link rel="modulepreload" crossorigin href="./chunks/Toggle-w24WWY4n.js">
+    <link rel="modulepreload" crossorigin href="./chunks/_virtual_wxt-html-plugins-Dezn_h7o.js">
+    <link rel="stylesheet" crossorigin href="./assets/Toggle-u3EuIM8G.css">
+    <link rel="stylesheet" crossorigin href="./assets/options-YGMPXAbW.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
