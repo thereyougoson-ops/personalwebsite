@@ -148,9 +148,12 @@
   /* ============ DESKTOP — horizontal line, builds branch up & down ============ */
   function makeDesktop(root, live) {
     var W = 1280, H = 560, VW = W - 340;
-    root.innerHTML = '<div style="display:grid;grid-template-columns:1fr 340px;min-height:560px;background:rgba(12,11,16,.5);border:1px solid var(--line);border-radius:14px;overflow:hidden;">'
-      + '<div style="position:relative;min-width:0;"><svg id="tmd-svg" viewBox="0 0 ' + VW + ' ' + H + '" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Career line with builds branching off" style="width:100%;height:100%;display:block;"></svg></div>'
-      + '<div id="tmd-panel" style="border-left:1px solid rgba(237,232,224,.08);background:#14131a;padding:24px;overflow:auto;"></div></div>';
+    // Transparent — sits directly on the site's #codefield + flashlight like every other section
+    // (no card veil). height:auto on the SVG removes the letterbox empty space that made the map look
+    // "zoomed out"; the panel width is responsive so the map column never gets crushed at mid widths.
+    root.innerHTML = '<div style="max-width:min(1600px,92vw);margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) clamp(280px,26%,360px);align-items:stretch;gap:0;">'
+      + '<div style="position:relative;min-width:0;"><svg id="tmd-svg" viewBox="0 0 ' + VW + ' ' + H + '" role="img" aria-label="Career line with builds branching off" style="width:100%;height:auto;display:block;"></svg></div>'
+      + '<div id="tmd-panel" style="border-left:1px solid var(--line);padding:24px;overflow:auto;"></div></div>';
     var svg = root.querySelector('#tmd-svg'), panel = root.querySelector('#tmd-panel');
     var ly = 294, x0 = 84, x1 = VW - 104, rx = function (i) { return x0 + (x1 - x0) * (i / 4); };
     var mainLine = mk('path', { d: 'M ' + x0 + ' ' + ly + ' L ' + x1 + ' ' + ly, fill: 'none', stroke: '#7c6cff', 'stroke-width': 6, 'stroke-linecap': 'round', opacity: .5 }); svg.appendChild(mainLine);
@@ -188,7 +191,7 @@
   /* ============ MOBILE — same map, vertical; tap → bottom sheet ============ */
   function makeMobile(root, live) {
     var VW = 392, H = 1400, lx = 196, y0 = 124, y1 = H - 120, ry = function (i) { return y0 + (y1 - y0) * (i / 4); };
-    root.innerHTML = '<div style="background:rgba(12,11,16,.5);border:1px solid var(--line);border-radius:14px;overflow:hidden;padding:6px 0;"><svg id="tmm-svg" viewBox="0 0 ' + VW + ' ' + H + '" role="img" aria-label="Career line with builds branching off" style="width:100%;height:auto;display:block;"></svg></div>';
+    root.innerHTML = '<div style="max-width:min(640px,92vw);margin:0 auto;background:transparent;padding:2px 0;"><svg id="tmm-svg" viewBox="0 0 ' + VW + ' ' + H + '" role="img" aria-label="Career line with builds branching off" style="width:100%;height:auto;display:block;"></svg></div>';
     var svg = root.querySelector('#tmm-svg');
     var mainLine = mk('path', { d: 'M ' + lx + ' ' + y0 + ' L ' + lx + ' ' + y1, fill: 'none', stroke: '#7c6cff', 'stroke-width': 6, 'stroke-linecap': 'round', opacity: .5 }); svg.appendChild(mainLine);
     var branches = [];
