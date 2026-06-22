@@ -300,6 +300,8 @@ function afterLoad(){
   initCardFX();
   window.__ptValidate = consoleValidation;                               // exposed so the runner can trigger it deterministically
   setTimeout(() => { try { consoleValidation(); } catch(e){} }, 3000);   // and auto-report once the page has settled
+  initHeroLinks();                                                       // hero CTAs (resume jump) — no-ops when absent; runs on both paths
+  initContactHeadline();                                                 // "compile by sweep" on the contact headline (#ctHead)
   if (!motionOn || !hasGSAP){ initBuildbar(); initCounters(); initSparklines(); initPipelineStatic(); return; }
   initLenis();
   revealHero();
@@ -310,6 +312,7 @@ function afterLoad(){
   initThroughput();
   initThesis();
   initThesisAutoScroll();
+  initHeroDots();                                                        // clickable terminal traffic-light dots → jump to Builds
   initPipeline();
   initBuildbar();
   initCounters();
@@ -323,11 +326,227 @@ function afterLoad(){
   window.addEventListener('orientationchange', refreshST);
 }
 
-/* =====================  HERO REVEAL  ===================== */
+/* =====================  HERO REVEAL — "compile in" entrance (variation #12)  =====================
+   The terminal scatter-assembles from blurred/rotated pieces, a CRT scan bar finishes it
+   with chromatic aberration, the ASCII name + the side paragraph each pixel-dissolve in,
+   then the phrase after the em-dash keeps retyping itself. Tilt / spotlight / glitch stay
+   live on the in-page shell. Runs only on the motion path (afterLoad gates it). */
 function revealHero(){
-  // the ASCII terminal is the hero's centerpiece now; reveal the eyebrow, terminal, side rail and CTAs as a staggered rise
-  const bits = gsap.utils.toArray('.hero [data-reveal]');
-  gsap.to(bits, { opacity: 1, y: 0, duration: .85, stagger: .07, ease: 'expo.out' });
+  const term = document.getElementById('heroTerm');
+  const wrap = document.querySelector('.hero__term');
+  // reveal the surrounding hero chrome (eyebrow, CTAs, scroll cue) with a quick rise
+  const chrome = gsap.utils.toArray('.hero [data-reveal]').filter((el) => el !== wrap && !el.closest('.hero__side'));
+  if (chrome.length) gsap.to(chrome, { opacity: 1, y: 0, duration: .8, stagger: .07, ease: 'expo.out' });
+  if (!term || !wrap){ gsap.to(gsap.utils.toArray('.hero [data-reveal]'), { opacity: 1, y: 0, duration: .6 }); return; }
+  heroEntrance(term, wrap);
+}
+
+function injectHeroFX(){
+  if (document.getElementById('hero-fx-css')) return;
+  const s = document.createElement('style'); s.id = 'hero-fx-css';
+  s.textContent = '@keyframes heroTagBlink{0%,49%{opacity:1}50%,100%{opacity:0}}';
+  document.head.appendChild(s);
+}
+
+function heroEntrance(term, wrap){
+  injectHeroFX();
+  const side  = document.querySelector('.hero__side');
+  const lede  = document.querySelector('.hero__lede');
+  const pitch = document.querySelector('.hero__pitch');
+  // we drive the inner pieces ourselves — clear the GSAP-primed hidden state on the wrappers
+  gsap.set(wrap, { opacity: 1, y: 0, clearProps: 'transform' });
+  if (lede || pitch) gsap.set([lede, pitch].filter(Boolean), { opacity: 1, y: 0, clearProps: 'transform' });
+
+  // 1 — scatter-assemble the terminal pieces
+  const pieces = ['.terminal__bar', '.term-chips', '.heroterm__banner', '.terminal__scroll']
+    .map((s) => term.querySelector(s)).filter(Boolean);
+  const SCAT = Math.min(1, (window.innerWidth || 1200) / 900);   // tighter fly-in on phones so pieces never bleed past the viewport
+  const rnd = (a) => (Math.random() * 2 - 1) * a * SCAT;
+  const prevOX = document.documentElement.style.overflowX;
+  document.documentElement.style.overflowX = 'hidden';           // clip any transient horizontal bleed during the scatter
+  pieces.forEach((p) => {
+    p.style.willChange = 'transform,opacity,filter';
+    p.style.transition = 'none'; p.style.opacity = '0'; p.style.filter = 'blur(7px)';
+    p.style.transform = 'translate(' + rnd(120) + 'px,' + rnd(-90) + 'px) rotate(' + ((Math.random() * 2 - 1) * 10) + 'deg)';
+  });
+  void term.offsetWidth;
+  pieces.forEach((p, i) => setTimeout(() => {
+    p.style.transition = 'transform .6s cubic-bezier(.34,1.4,.32,1), opacity .3s, filter .4s';
+    p.style.transform = 'translate(0,0) rotate(0)'; p.style.opacity = '1'; p.style.filter = 'blur(0)';
+  }, 90 + i * 95));
+  const scatterDone = 90 + pieces.length * 95 + 560;
+
+  // 2 — CRT scan-bar + chromatic aberration finish
+  setTimeout(() => heroScanPass(term), Math.max(320, scatterDone - 380));
+  // 3 — pixel-dissolve the ASCII name
+  const banner = term.querySelector('.heroterm__banner');
+  if (banner) setTimeout(() => heroPixelDissolve(banner, 18, 8, 700), Math.max(360, scatterDone - 280));
+  // 4 — pixel-dissolve the side paragraph
+  if (side) setTimeout(() => heroPixelDissolve(side, 16, 7, 720), Math.max(420, scatterDone - 180));
+
+  // 5 — settle safeguard, then the live tagline + interactive layer
+  setTimeout(() => { pieces.forEach((p) => {
+    p.style.transition = 'none'; p.style.transform = 'none'; p.style.opacity = '1'; p.style.filter = 'none'; p.style.willChange = '';
+  }); document.documentElement.style.overflowX = prevOX; }, scatterDone + 1100);
+  setTimeout(() => { startHeroTagline(); setupHeroInteractive(term); }, scatterDone + 720);
+}
+
+function heroPixelDissolve(host, cols, rows, dur){
+  if (!host) return;
+  if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+  const grid = document.createElement('div');
+  grid.style.cssText = 'position:absolute;inset:0;z-index:7;display:grid;pointer-events:none;grid-template-columns:repeat(' + cols + ',1fr);grid-template-rows:repeat(' + rows + ',1fr);';
+  const n = cols * rows, cells = [];
+  for (let i = 0; i < n; i++){ const c = document.createElement('div'); c.style.cssText = 'background:#0c0b10;transition:opacity .42s ease-out;'; grid.appendChild(c); cells.push(c); }
+  host.appendChild(grid);
+  cells.map((c, i) => i).sort(() => Math.random() - 0.5).forEach((ci, k) => setTimeout(() => { cells[ci].style.opacity = '0'; }, k * (dur / n)));
+  setTimeout(() => { try { grid.remove(); } catch(e){} }, dur + 560);
+}
+
+function heroScanPass(term){
+  if (getComputedStyle(term).position === 'static') term.style.position = 'relative';
+  const h = term.offsetHeight || 380;
+  const bar = document.createElement('div');
+  bar.style.cssText = 'position:absolute;left:0;right:0;top:0;height:3px;z-index:9;pointer-events:none;background:linear-gradient(90deg,transparent,#f5b642,transparent);box-shadow:0 0 18px 3px rgba(245,182,66,.7);';
+  term.appendChild(bar);
+  if (bar.animate) bar.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(' + h + 'px)' }], { duration: 860, easing: 'linear' });
+  term.style.filter = 'drop-shadow(2px 0 rgba(248,85,63,.45)) drop-shadow(-2px 0 rgba(94,200,255,.45))';
+  setTimeout(() => { term.style.filter = 'none'; try { bar.remove(); } catch(e){} }, 900);
+}
+
+function startHeroTagline(){
+  const hl = document.querySelector('.hero__lede .hl');
+  if (!hl || hl.__rotating) return; hl.__rotating = true;
+  let cur = hl.nextElementSibling;
+  if (!(cur && cur.classList && cur.classList.contains('hero-tagcur'))){
+    cur = document.createElement('span'); cur.className = 'hero-tagcur';
+    cur.style.cssText = 'display:inline-block;width:.5em;height:1.05em;background:#f5b642;transform:translateY(2px);margin-left:1px;vertical-align:middle;animation:heroTagBlink 1.05s steps(1) infinite;';
+    hl.parentNode.insertBefore(cur, hl.nextSibling);
+  }
+  if (reduceQuery && reduceQuery.matches) return;   // reduced-motion: keep the caret, don't auto-retype
+  const tags = ['fast, tested, and boringly reliable.', 'green builds, every single time.', 'zero-downtime, even on a Friday.', 'automated from commit to prod.', 'observable, reversible, and calm.', 'shipped in 1.2s, not 12 minutes.'];
+  let idx = 0;
+  const schedule = () => { hl.__t = setTimeout(cycle, 2400 + Math.random() * 2600); };
+  const type = (txt, i) => { hl.textContent = txt.slice(0, i); if (i < txt.length) hl.__t = setTimeout(() => type(txt, i + 1), 44); else schedule(); };
+  const cycle = () => { let s = hl.textContent; const del = () => { if (s.length){ s = s.slice(0, -1); hl.textContent = s; hl.__t = setTimeout(del, 24); } else { idx = (idx + 1) % tags.length; type(tags[idx], 1); } }; del(); };
+  schedule();
+}
+
+/* live interactive layer on the in-page hero shell: cursor spotlight wash, a subtle 3D tilt,
+   and an occasional chromatic-aberration glitch on a fast flick. Bails while the shell is docked
+   (is-floating) and on touch. */
+function setupHeroInteractive(term){
+  if (isTouch) return;
+  const hero = document.querySelector('.hero');
+  if (getComputedStyle(term).position === 'static') term.style.position = 'relative';
+  const sp = document.createElement('div');
+  sp.style.cssText = 'position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(220px 220px at var(--sx,50%) var(--sy,40%),rgba(245,182,66,.13),transparent 70%);';
+  term.appendChild(sp);
+  term.style.transition = 'transform .25s ease-out, filter .2s';
+  term.style.transformStyle = 'preserve-3d';
+  let raf = 0, tx = 0, ty = 0;
+  const apply = () => {
+    raf = 0;
+    term.style.transform = 'perspective(900px) rotateY(' + (tx * 5).toFixed(2) + 'deg) rotateX(' + (-ty * 5).toFixed(2) + 'deg)';
+  };
+  const onMove = (e) => {
+    if (term.classList.contains('is-floating')) return;
+    const r = term.getBoundingClientRect(); if (!r.width) return;
+    tx = (e.clientX - (r.left + r.width / 2)) / r.width;     // -0.5..0.5
+    ty = (e.clientY - (r.top + r.height / 2)) / r.height;
+    sp.style.setProperty('--sx', ((e.clientX - r.left) / r.width * 100) + '%');
+    sp.style.setProperty('--sy', ((e.clientY - r.top) / r.height * 100) + '%');
+    sp.style.opacity = '1';
+    if (!raf) raf = requestAnimationFrame(apply);
+  };
+  const reset = () => { sp.style.opacity = '0'; term.style.transform = 'perspective(900px) rotateY(0) rotateX(0)'; };
+  (hero || term).addEventListener('pointermove', onMove);
+  (hero || term).addEventListener('pointerleave', reset);
+}
+
+/* Hero CTAs: "Get in touch" → contact (handled by the anchor handler); "résumé" → scroll to contact, THEN open the PDF. */
+function initHeroLinks(){
+  const resume = document.getElementById('heroResume');
+  if (!resume) return;
+  resume.addEventListener('click', (e) => {
+    e.preventDefault();
+    const open = () => { try { window.open('assets/philip-toulinov-resume.pdf', '_blank', 'noopener'); } catch(_){ location.href = 'assets/philip-toulinov-resume.pdf'; } };
+    const t = document.getElementById('contact');
+    if (!t){ open(); return; }
+    const y = Math.max(0, Math.round(t.getBoundingClientRect().top + window.scrollY - 68));
+    if (window.__autoRideSync) window.__autoRideSync(y);
+    if (lenis && lenis.scrollTo) lenis.scrollTo(y, { duration: 1.2, force: true, onComplete: () => setTimeout(open, 200) });
+    else { try { window.scrollTo({ top: y, behavior: 'smooth' }); } catch(_){ window.scrollTo(0, y); } setTimeout(open, 700); }
+  });
+}
+/* Contact headline — a "compile by sweep" interaction. Move the cursor across the words and they compile
+   in CI semantics: pending letters sit dim (source), the cursor is the amber compile head, and the mint
+   trail it leaves is "✓ passed", with a live `compiling NN% → ✓ ready to ship` readout. Pointer-only. */
+function initContactHeadline(){
+  const h = document.getElementById('ctHead');
+  if (!h || isTouch || reduceQuery.matches) return;
+  const text = h.dataset.text || h.textContent; h.dataset.text = text;
+  h.textContent = '';
+  h.style.background = 'none'; h.style.webkitBackgroundClip = 'border-box'; h.style.backgroundClip = 'border-box';
+  h.style.color = '#f2f2f7'; h.style.webkitTextFillColor = '#f2f2f7'; h.style.animation = 'none';
+  const chars = [];
+  text.split(' ').forEach((word, wi, arr) => {
+    const w = document.createElement('span'); w.style.display = 'inline-block'; w.style.whiteSpace = 'nowrap';
+    [...word].forEach((ch) => {
+      const s = document.createElement('span'); s.textContent = ch; s.dataset.ch = ch;
+      s.style.display = 'inline-block'; s.style.transition = 'color .22s, opacity .22s, transform .22s, text-shadow .22s'; s.style.willChange = 'transform';
+      w.appendChild(s); chars.push(s);
+    });
+    h.appendChild(w);
+    if (wi < arr.length - 1){ const sp = document.createElement('span'); sp.textContent = ' '; sp.style.display = 'inline-block'; sp.style.width = '.26em'; h.appendChild(sp); }
+  });
+  const real = chars.filter((s) => s.dataset.ch.trim());
+  const read = document.createElement('div');
+  read.setAttribute('aria-hidden', 'true');
+  read.style.cssText = "font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.06em;color:#5ee6c0;margin:10px 0 0;height:1.3em;opacity:0;transition:opacity .3s;";
+  h.insertAdjacentElement('afterend', read);
+  let raf = 0, cx = -1; const swept = new Set();
+  const tick = () => {
+    raf = 0;
+    chars.forEach((s) => {
+      const r = s.getBoundingClientRect(); const mid = r.left + r.width / 2;
+      const d = cx >= 0 ? Math.abs(mid - cx) : 1e9;
+      if (d < 52){
+        swept.add(s);
+        s.style.opacity = '1'; s.style.color = '#f5b642'; s.style.textShadow = '0 0 18px rgba(245,182,66,.75)'; s.style.transform = 'translateY(-3px)';
+      } else {
+        s.style.transform = 'none'; s.style.textShadow = 'none';
+        if (swept.has(s)){ s.style.opacity = '1'; s.style.color = '#5ee6c0'; }   // compiled · passed (mint trail)
+        else { s.style.opacity = '.30'; s.style.color = '#f2f2f7'; }              // source · pending (dim)
+      }
+    });
+    const pct = Math.round([...swept].filter((s) => s.dataset.ch.trim()).length / Math.max(1, real.length) * 100);
+    read.style.opacity = '1';
+    read.textContent = pct >= 100 ? '✓ compiled — ready to ship' : '› compiling ' + Math.min(99, Math.max(1, pct)) + '%';
+    if (cx >= 0) raf = requestAnimationFrame(tick);
+  };
+  h.addEventListener('pointermove', (e) => { cx = e.clientX; if (!raf) raf = requestAnimationFrame(tick); });
+  h.addEventListener('pointerleave', () => {
+    cx = -1; if (raf){ cancelAnimationFrame(raf); raf = 0; }
+    swept.clear();
+    chars.forEach((s) => { s.style.opacity = '1'; s.style.color = ''; s.style.textShadow = 'none'; s.style.transform = 'none'; });
+    read.style.opacity = '0';
+  });
+}
+
+function initHeroDots(){
+  const dots = document.querySelectorAll('#heroTerm .terminal__bar .pre__dot');
+  if (!dots.length) return;
+  const go = () => scrollToId('#transitMap');
+  dots.forEach((d) => {
+    d.style.cursor = 'pointer';
+    d.setAttribute('role', 'button');
+    d.setAttribute('tabindex', '0');
+    d.setAttribute('aria-label', 'Jump to Builds');
+    d.title = 'Builds';
+    d.addEventListener('click', (e) => { e.stopPropagation(); go(); });
+    d.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } });
+  });
 }
 
 /* =====================  LENIS  ===================== */
