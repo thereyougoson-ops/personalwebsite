@@ -567,13 +567,17 @@ function initLenis(){
       const target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
-      lenis.scrollTo(target, { offset: -68, duration: 1.2 });
+      const y = Math.max(0, Math.round(target.getBoundingClientRect().top + window.scrollY - 68));
+      if (window.__autoRideSync) window.__autoRideSync(y);   // park the guided ride at the destination — explicit nav must NOT be hijacked
+      lenis.scrollTo(y, { duration: 1.2 });
     });
   });
 }
 function scrollToId(id){
   const t = document.querySelector(id); if (!t) return;
-  if (lenis) lenis.scrollTo(t, { offset: -68, duration: 1.2 });
+  const y = Math.max(0, Math.round(t.getBoundingClientRect().top + window.scrollY - 68));
+  if (window.__autoRideSync) window.__autoRideSync(y);   // same: a palette/anchor jump parks the ride so it can't yank you elsewhere
+  if (lenis) lenis.scrollTo(y, { duration: 1.2 });
   else t.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -641,7 +645,8 @@ function initFlowRails(){
    (that would read as a template). Each clones the canonical terminal markup with UNIQUE ids,
    gets an aria-labelled input, and inherits the looping + off-screen-pause demo. */
 function initSectionShells(){
-  if (typeof makeShell !== 'function' || !document.getElementById('heroTerm')) return;   // engine present?
+  return;   // per-section terminal shells removed — they read as duplicates of the hero terminal in the minimal layout
+  // eslint-disable-next-line no-unreachable
   const SHELLS = [
     { sec: 'work', path: '~/about', label: '// the human behind the pipeline — ask away',
       demo: ['whoami', 'cat about.txt', 'bonjour'], chips: ['whoami', 'cat about.txt', 'education', 'bonjour', 'help'] },

@@ -160,13 +160,14 @@ main,.foot{ position:relative; z-index:1; }
 /* solid white (no mix-blend-mode:difference — it went muddy/invisible over the now-visible codefield +
    WebGL flux field); a soft shadow keeps it crisp on any busy/bright background. */
 .cursor{ position:fixed; top:0; left:0; z-index:9999; pointer-events:none; filter:drop-shadow(0 0 2.5px rgba(0,0,0,.5)); }
-.cursor__dot{ position:fixed; width:7px; height:7px; border-radius:50%; background:#fff; transform:translate(-50%,-50%); }
-.cursor__ring{ position:fixed; width:34px; height:34px; border-radius:50%; border:1.5px solid rgba(255,255,255,.8);
-  transform:translate(-50%,-50%); transition:width .25s var(--ease), height .25s var(--ease), background .25s, border-color .25s; }
+.cursor__dot{ position:fixed; width:7px; height:7px; border-radius:50%; background:#f8553f; box-shadow:0 0 6px rgba(248,85,63,.7); transform:translate(-50%,-50%); }
+.cursor__ring{ position:fixed; width:34px; height:34px; border-radius:50%; background:transparent; border:1.5px solid #fff;
+  transform:translate(-50%,-50%); transition:width .25s var(--ease), height .25s var(--ease), border-color .25s; }
 .cursor__label{ position:fixed; transform:translate(-50%,-50%); font-family:var(--mono); font-size:9.5px;
-  letter-spacing:.04em; color:#0a0a0c; opacity:0; white-space:nowrap; text-transform:lowercase; }
-body.cursor-hover .cursor__ring{ width:54px; height:54px; background:#fff; border-color:transparent; }
-body.cursor-label .cursor__ring{ width:66px; height:66px; background:#fff; border-color:transparent; }
+  letter-spacing:.04em; color:#fff; opacity:0; white-space:nowrap; text-transform:lowercase; }
+/* grows on hover/label — always a transparent ring with a clear white border (never a filled blob) */
+body.cursor-hover .cursor__ring{ width:54px; height:54px; }
+body.cursor-label .cursor__ring{ width:66px; height:66px; }
 body.cursor-label .cursor__label{ opacity:1; }
 @media (hover:hover) and (pointer:fine){ body{ cursor:none; } body a,body button,body input{ cursor:none; } }
 @media (hover:none){ .cursor{ display:none; } }
