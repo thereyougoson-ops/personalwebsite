@@ -397,9 +397,18 @@ fn ringedPlanet(rd:vec3<f32>, ro:vec3<f32>, c:vec3<f32>, rad:f32, tint:vec3<f32>
   function boot() {
     const stage = document.getElementById('v8uStage');
     if (!stage || stage.dataset.mounted) return;
-    stage.dataset.mounted = '1';
-    try { new V8U().mountCarousel(stage, '#e878f5'); }
-    catch (e) { if (window.console) console.error('[v8u] mount failed', e); }
+    const mount = () => {
+      if (stage.dataset.mounted) return; stage.dataset.mounted = '1';
+      try { new V8U().mountCarousel(stage, '#e878f5'); }
+      catch (e) { if (window.console) console.error('[v8u] mount failed', e); }
+    };
+    // RENDER SMART: the 16-card 3D deck sits far below the fold — building it on load was a heavy
+    // main-thread task. Defer CONSTRUCTION until the stage nears the viewport; the deck's rAF/intro
+    // is already inView-gated so motion is unchanged (it just builds when you scroll toward it).
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((es) => { if (es[0].isIntersecting) { io.disconnect(); mount(); } }, { rootMargin: '600px 0px' });
+      io.observe(stage);
+    } else { mount(); }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
   else boot();

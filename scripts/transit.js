@@ -251,5 +251,15 @@
     if (mq.addEventListener) mq.addEventListener('change', render); else if (mq.addListener) mq.addListener(render);
   }
   window.initTransitMap = initTransitMap;
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initTransitMap); else initTransitMap();
+  // RENDER SMART: the map is near the bottom of the page — building its SVG (+ the live dock) on load
+  // was wasted main-thread work. Build it only when it nears the viewport; the train rAF is already
+  // off-screen-gated, so motion is unchanged. 600px lead = built before it's visible (no pop / no CLS).
+  function bootTransit() {
+    var root = document.getElementById('tmRoot'); if (!root) return;
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); initTransitMap(); } }, { rootMargin: '600px 0px' });
+      io.observe(root);
+    } else { initTransitMap(); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootTransit); else bootTransit();
 })();
