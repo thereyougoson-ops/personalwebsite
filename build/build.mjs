@@ -31,6 +31,7 @@ const HASHED = [
   { rel: 'styles/main.css', loader: 'css' },
   { rel: 'scripts/main.js', loader: 'js' },
   { rel: 'scripts/v8u.js', loader: 'js' },
+  { rel: 'scripts/transit.js', loader: 'js' },
 ];
 
 let minify = async (code /*, loader */) => code;        // default: identity (no esbuild)
