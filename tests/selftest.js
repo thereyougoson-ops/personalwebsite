@@ -34,7 +34,7 @@ window.runSelfTest = async function runSelfTest(){
   } catch(e){ ok('fonts', false, String(e)); }
 
   // 2 — structure: the Flux world is present; removed modules are gone
-  ['#hero','#thesis','#fluxRoot','#work','#builds','#contact','#status','#codefield','#palette','#sheet','#nav','#heroTerm','#termDock'].forEach(s =>
+  ['#hero','#thesis','#fluxRoot','#work','#transitMap','#contact','#status','#codefield','#palette','#sheet','#nav','#heroTerm','#termDock'].forEach(s =>
     ok('exists ' + s, !!q(s)));
   ['#dag','#metrics','#incident','#statuspage','#toolchain','#envChip','#stack','#about','#terminal','#commitForm'].forEach(s =>
     ok('removed ' + s, !q(s)));
@@ -50,71 +50,39 @@ window.runSelfTest = async function runSelfTest(){
   const thesisST = (window.ScrollTrigger ? ScrollTrigger.getAll() : []).find(t => t.vars.trigger && t.vars.trigger.id === 'thesis');
   ok('thesis is pinned + scrubbed (ScrollTrigger)', !!(thesisST && thesisST.vars.pin), thesisST ? ('pin=' + !!thesisST.vars.pin) : 'no ScrollTrigger on #thesis');
 
-  // 4 — 01 Experience (hand-written WebGL "field" + magnetic station nav + scramble detail)
+  // 4 — 01 Experience (intro heading + lab effects). The hand-written WebGL "field" + magnetic station
+  // nav were removed — the Transit Map is now the sole Experience visual; the #work intro heading stays.
   scrollTo('#work'); await sleep(600);
   ok('experience eyebrow present', !!q('#work .fx-eb'), q('#work .fx-eb') && q('#work .fx-eb').textContent.trim());
-  ok('WebGL field canvas has a GL context + non-black pixels', (() => {
-    const c = q('#fluxCanvas'); if (!c) return false;
-    const gl = c.getContext('webgl') || c.getContext('webgl2'); if (!gl) return false;
-    try { const px = new Uint8Array(4 * 64); gl.readPixels(0, 0, 8, 8, gl.RGBA, gl.UNSIGNED_BYTE, px); let s = 0; for (let i = 0; i < px.length; i++) s += px[i]; return s > 0; }
-    catch(e){ return false; }
-  })(), q('#fluxCanvas') && (q('#fluxCanvas').width + 'x' + q('#fluxCanvas').height));
+  ['#fluxStage', '#fluxCanvas', '#fluxStations', '#fluxDetail', '#fluxMotion'].forEach(s =>
+    ok('removed (flux field) ' + s, !q(s)));
   ok('compiler-lens active (or graceful CSS fallback)', !window.__compilerLens || window.__compilerLens.active || window.__compilerLens.fellBack);
   // ---- ported lab effects (Wave 1) — active OR graceful fallback, never broken ----
   ok('#1 velocity-skew active (or graceful fallback)', !!window.__velocitySkew && (window.__velocitySkew.active || window.__velocitySkew.fellBack),
     window.__velocitySkew && ('active=' + window.__velocitySkew.active + (window.__velocitySkew.count ? ' n=' + window.__velocitySkew.count : '')));
-  ok('#2 deploy-handoff source tagger wired to .pj-build', 'onpageswap' in window && qa('#bdGrid .pj-build .pj-case[href*="#build-"]').length > 0,
-    qa('#bdGrid .pj-build .pj-case[href*="#build-"]').length + ' case-study cards');
-  ok('#3 builds scroll-state strip present', !!q('.bd-stuck .bd-stuck__state'));
+  // #2 deploy-handoff (.pj-build → projects.html) and #3 builds scroll-state strip were removed with the Builds grid.
   ok('#5 status popover + anchored info button present', !!q('#fxStatusPop[popover]') && !!q('.fx-info[popovertarget="fxStatusPop"]'));
+  // #6 scan panel draws frames only while on-screen (rAF; pauses off-screen). Removing the Builds grid +
+  // V8u carousel shortened the page and shifted this panel, so explicitly bring it into view and give it
+  // rAF time before asserting frames>0 (verified live: ~23 frames within ~1.6s on-screen).
+  if (q('#scanCanvas')) q('#scanCanvas').scrollIntoView({ block: 'center' });
+  await sleep(1100);
   ok('#6 scan panel drawing frames (or graceful CSS fallback)', !!q('#scanCanvas') && !!window.__scanPanel && ((window.__scanPanel.active && window.__scanPanel.frames > 0) || window.__scanPanel.fellBack),
     window.__scanPanel && ('active=' + window.__scanPanel.active + ' frames=' + window.__scanPanel.frames));
-  const stations = qa('#fluxStations button');
-  ok('5 magnetic role stations', stations.length === 5, 'count=' + stations.length);
-  ok('station detail populated', !!q('#fluxDetail') && q('#fluxDetail').innerText.trim().length > 8);
-  if (stations.length === 5){
-    const before = q('#fluxDetail').innerText.slice(0, 40);
-    stations[2].click(); await sleep(550);
-    ok('station click swaps the detail panel', q('#fluxDetail').innerText.slice(0, 40) !== before, 'before≠after');
-  }
+  // (the 5 magnetic stations + #fluxDetail panel were removed with the WebGL field — asserted gone above.)
 
-  // 5 — 02 Builds: the live-demo grid (10 real apps, each iframed same-origin from /demos/<slug>/).
-  // The earlier one-slide-at-a-time #bdStage carousel (.bd-slide/.bd-tab/#bdPrev/#bdNext) was
-  // replaced by this <demo-card> grid — its JS self-guards (if(!stage)return), so assert it's ABSENT.
-  scrollTo('#builds'); await sleep(500);
-  ['#bdStage', '.bd-slide', '.bd-tab', '#bdPrev', '#bdNext'].forEach(s =>
-    ok('removed (builds carousel) ' + s, !q(s)));
-  ok('builds links to full case studies (projects.html)', qa('#builds a[href*="projects.html#build-"]').length >= 5, qa('#builds a[href*="projects.html#build-"]').length + ' links');
-
-  // 5b — <demo-card> live-demo grid contract.
-  // Cards render a poster + a launch veil and load NOTHING until clicked.
-  // Each embed's actual boot (200 · real DOM · no uncaught error) is verified end-to-end by
-  // tests/run-demos.mjs, which loads all 10 /demos/<slug>/ apps in a real browser.
-  const cards = qa('#bdGrid demo-card');
-  ok('demo grid renders all live-demo cards', cards.length === 10, cards.length + ' cards');
-  ok('every demo card has a launch veil + control bar', cards.length > 0 &&
-    cards.every(c => c.querySelector('.dc__launch') && c.querySelector('.pj-frame__bar')),
-    cards.filter(c => c.querySelector('.dc__launch')).length + '/' + cards.length + ' with launch');
-  ok('every demo card shows a poster or numbered fallback', cards.length > 0 &&
-    cards.every(c => c.querySelector('.dc__poster') || c.querySelector('.dc__fallback')));
-  const liveBadges = qa('#bdGrid .dc__badge[data-mode="live"]');
-  ok('all demos are tagged "live" (real app, not a tour)', liveBadges.length === cards.length && cards.length === 10,
-    liveBadges.length + '/' + cards.length + ' live');
-  ok('nothing is loaded before click (no eager iframes)', qa('#bdGrid iframe').length === 0,
-    qa('#bdGrid iframe').length + ' iframes pre-click');
-  // click-to-load contract: activating a card mounts a sandboxed iframe pointing at /demos/<slug>/
-  const firstCard = cards[0], firstLaunch = firstCard && firstCard.querySelector('.dc__launch');
-  if (firstLaunch){
-    firstLaunch.click(); await sleep(400);
-    const f = firstCard.querySelector('.dc__host iframe');
-    ok('launching a demo mounts a sandboxed /demos/ iframe', !!f && /(^|\/)demos\//.test(f.getAttribute('src') || ''),
-      f ? f.getAttribute('src') : 'no iframe');
-    ok('demo iframe is sandboxed (allow-scripts, allow-same-origin)', !!f &&
-      /allow-scripts/.test(f.getAttribute('sandbox') || '') && /allow-same-origin/.test(f.getAttribute('sandbox') || ''),
-      f ? (f.getAttribute('sandbox') || '').slice(0, 40) : '');
-    // restore the card so the rest of the suite (and the page) is left clean
-    const closeBtn = firstCard.querySelector('[data-act="close"]'); if (closeBtn) closeBtn.click(); await sleep(120);
-  }
+  // 5 — 02 Builds is now the Transit Map (Experience × Builds) — the sole builds surface.
+  // The old <demo-card> grid (#bdGrid) and the #bdStage / #v8uStage carousels were removed;
+  // each real /demos/<slug>/ app still loads in the Transit Map's live dock and is boot-verified
+  // end-to-end by tests/run-demos.mjs. Here we assert the map renders and removed surfaces are gone.
+  scrollTo('#transitMap'); await sleep(300);
+  // the transit map is constructed lazily when scrolled into view — poll up to ~1.8s for its render
+  for (let i = 0; i < 12 && !(q('#tmRoot') && q('#tmRoot').children.length); i++) await sleep(150);
+  ok('transit map section + dock root present', !!q('#transitMap') && !!q('#tmRoot'));
+  ok('transit map rendered into #tmRoot', !!q('#tmRoot') && q('#tmRoot').children.length > 0,
+    q('#tmRoot') && (q('#tmRoot').children.length + ' nodes'));
+  ['#bdGrid', '#v8uStage', '#bdStage'].forEach(s =>
+    ok('removed (builds grid / carousel) ' + s, !q(s)));
 
   // 6 — 03 Contact (vibrant terminal commit form → mailto; live SF clock)
   scrollTo('#contact'); await sleep(400);

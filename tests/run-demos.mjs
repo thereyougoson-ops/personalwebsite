@@ -23,19 +23,20 @@ import { fileURLToPath } from 'url';
 
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:8099';
 
-// ---- derive the demo list from index.html (single source of truth) ----
-const indexPath = fileURLToPath(new URL('../index.html', import.meta.url));
-const html = readFileSync(indexPath, 'utf8');
-// each project block carries  slug:"..."  and a later  src:"demos/<slug>/..."
-const slugs = [...html.matchAll(/slug:\s*"([^"]+)"/g)].map((m) => m[1]);
-const srcs = [...html.matchAll(/src:\s*"(demos\/[^"]+)"/g)].map((m) => m[1]);
-const DEMOS = srcs.map((src) => {
-  const slug = (src.match(/^demos\/([^/#]+)/) || [])[1];
-  return { slug, src };
-});
-if (!DEMOS.length) { console.error('No demos parsed from index.html — abort.'); process.exit(2); }
-console.log(`Parsed ${DEMOS.length} demo embed(s) from index.html` +
-  (slugs.length !== DEMOS.length ? `  (note: ${slugs.length} project slugs)` : '') + `\n`);
+// ---- derive the demo list from the Transit Map (scripts/transit.js) — single source of truth ----
+// The Transit Map's live dock is now the sole builds surface (the old #bdGrid PROJECTS array was
+// removed). Its SRC map holds each real same-origin embed, including non-slug paths like
+// demos/stakeodds/#demo and demos/renovation-watchlist/. We read those values directly.
+const transitPath = fileURLToPath(new URL('../scripts/transit.js', import.meta.url));
+const tsrc = readFileSync(transitPath, 'utf8');
+const seen = new Set();
+const DEMOS = [...tsrc.matchAll(/['"](demos\/[^'"]+)['"]/g)]
+  .map((m) => m[1])
+  // keep real embed paths (demos/<slug>/...); drop the bare 'demos/' concat-prefix; dedupe
+  .filter((src) => /^demos\/[^/]+\//.test(src) && !seen.has(src) && seen.add(src))
+  .map((src) => ({ slug: (src.match(/^demos\/([^/#]+)/) || [])[1], src }));
+if (!DEMOS.length) { console.error('No demos parsed from scripts/transit.js — abort.'); process.exit(2); }
+console.log(`Parsed ${DEMOS.length} demo embed(s) from scripts/transit.js\n`);
 
 // console.error patterns that are by-design for an embedded, backend-less facade demo
 const benign = (t) =>

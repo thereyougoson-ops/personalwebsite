@@ -8,7 +8,7 @@
 import { chromium } from 'playwright';
 
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:8099';
-const PAGES = ['/index.html', '/projects.html', '/404.html'];
+const PAGES = ['/index.html', '/404.html'];
 
 const browser = await chromium.launch();
 const context = await browser.newContext();

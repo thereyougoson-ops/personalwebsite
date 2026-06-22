@@ -30,7 +30,6 @@ const skipFile = (name) => SKIP_FILES.has(name) || name.endsWith('.md');
 const HASHED = [
   { rel: 'styles/main.css', loader: 'css' },
   { rel: 'scripts/main.js', loader: 'js' },
-  { rel: 'scripts/v8u.js', loader: 'js' },
   { rel: 'scripts/transit.js', loader: 'js' },
 ];
 

@@ -8,7 +8,7 @@ import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 
 const BASE = process.env.BASE_URL || 'http://127.0.0.1:8099';
-const PAGES = ['/index.html', '/projects.html'];
+const PAGES = ['/index.html'];
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'];
 
 const browser = await chromium.launch();

@@ -17,27 +17,8 @@ let lenis = null;
 
 if (hasGSAP) gsap.registerPlugin(ScrollTrigger);
 
-/* cross-document "deploy handoff": when navigating to a case study, hand the CLICKED card's hero+title
-   to the shared View-Transition name so it morphs into the projects.html article (CSS :target supplies
-   the destination). Scoped to the clicked card → only it morphs, the rest cross-fades. Feature-detected,
-   fully guarded, and inert during the in-page self-test (no cross-doc navigation happens there). */
-if ('onpageswap' in window){
-  window.addEventListener('pageswap', (e) => {
-    if (!e.viewTransition || !e.activation || !e.activation.entry) return;
-    const m = (e.activation.entry.url || '').match(/#build-([a-z0-9-]+)/i);
-    if (!m) return;
-    // the Flux Builds redesign renders cards as .pj-build (link = .pj-case → projects.html#build-<slug>);
-    // tag the matching card's frame + title so the cross-document View Transition has a real shared element
-    // to morph into the destination dossier (CSS opt-in + group timing live in main.css; destination names
-    // are :target-driven in projects.html). Without this the nav silently degrades to a root cross-fade.
-    const link = document.querySelector('.pj-case[href*="#build-' + m[1] + '"]');
-    const card = link && link.closest('.pj-build');
-    if (!card) return;
-    const frame = card.querySelector('.pj-build__media'), title = card.querySelector('h3');
-    if (frame) frame.style.viewTransitionName = 'vt-deploy-hero';
-    if (title) title.style.viewTransitionName = 'vt-deploy-title';
-  });
-}
+/* cross-document deploy-handoff to projects.html removed: projects.html and the #bdGrid demo-card
+   grid (.pj-build / .pj-case cards) no longer exist — the Transit Map is the sole builds surface. */
 
 /* ---------- boot (invoked at end of file, after all module state is initialized) ---------- */
 function boot(){
@@ -236,7 +217,7 @@ function initShortcuts(){
     if (k === 'g'){ gPending = true; clearTimeout(gTimer); gTimer = setTimeout(() => gPending = false, 1200); return; }
     if (gPending){
       gPending = false; clearTimeout(gTimer);
-      const map = { p:'#work', s:'#stack', b:'#builds', a:'#about', c:'#contact', h:'#top', m:'#metrics' };
+      const map = { p:'#work', s:'#stack', b:'#transitMap', a:'#about', c:'#contact', h:'#top', m:'#metrics' };
       if (map[k]){ e.preventDefault(); scrollToId(map[k]); }
     }
   });
@@ -1394,7 +1375,7 @@ function buildPaletteItems(){
   return [
     { ico:'→', t:'Go to Pipeline', d:'01', run:() => scrollToId('#work') },
     { ico:'→', t:'Go to Stack (terminal)', d:'02', run:() => { scrollToId('#stack'); setTimeout(()=>document.getElementById('termInput')?.focus(),700); } },
-    { ico:'→', t:'Go to Builds', d:'03', run:() => scrollToId('#builds') },
+    { ico:'→', t:'Go to Builds', d:'03', run:() => scrollToId('#transitMap') },
     { ico:'→', t:'Go to About', d:'04', run:() => scrollToId('#about') },
     { ico:'→', t:'Go to Contact', d:'05', run:() => scrollToId('#contact') },
     { ico:'⌘', t:'Run ./deploy --prod', d:'demo', run:() => deployOverlay() },
