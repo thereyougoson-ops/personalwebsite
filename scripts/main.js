@@ -38,7 +38,7 @@ function boot(){
   initTerminal();
   initHeroDock();
   initPalette();
-  initNavHint();
+  initCoachMarks();
   initEnvFromStorage();
   initClock();
   initShortcuts();
@@ -1667,54 +1667,95 @@ function togglePalette(force){
   if (open){ input.value=''; window.__renderPalette && window.__renderPalette(''); setTimeout(()=>input.focus(),30); if (lenis) lenis.stop(); blip(660,.05,'triangle',.03); }
   else { if (lenis) lenis.start(); const r = window.__paletteReturnFocus; if (r && r.focus){ try { r.focus(); } catch(e){} } }   // restore focus to the trigger
 }
-/* first-visit coach-mark: on touch / narrow screens the palette IS the nav, but the bare ⌘K
-   glyph gives no hint of that. Point at the "Menu" button once, then never again (localStorage). */
-function initNavHint(){
-  const btn = document.getElementById('paletteOpen');
-  if (!btn) return;
-  const onTouch = isTouch || window.matchMedia('(max-width: 760px)').matches;
-  if (!onTouch) return;
-  try { if (localStorage.getItem('pt_navhint') === 'seen') return; } catch(e){}
-  const mark = () => { try { localStorage.setItem('pt_navhint', 'seen'); } catch(e){} };
+/* ---- coach-marks: a reusable guided pop-up that genie-maximizes OUT of the element it
+   points at, softly cycles the transit palette for ~5.5s, then genie-minimizes back INTO
+   that element. Fires once per visit (localStorage) when its trigger scrolls into view.
+   Generalizes the old first-visit Menu hint. ---- */
+function coachMark(opts){
+  try { if (localStorage.getItem(opts.id) === 'seen') return; } catch(e){}
+  const onTouch = isTouch || window.matchMedia('(max-width:760px)').matches;
+  if (opts.platforms === 'touch' && !onTouch) return;
+  let fired = false;
 
-  const hint = document.createElement('div');
-  hint.className = 'navhint mono';
-  hint.setAttribute('role', 'status');
-  hint.innerHTML = `<span class="navhint__arrow" aria-hidden="true"></span><b>☰ Menu</b> — tap to navigate &amp; search the site.`;
-  document.body.appendChild(hint);
+  const fire = (attempt) => {
+    if (fired) return;
+    const target = opts.getTarget();
+    if (!target){ if ((attempt || 0) < 12) setTimeout(() => fire((attempt || 0) + 1), 300); return; }   // wait for lazily-rendered stations
+    fired = true;
+    const el = document.createElement('div');
+    el.className = 'navhint coach mono';
+    el.setAttribute('role', 'status');
+    el.innerHTML = `<span class="navhint__arrow" aria-hidden="true"></span>${opts.html}`;
+    document.body.appendChild(el);
+    let done = false, timer = null;
 
-  const place = () => {
-    const r = btn.getBoundingClientRect();
-    const w = hint.offsetWidth || 240;
-    let left = Math.max(8, Math.min(Math.round(r.right - w), window.innerWidth - w - 8));
-    hint.style.top = Math.round(r.bottom + 10) + 'px';
-    hint.style.left = left + 'px';
-    const arrow = hint.querySelector('.navhint__arrow');
-    if (arrow) arrow.style.left = Math.max(8, Math.round(r.left + r.width / 2 - left - 5)) + 'px';
-  };
-
-  let done = false;
-  const dismiss = () => {
-    if (done) return; done = true;
-    mark();
-    hint.classList.remove('is-in');
-    document.removeEventListener('click', onDocClick, true);
-    setTimeout(() => hint.remove(), 420);
-  };
-  const onDocClick = () => dismiss();
-
-  // the nav (and so the button) is position:fixed, so the hint tracks it through scroll —
-  // dismiss only on an explicit interaction or after a timeout, never on scroll/settle.
-  let shown = false;
-  const show = () => {
-    if (shown || done) return; shown = true;
+    const place = () => {
+      const t = opts.getTarget(); if (!t) return;
+      const r = t.getBoundingClientRect();
+      const w = el.offsetWidth || 240, h = el.offsetHeight || 60;
+      const above = opts.side === 'above';
+      const top = above ? Math.round(r.top - h - 10) : Math.round(r.bottom + 10);
+      const left = Math.max(8, Math.min(Math.round(r.left + r.width / 2 - w / 2), window.innerWidth - w - 8));
+      el.style.top = top + 'px'; el.style.left = left + 'px';
+      const arrow = el.querySelector('.navhint__arrow');
+      if (arrow){ arrow.style.left = Math.max(8, Math.round(r.left + r.width / 2 - left - 5)) + 'px';
+        arrow.style.top = above ? (h - 6) + 'px' : '-6px'; }
+      // genie vector: mark-centre → target-centre, so it grows from / shrinks into the target
+      el.style.setProperty('--gx', Math.round((r.left + r.width / 2) - (left + w / 2)) + 'px');
+      el.style.setProperty('--gy', Math.round((r.top + r.height / 2) - (top + h / 2)) + 'px');
+    };
     place();
-    requestAnimationFrame(() => { hint.classList.add('is-in'); if (!reduceQuery.matches) hint.classList.add('navhint__pulse'); });
-    setTimeout(() => { document.addEventListener('click', onDocClick, true); }, 400);
-    setTimeout(dismiss, 8000);
+    requestAnimationFrame(() => { place(); el.classList.add('is-in'); });
+
+    const onScroll = () => { if (!done) place(); };
+    window.addEventListener('scroll', onScroll, true);
+    window.addEventListener('resize', onScroll);
+    const dismiss = () => {
+      if (done) return; done = true;
+      try { localStorage.setItem(opts.id, 'seen'); } catch(e){}
+      clearTimeout(timer);
+      place();                                            // recompute the genie vector at the current scroll position
+      el.classList.remove('is-in'); el.classList.add('is-out');
+      window.removeEventListener('scroll', onScroll, true);
+      window.removeEventListener('resize', onScroll);
+      setTimeout(() => el.remove(), 480);
+    };
+    el.addEventListener('click', () => { dismiss(); if (opts.onClick) opts.onClick(); });
+    timer = setTimeout(dismiss, 6000);                    // ~0.5s genie-in + 5.5s on screen
   };
-  hint.addEventListener('click', () => { dismiss(); togglePalette(true); });
-  setTimeout(show, 1500);   // let the preloader clear first
+
+  const trigger = (opts.getTrigger && opts.getTrigger()) || opts.getTarget();
+  if (!trigger) return;
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver((ents) => {
+      ents.forEach((e) => { if (e.isIntersecting){ io.disconnect(); setTimeout(() => fire(0), opts.delay || 0); } });
+    }, { threshold: 0.25 });
+    io.observe(trigger);
+  } else { setTimeout(() => fire(0), (opts.delay || 0) + 1200); }
+}
+
+function initCoachMarks(){
+  // 1 · Menu (touch only — desktop already shows the ⌘K label)
+  coachMark({ id:'pt_navhint', platforms:'touch', delay:1400,
+    getTarget: () => document.getElementById('paletteOpen'),
+    html: `<b>☰ Menu</b> — tap to navigate &amp; search the site.`,
+    onClick: () => togglePalette(true) });
+  // 2 · type-to-take-over the shell
+  coachMark({ id:'pt_typehint', delay:1700,
+    getTarget: () => document.getElementById('heroTermInput'),
+    getTrigger: () => document.getElementById('heroTerm'),
+    html: `<b>↳ type to take over</b> — try <b>help</b>, <b>whoami</b>, or tap a chip.`,
+    onClick: () => { const i = document.getElementById('heroTermInput'); if (i) i.focus({ preventScroll:true }); } });
+  // 3 · transit: experience stops are clickable
+  coachMark({ id:'pt_xphint',
+    getTrigger: () => document.getElementById('transitMap'),
+    getTarget: () => document.querySelector('#tmRoot circle[data-role]'),
+    html: `<b>tap a stop</b> to read that chapter of the path.` });
+  // 4 · transit: build stops launch live (staggered so the two don't genie in together)
+  coachMark({ id:'pt_buildhint', delay:1100,
+    getTrigger: () => document.getElementById('transitMap'),
+    getTarget: () => document.querySelector('#tmRoot circle[data-slug]'),
+    html: `<b>tap a build</b> to launch it live ↗` });
 }
 function filterItems(items, q){
   q = (q||'').trim().toLowerCase(); if (!q) return items;
@@ -2137,7 +2178,9 @@ function initTerminal(){
     if (!vv || !term || !input) return;
     var want = false, active = false;
     var isMobile = function(){ return window.matchMedia('(max-width:760px)').matches; };
-    var kbOpen = function(){ return (window.innerHeight - vv.height) > 120; };
+    // a soft keyboard shrinks visualViewport — but so does pinch-zoom; only treat it as the
+    // keyboard when NOT pinch-zoomed (scale ~1), so zooming can't false-trigger keyboard mode.
+    var kbOpen = function(){ return (vv.scale || 1) <= 1.05 && (window.innerHeight - vv.height) > 120; };
     function size(){ term.style.top = (vv.offsetTop || 0) + 'px'; term.style.height = vv.height + 'px'; }
     function activate(){ active = true; root.classList.add('kbd-term');
       try { if (typeof lenis !== 'undefined' && lenis) lenis.stop(); } catch (e) {} size(); }

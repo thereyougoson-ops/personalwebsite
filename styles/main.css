@@ -260,6 +260,32 @@ body.cursor-label .cursor__label{ opacity:1; }
 .navhint__pulse{ animation:navhintPulse 1.6s var(--ease-out,ease) infinite; }
 @keyframes navhintPulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(var(--accent-rgb,245,182,66),.0);} 50%{ box-shadow:0 0 0 4px rgba(var(--accent-rgb,245,182,66),.22);} }
 
+/* ---- genie coach-mark: maximize out of the element it points at, softly cycle the
+   transit palette for ~5.5s, then minimize back into that element. --gx/--gy are the
+   vector (mark-centre → target-centre) set by JS, so it grows from / shrinks into the
+   target like a macOS dock genie (a scale+translate approximation, not a literal warp). */
+.coach{ will-change:transform,opacity; }
+/* informational + non-blocking: never intercept a tap meant for the control it points at
+   (a coach that blocks the very thing it says to tap would be broken). Auto-dismisses. */
+.coach.is-in{ animation: coachGenieIn .52s cubic-bezier(.2,1.25,.3,1) both, coachColor 5.5s linear .12s 1, coachColorB 5.5s linear .12s 1; pointer-events:none; }
+.coach.is-out{ animation: coachGenieOut .46s cubic-bezier(.5,0,.75,.25) both; pointer-events:none; }
+@keyframes coachGenieIn{
+  0%{ opacity:0; transform: translate(var(--gx,0), var(--gy,0)) scale(.12); filter:blur(1.5px); }
+  55%{ opacity:1; }
+  100%{ opacity:1; transform: translate(0,0) scale(1); filter:blur(0); } }
+@keyframes coachGenieOut{
+  0%{ opacity:1; transform: translate(0,0) scale(1); filter:blur(0); }
+  100%{ opacity:0; transform: translate(var(--gx,0), var(--gy,0)) scale(.12); filter:blur(1.5px); } }
+/* soft palette cycle on the border + the highlighted words */
+@keyframes coachColor{
+  0%,100%{ border-color: rgba(245,182,66,.92); }   /* amber  */
+  25%{ border-color: rgba(94,230,192,.92); }        /* mint   */
+  50%{ border-color: rgba(98,182,255,.92); }        /* cyan   */
+  75%{ border-color: rgba(199,146,234,.92); } }     /* violet */
+@keyframes coachColorB{
+  0%,100%{ color:#f5b642; } 25%{ color:#5ee6c0; } 50%{ color:#62b6ff; } 75%{ color:#c792ea; } }
+.coach.is-in b{ animation: coachColorB 5.5s linear .12s 1; }
+
 /* =====================  SECTION PRIMITIVES  ===================== */
 section{ position:relative; padding:clamp(4.5rem,10vw,9rem) var(--pad); }
 .sec__head{ max-width:var(--maxw); margin:0 auto clamp(2.5rem,5vw,4.5rem); }
