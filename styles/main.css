@@ -346,10 +346,10 @@ section{ position:relative; padding:clamp(4.5rem,10vw,9rem) var(--pad); }
 .hero__scroll i::after{ content:none; }
 @keyframes heroScrollCue{ 0%,100%{ transform:translateY(0); opacity:.86; } 50%{ transform:translateY(5px); opacity:1; } }
 @keyframes heroScrollCueM{ 0%,100%{ transform:translateX(-50%) translateY(0); opacity:.86; } 50%{ transform:translateX(-50%) translateY(4px); opacity:1; } }
-/* mobile: same pill, centred at the bottom, a touch smaller */
+/* mobile: same pill, kept IN-FLOW below the text (never absolutely positioned over it) */
 @media (max-width:880px){
-  .hero__scroll{ position:absolute; bottom:1.4rem; left:50%; margin-top:0;
-    font-size:.7rem; letter-spacing:.18em; padding:.55rem 1.05rem; color:var(--accent); animation-name:heroScrollCueM; }
+  .hero__scroll{ align-self:center; margin-top:1.3rem;
+    font-size:.7rem; letter-spacing:.18em; padding:.55rem 1.05rem; color:var(--accent); }
 }
 
 /* =====================  PIPELINE DAG  ===================== */

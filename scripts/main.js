@@ -564,6 +564,14 @@ function initLenis(){
     a.addEventListener('click', (e) => {
       const id = a.getAttribute('href');
       if (id.length < 2) return;
+      // the hero scroll cue: instead of a fast jump, nudge just past the auto-ride trigger
+      // (20% of the viewport) so the hands-off guided ride glides SLOWLY through the thesis
+      // messages into Experience — don't park/short-circuit it (that's what read "too fast").
+      if (a.classList.contains('hero__scroll')){
+        e.preventDefault();
+        lenis.scrollTo(Math.round(window.innerHeight * 0.26), { duration: 0.5 });
+        return;
+      }
       const target = document.querySelector(id);
       if (!target) return;
       e.preventDefault();
@@ -1739,9 +1747,10 @@ function initCoachMarks(){
     getTarget: () => document.getElementById('heroTermInput'),
     getTrigger: () => document.getElementById('heroTerm'),
     html: `<b>↳ type to take over</b> — try <b>help</b>, <b>whoami</b>, or tap a chip.` });
-  // 2 · Menu / palette (BOTH viewports now) — shows AFTER the terminal bubble
+  // 2 · Menu / palette (BOTH viewports) — appears only AFTER the terminal bubble's full
+  //     genie cycle (fire ~1.1s + ~6s on screen + minimise), so the two never overlap.
   const navTouch = isTouch || window.matchMedia('(max-width:760px)').matches;
-  coachMark({ id:'pt_navhint', delay:2600,
+  coachMark({ id:'pt_navhint', delay:7800,
     getTarget: () => document.getElementById('paletteOpen'),
     getTrigger: () => document.getElementById('hero'),
     html: navTouch ? `<b>☰ Menu</b> — tap to navigate &amp; search the site.`
@@ -1751,10 +1760,6 @@ function initCoachMarks(){
     getTrigger: () => document.getElementById('transitMap'),
     getTarget: () => document.querySelector('#tmRoot circle[data-role]'),
     html: `<b>tap a stop</b> to read that chapter of the path.` });
-
-  // scroll cue → smooth-scroll to the next section on click/tap (lenis-aware via scrollToId)
-  const cue = document.querySelector('.hero__scroll');
-  if (cue) cue.addEventListener('click', (e) => { e.preventDefault(); scrollToId(cue.getAttribute('href') || '#work'); });
 }
 function filterItems(items, q){
   q = (q||'').trim().toLowerCase(); if (!q) return items;
