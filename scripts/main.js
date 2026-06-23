@@ -2097,13 +2097,13 @@ function makeShell(cfg){
     else if (e.key === 'Tab'){ e.preventDefault(); complete(); }
     else if (e.key === 'l' && e.ctrlKey){ e.preventDefault(); bodyEl.innerHTML=''; }
   });
-  term.addEventListener('click', (e) => { if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON'){ abortDemo(); input.focus(); } });
+  term.addEventListener('click', (e) => { if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON'){ abortDemo(); input.focus({ preventScroll: true }); } });
 
   // quick-command chips (discoverability for visitors who won't type)
   const chips = cfg.chipsId ? document.getElementById(cfg.chipsId) : null;
   if (chips) chips.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
     const cmd = b.dataset.cmd; if (!cmd) return;
-    abortDemo(); input.focus(); run(cmd); hist.push(cmd); hi = hist.length;
+    abortDemo(); input.focus({ preventScroll: true }); run(cmd); hist.push(cmd); hi = hist.length;
   }));
 
   // register this shell's demo-abort so the nav motion toggle halts EVERY tour, not just the last
@@ -2123,6 +2123,36 @@ function initTerminal(){
     staticList: ['help', 'whoami', 'git log', 'kubectl get skills'],
     welcome: `<span class='d'>release &amp; software engineer · ci/cd · cloud-native · 5g/lte. this is a real shell — watch the tour, or type <span class='a'>help</span> and take over.</span>`,
     demoEndMsg: `<span class='d'>// that's the tour — your turn. type <span class='a'>help</span>, <span class='a'>git log</span>, <span class='a'>kubectl get skills</span>, or pick a chip ↑</span>` });
+
+  // ---- mobile keyboard fit (iOS Safari): keep the focused terminal input above the
+  // on-screen keyboard instead of letting the page auto-scroll. Engages ONLY while a soft
+  // keyboard actually shrinks visualViewport (>120px), so it's a verifiable no-op on
+  // desktop / hardware-keyboard / headless. Pins #heroTerm into the visible area; the
+  // input sits at the bottom of the flex column = just above the keyboard. ----
+  (function termKeyboardFit(){
+    var vv = window.visualViewport,
+        term = document.getElementById('heroTerm'),
+        input = document.getElementById('heroTermInput'),
+        root = document.documentElement;
+    if (!vv || !term || !input) return;
+    var want = false, active = false;
+    var isMobile = function(){ return window.matchMedia('(max-width:760px)').matches; };
+    var kbOpen = function(){ return (window.innerHeight - vv.height) > 120; };
+    function size(){ term.style.top = (vv.offsetTop || 0) + 'px'; term.style.height = vv.height + 'px'; }
+    function activate(){ active = true; root.classList.add('kbd-term');
+      try { if (typeof lenis !== 'undefined' && lenis) lenis.stop(); } catch (e) {} size(); }
+    function deactivate(){ active = false; root.classList.remove('kbd-term');
+      term.style.top = ''; term.style.height = '';
+      try { if (typeof lenis !== 'undefined' && lenis) lenis.start(); } catch (e) {} }
+    function update(){
+      if (want && isMobile() && kbOpen()){ active ? size() : activate(); }
+      else if (active){ deactivate(); }
+    }
+    input.addEventListener('focus', function(){ want = true; update(); });
+    input.addEventListener('blur', function(){ want = false; deactivate(); });
+    vv.addEventListener('resize', update);
+    vv.addEventListener('scroll', update);
+  })();
 }
 
 /* =====================  HERO TERMINAL — minimise to a pinned dock, expand as an overlay  ===================== */

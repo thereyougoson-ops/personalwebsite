@@ -1038,6 +1038,18 @@ body.term-frozen{ overflow:hidden; }
   #tmLiveOpen,#tmLiveClose{ min-height:44px; display:inline-flex; align-items:center; }  /* live-app dock controls: real touch size */
   #heroTerm .terminal__bar .pre__dot{ position:relative; }             /* dots double as a "jump to builds" button — give them a real hit area */
   #heroTerm .terminal__bar .pre__dot::after{ content:''; position:absolute; inset:-16px -7px; }
+  /* terminal input: always-on amber field so it reads as "type here" before focus, not only on tap */
+  #heroTermInput{ border:1.5px solid rgba(var(--accent-rgb),.85); border-radius:9px; padding:9px 11px; }
+  #heroTermInput:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),.20); outline:none; }
+  /* keyboard mode (toggled by JS from visualViewport, only while a soft keyboard is open):
+     pin the hero terminal into the space above the keyboard so the input is reachable
+     without the page auto-scrolling. */
+  html.kbd-term, html.kbd-term body{ overflow:hidden !important; }
+  html.kbd-term #heroTerm{ position:fixed; left:0; right:0; z-index:130; margin:0; max-width:none;
+    border-radius:0; display:flex; flex-direction:column; }
+  html.kbd-term #heroTerm .heroterm__banner,
+  html.kbd-term #heroTerm #heroTermChips{ display:none; }
+  html.kbd-term #heroTerm .terminal__scroll{ flex:1 1 auto; height:auto !important; min-height:0; }
   .fx-info{ width:30px; height:30px; }                                 /* was 20x20 → meets tap-target min */
   .nav__brand{ min-height:42px; min-width:42px; justify-content:center; }
   .ct-copy{ min-height:40px; display:inline-flex; align-items:center; justify-content:center; }
