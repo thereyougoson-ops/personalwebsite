@@ -1697,9 +1697,9 @@ function coachMark(opts){
       const top = above ? Math.round(r.top - h - 10) : Math.round(r.bottom + 10);
       const left = Math.max(8, Math.min(Math.round(r.left + r.width / 2 - w / 2), window.innerWidth - w - 8));
       el.style.top = top + 'px'; el.style.left = left + 'px';
-      const arrow = el.querySelector('.navhint__arrow');
-      if (arrow){ arrow.style.left = Math.max(8, Math.round(r.left + r.width / 2 - left - 5)) + 'px';
-        arrow.style.top = above ? (h - 6) + 'px' : '-6px'; }
+      const arrow = el.querySelector('.navhint__arrow');   // iMessage-style two-circle tail toward the target
+      if (arrow){ arrow.style.left = Math.max(8, Math.round(r.left + r.width / 2 - left - 7)) + 'px';
+        arrow.style.top = above ? (h - 9) + 'px' : '-9px'; }
       // genie vector: mark-centre → target-centre, so it grows from / shrinks into the target
       el.style.setProperty('--gx', Math.round((r.left + r.width / 2) - (left + w / 2)) + 'px');
       el.style.setProperty('--gy', Math.round((r.top + r.height / 2) - (top + h / 2)) + 'px');

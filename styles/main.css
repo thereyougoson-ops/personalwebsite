@@ -264,10 +264,17 @@ body.cursor-label .cursor__label{ opacity:1; }
    transit palette for ~5.5s, then minimize back into that element. --gx/--gy are the
    vector (mark-centre → target-centre) set by JS, so it grows from / shrinks into the
    target like a macOS dock genie (a scale+translate approximation, not a literal warp). */
-.coach{ will-change:transform,opacity; }
+/* iMessage-style bubble: black fill, white outline, big radius + a two-circle tail */
+.coach{ background:#0a0a0a; border:1.6px solid rgba(255,255,255,.92); border-radius:22px; color:#fff;
+  box-shadow:0 0 0 4px rgba(255,255,255,.06), 0 12px 34px rgba(0,0,0,.6); will-change:transform,opacity; }
+.coach b{ font-weight:700; }
+.coach .navhint__arrow{ width:15px; height:15px; rotate:0deg; border-radius:50%;
+  background:#0a0a0a; border:1.6px solid rgba(255,255,255,.92); box-shadow:none; }
+.coach .navhint__arrow::after{ content:""; position:absolute; width:8px; height:8px; border-radius:50%;
+  background:#0a0a0a; border:1.6px solid rgba(255,255,255,.92); left:-1px; top:-12px; }
 /* informational + non-blocking: never intercept a tap meant for the control it points at
    (a coach that blocks the very thing it says to tap would be broken). Auto-dismisses. */
-.coach.is-in{ animation: coachGenieIn .52s cubic-bezier(.2,1.25,.3,1) both, coachColor 5.5s linear .12s 1, coachColorB 5.5s linear .12s 1; pointer-events:none; }
+.coach.is-in{ animation: coachGenieIn .52s cubic-bezier(.2,1.25,.3,1) both; pointer-events:none; }
 .coach.is-out{ animation: coachGenieOut .46s cubic-bezier(.5,0,.75,.25) both; pointer-events:none; }
 @keyframes coachGenieIn{
   0%{ opacity:0; transform: translate(var(--gx,0), var(--gy,0)) scale(.12); filter:blur(1.5px); }
