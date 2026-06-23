@@ -265,13 +265,13 @@ body.cursor-label .cursor__label{ opacity:1; }
    vector (mark-centre → target-centre) set by JS, so it grows from / shrinks into the
    target like a macOS dock genie (a scale+translate approximation, not a literal warp). */
 /* iMessage-style bubble: black fill, white outline, big radius + a two-circle tail */
-.coach{ background:#0a0a0a; border:1.6px solid rgba(255,255,255,.92); border-radius:22px; color:#fff;
-  box-shadow:0 0 0 4px rgba(255,255,255,.06), 0 12px 34px rgba(0,0,0,.6); will-change:transform,opacity; }
+.coach{ background:#0a0a0a; border:1.6px solid rgba(245,182,66,.95); border-radius:22px; color:#fff;
+  box-shadow:0 0 0 4px rgba(245,182,66,.12), 0 12px 34px rgba(0,0,0,.6); will-change:transform,opacity; }
 .coach b{ font-weight:700; }
 .coach .navhint__arrow{ width:15px; height:15px; rotate:0deg; border-radius:50%;
-  background:#0a0a0a; border:1.6px solid rgba(255,255,255,.92); box-shadow:none; }
+  background:#0a0a0a; border:1.6px solid rgba(245,182,66,.95); box-shadow:none; }
 .coach .navhint__arrow::after{ content:""; position:absolute; width:8px; height:8px; border-radius:50%;
-  background:#0a0a0a; border:1.6px solid rgba(255,255,255,.92); left:-1px; top:-12px; }
+  background:#0a0a0a; border:1.6px solid rgba(245,182,66,.95); left:-1px; top:-12px; }
 /* informational + non-blocking: never intercept a tap meant for the control it points at
    (a coach that blocks the very thing it says to tap would be broken). Auto-dismisses. */
 .coach.is-in{ animation: coachGenieIn .52s cubic-bezier(.2,1.25,.3,1) both, coachBreathe 2.8s ease-in-out .62s infinite; pointer-events:none; }
@@ -332,20 +332,24 @@ section{ position:relative; padding:clamp(4.5rem,10vw,9rem) var(--pad); }
 .btn--ghost{ color:var(--text); } .btn--ghost:hover{ background:rgba(255,255,255,.05); border-color:var(--text-3); }
 .btn.mono{ font-size:.84rem; }
 /* desktop: a deliberate, BIG cue in the right rail under the side text — 2x bold, pulsing + bouncing */
-.hero__scroll{ display:flex; flex-direction:column; align-items:center; gap:.6rem; margin-top:1.8rem; text-decoration:none;
-  font-size:1.2rem; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--accent);
+/* a clear, clickable pill cue — bigger, invites a tap that scrolls to the next section */
+.hero__scroll{ display:inline-flex; align-items:center; gap:.55rem; margin-top:1.8rem; text-decoration:none; cursor:pointer;
+  font-size:.82rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--accent);
+  padding:.72rem 1.25rem; border:1.6px solid rgba(var(--accent-rgb),.55); border-radius:999px;
+  background:rgba(var(--accent-rgb),.07); box-shadow:0 6px 20px rgba(0,0,0,.3);
+  transition:background .2s, border-color .2s, color .2s;
   animation:heroScrollCue 1.7s var(--ease) infinite; }
-.hero__scroll:hover{ color:var(--accent-soft); }
-.hero__scroll i{ width:2px; height:46px; background:linear-gradient(var(--accent),transparent); position:relative; overflow:hidden; border-radius:2px; }
-.hero__scroll i::after{ content:""; position:absolute; top:-50%; left:0; width:100%; height:50%; background:var(--text); animation:scrolldrip 2s var(--ease) infinite; }
-@keyframes scrolldrip{ 0%{top:-50%} 60%,100%{top:100%} }
-@keyframes heroScrollCue{ 0%,100%{ transform:translateY(0); opacity:.72; } 50%{ transform:translateY(8px); opacity:1; } }
-@keyframes heroScrollCueM{ 0%,100%{ transform:translateX(-50%) translateY(0); opacity:.7; } 50%{ transform:translateX(-50%) translateY(5px); opacity:1; } }
-/* mobile: a small, unobtrusive cue centred at the bottom */
+.hero__scroll:hover{ color:#fff; background:rgba(var(--accent-rgb),.18); border-color:var(--accent); }
+/* a down chevron in place of the old thin drip line */
+.hero__scroll i{ width:9px; height:9px; border-right:2.4px solid currentColor; border-bottom:2.4px solid currentColor;
+  transform:rotate(45deg); margin-top:-3px; background:none; border-radius:0; }
+.hero__scroll i::after{ content:none; }
+@keyframes heroScrollCue{ 0%,100%{ transform:translateY(0); opacity:.86; } 50%{ transform:translateY(5px); opacity:1; } }
+@keyframes heroScrollCueM{ 0%,100%{ transform:translateX(-50%) translateY(0); opacity:.86; } 50%{ transform:translateX(-50%) translateY(4px); opacity:1; } }
+/* mobile: same pill, centred at the bottom, a touch smaller */
 @media (max-width:880px){
-  .hero__scroll{ position:absolute; bottom:1.4rem; left:50%; margin-top:0; gap:.5rem;
-    font-size:.62rem; font-weight:400; letter-spacing:.22em; color:var(--text-3); animation-name:heroScrollCueM; }
-  .hero__scroll i{ width:1px; height:40px; }
+  .hero__scroll{ position:absolute; bottom:1.4rem; left:50%; margin-top:0;
+    font-size:.7rem; letter-spacing:.18em; padding:.55rem 1.05rem; color:var(--accent); animation-name:heroScrollCueM; }
 }
 
 /* =====================  PIPELINE DAG  ===================== */
@@ -446,6 +450,11 @@ section{ position:relative; padding:clamp(4.5rem,10vw,9rem) var(--pad); }
 .terminal__line{ display:flex; align-items:center; gap:.5ch; font-size:13px; margin-top:.5em; }
 .terminal__prompt{ color:var(--text); white-space:nowrap; }
 .terminal__input{ flex:1; min-width:2ch; background:none; border:none; outline:none; color:var(--text); font-family:var(--mono); font-size:13px; caret-color:var(--accent); padding:0; }
+/* the hero typing line: a constant amber field (both viewports) so it always reads as "type here" */
+#heroTermInput{ border:1.5px solid rgba(var(--accent-rgb),.85); border-radius:9px; padding:7px 11px; transition:border-color .2s, box-shadow .2s; }
+#heroTermInput:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(var(--accent-rgb),.18); }
+/* focusing the shell hides the big ASCII name banner for a clearer view of the live terminal */
+#heroTerm.is-typing .heroterm__banner{ display:none; }
 .term-fallback{ max-width:960px; margin:1rem auto; color:var(--text-2); font-family:var(--mono); font-size:.84rem; line-height:1.8; }
 /* terminal uses JetBrains Mono for real-shell glyphs (slashed zero, unambiguous) */
 .terminal__body,.terminal__body.mono,.terminal__line,.terminal__line.mono,.terminal__input,.terminal__path,.terminal__path.mono,.terminal__hint,.terminal__hint.mono{ font-family:var(--term); }

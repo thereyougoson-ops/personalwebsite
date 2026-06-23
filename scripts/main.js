@@ -1739,16 +1739,22 @@ function initCoachMarks(){
     getTarget: () => document.getElementById('heroTermInput'),
     getTrigger: () => document.getElementById('heroTerm'),
     html: `<b>↳ type to take over</b> — try <b>help</b>, <b>whoami</b>, or tap a chip.` });
-  // 2 · Menu (touch only — desktop already shows the ⌘K label) — shows AFTER the terminal bubble
-  coachMark({ id:'pt_navhint', platforms:'touch', delay:2600,
+  // 2 · Menu / palette (BOTH viewports now) — shows AFTER the terminal bubble
+  const navTouch = isTouch || window.matchMedia('(max-width:760px)').matches;
+  coachMark({ id:'pt_navhint', delay:2600,
     getTarget: () => document.getElementById('paletteOpen'),
     getTrigger: () => document.getElementById('hero'),
-    html: `<b>☰ Menu</b> — tap to navigate &amp; search the site.` });
+    html: navTouch ? `<b>☰ Menu</b> — tap to navigate &amp; search the site.`
+                   : `<b>⌘K</b> — navigate &amp; search the site.` });
   // 3 · transit: experience stops are clickable
   coachMark({ id:'pt_xphint',
     getTrigger: () => document.getElementById('transitMap'),
     getTarget: () => document.querySelector('#tmRoot circle[data-role]'),
     html: `<b>tap a stop</b> to read that chapter of the path.` });
+
+  // scroll cue → smooth-scroll to the next section on click/tap (lenis-aware via scrollToId)
+  const cue = document.querySelector('.hero__scroll');
+  if (cue) cue.addEventListener('click', (e) => { e.preventDefault(); scrollToId(cue.getAttribute('href') || '#work'); });
 }
 function filterItems(items, q){
   q = (q||'').trim().toLowerCase(); if (!q) return items;
@@ -2060,6 +2066,7 @@ function makeShell(cfg){
     let ei = 0;
     // loop the FULL command tour forever until the visitor takes over (types / clicks / taps a chip);
     // run each command, hold so it can be read, then wipe for the next; pauses while off-screen / tab hidden.
+    let firstPass = true;
     while (!demoAborted){
       await waitVisible(); if (demoAborted) break;
       // FLOATING (scrolled into the mini dock): do NOT run the command tour — just show the shell is
@@ -2071,22 +2078,28 @@ function makeShell(cfg){
         await dsleep(900);
         continue;
       }
-      // IN-PAGE hero: loop the FULL command tour (type → run → hold → wipe), then a your-turn nudge.
-      if (hintEl) hintEl.innerHTML = `<span class='g'>●</span> live demo · type to take over`;
-      for (let k = 0; k < tour.length && !demoAborted; k++){
-        if (term.classList.contains('is-floating')) break;     // scrolled mid-tour → switch to entice-only next loop
-        await waitVisible(); if (demoAborted) break;
-        await typeInto(tour[k]); if (demoAborted) break;       // type the command, character by character
-        await dsleep(360); if (demoAborted) break;             // a beat, as if reaching for Enter
-        run(tour[k]); input.value = '';                         // run it → its output / banner appears
-        await dsleep(2300); if (demoAborted) break;             // hold so a visitor can actually read it
-        wipe(); await dsleep(300);                              // clean slate for the next command
+      // IN-PAGE hero: run the FULL command tour ONCE (type → run → hold → wipe), then clear …
+      if (firstPass){
+        firstPass = false;
+        if (hintEl) hintEl.innerHTML = `<span class='g'>●</span> live demo · type to take over`;
+        for (let k = 0; k < tour.length && !demoAborted; k++){
+          if (term.classList.contains('is-floating')) break;   // scrolled mid-tour → switch to entice-only
+          await waitVisible(); if (demoAborted) break;
+          await typeInto(tour[k]); if (demoAborted) break;     // type the command, character by character
+          await dsleep(360); if (demoAborted) break;           // a beat, as if reaching for Enter
+          run(tour[k]); input.value = '';                       // run it → its output / banner appears
+          await dsleep(2300); if (demoAborted) break;           // hold so a visitor can actually read it
+          wipe(); await dsleep(300);                            // clean slate for the next command
+        }
+        if (demoAborted) break;
+        wipe();                                                 // … clear the terminal after the one-time tour
       }
-      if (demoAborted) break;
-      // your-turn nudge: type then un-type a command so the caret visibly invites the visitor to take over
-      if (hintEl) hintEl.innerHTML = `<span class='g'>●</span> your turn — type a command`;
+      // … then settle into a clean entice loop: ghost-type a real command and erase it (never sent),
+      //   inviting the visitor to take over on a fresh screen.
+      if (bodyEl.querySelector('.cmd')) wipe();
+      if (hintEl) hintEl.innerHTML = `<span class='g'>●</span> your turn — type a command, it's live`;
       await typeAndDelete(entice[ei++ % entice.length]); if (demoAborted) break;
-      await dsleep(800);
+      await dsleep(900);
     }
     demoOn = false;
     if (hintEl) hintEl.innerHTML = hintOrig;
@@ -2188,6 +2201,14 @@ function initTerminal(){
     input.addEventListener('blur', function(){ want = false; deactivate(); });
     vv.addEventListener('resize', update);
     vv.addEventListener('scroll', update);
+  })();
+
+  // collapse the big ASCII name banner while the visitor is typing — clearer view of the live shell
+  (function termBannerCollapse(){
+    var t = document.getElementById('heroTerm'), inp = document.getElementById('heroTermInput');
+    if (!t || !inp) return;
+    inp.addEventListener('focus', function(){ t.classList.add('is-typing'); });
+    inp.addEventListener('blur', function(){ t.classList.remove('is-typing'); });
   })();
 }
 
