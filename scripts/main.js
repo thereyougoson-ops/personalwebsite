@@ -1672,16 +1672,15 @@ function togglePalette(force){
    that element. Fires once per visit (localStorage) when its trigger scrolls into view.
    Generalizes the old first-visit Menu hint. ---- */
 function coachMark(opts){
-  try { if (localStorage.getItem(opts.id) === 'seen') return; } catch(e){}
   const onTouch = isTouch || window.matchMedia('(max-width:760px)').matches;
   if (opts.platforms === 'touch' && !onTouch) return;
-  let fired = false;
+  let showing = false;   // a bubble is currently up — guards double-fire; re-arms so it re-fires on each re-enter
 
   const fire = (attempt) => {
-    if (fired) return;
+    if (showing) return;
     const target = opts.getTarget();
     if (!target){ if ((attempt || 0) < 12) setTimeout(() => fire((attempt || 0) + 1), 300); return; }   // wait for lazily-rendered stations
-    fired = true;
+    showing = true;
     const el = document.createElement('div');
     el.className = 'navhint coach mono';
     el.setAttribute('role', 'status');
@@ -1712,13 +1711,12 @@ function coachMark(opts){
     window.addEventListener('resize', onScroll);
     const dismiss = () => {
       if (done) return; done = true;
-      try { localStorage.setItem(opts.id, 'seen'); } catch(e){}
       clearTimeout(timer);
       place();                                            // recompute the genie vector at the current scroll position
       el.classList.remove('is-in'); el.classList.add('is-out');
       window.removeEventListener('scroll', onScroll, true);
       window.removeEventListener('resize', onScroll);
-      setTimeout(() => el.remove(), 480);
+      setTimeout(() => { el.remove(); showing = false; }, 480);   // re-arm for the next scroll-into-view
     };
     el.addEventListener('click', () => { dismiss(); if (opts.onClick) opts.onClick(); });
     timer = setTimeout(dismiss, 6000);                    // ~0.5s genie-in + 5.5s on screen
@@ -1727,35 +1725,30 @@ function coachMark(opts){
   const trigger = (opts.getTrigger && opts.getTrigger()) || opts.getTarget();
   if (!trigger) return;
   if ('IntersectionObserver' in window){
+    // re-fires every time the trigger re-enters view (not once); the `showing` guard prevents overlap
     const io = new IntersectionObserver((ents) => {
-      ents.forEach((e) => { if (e.isIntersecting){ io.disconnect(); setTimeout(() => fire(0), opts.delay || 0); } });
+      ents.forEach((e) => { if (e.isIntersecting) setTimeout(() => fire(0), opts.delay || 0); });
     }, { threshold: 0.25 });
     io.observe(trigger);
   } else { setTimeout(() => fire(0), (opts.delay || 0) + 1200); }
 }
 
 function initCoachMarks(){
-  // 1 · Menu (touch only — desktop already shows the ⌘K label)
-  coachMark({ id:'pt_navhint', platforms:'touch', delay:1400,
-    getTarget: () => document.getElementById('paletteOpen'),
-    html: `<b>☰ Menu</b> — tap to navigate &amp; search the site.`,
-    onClick: () => togglePalette(true) });
-  // 2 · type-to-take-over the shell
-  coachMark({ id:'pt_typehint', delay:1700,
+  // 1 · type-to-take-over the shell — shows FIRST on the home page
+  coachMark({ id:'pt_typehint', delay:1100,
     getTarget: () => document.getElementById('heroTermInput'),
     getTrigger: () => document.getElementById('heroTerm'),
-    html: `<b>↳ type to take over</b> — try <b>help</b>, <b>whoami</b>, or tap a chip.`,
-    onClick: () => { const i = document.getElementById('heroTermInput'); if (i) i.focus({ preventScroll:true }); } });
+    html: `<b>↳ type to take over</b> — try <b>help</b>, <b>whoami</b>, or tap a chip.` });
+  // 2 · Menu (touch only — desktop already shows the ⌘K label) — shows AFTER the terminal bubble
+  coachMark({ id:'pt_navhint', platforms:'touch', delay:2600,
+    getTarget: () => document.getElementById('paletteOpen'),
+    getTrigger: () => document.getElementById('hero'),
+    html: `<b>☰ Menu</b> — tap to navigate &amp; search the site.` });
   // 3 · transit: experience stops are clickable
   coachMark({ id:'pt_xphint',
     getTrigger: () => document.getElementById('transitMap'),
     getTarget: () => document.querySelector('#tmRoot circle[data-role]'),
     html: `<b>tap a stop</b> to read that chapter of the path.` });
-  // 4 · transit: build stops launch live (staggered so the two don't genie in together)
-  coachMark({ id:'pt_buildhint', delay:1100,
-    getTrigger: () => document.getElementById('transitMap'),
-    getTarget: () => document.querySelector('#tmRoot circle[data-slug]'),
-    html: `<b>tap a build</b> to launch it live ↗` });
 }
 function filterItems(items, q){
   q = (q||'').trim().toLowerCase(); if (!q) return items;

@@ -274,7 +274,7 @@ body.cursor-label .cursor__label{ opacity:1; }
   background:#0a0a0a; border:1.6px solid rgba(255,255,255,.92); left:-1px; top:-12px; }
 /* informational + non-blocking: never intercept a tap meant for the control it points at
    (a coach that blocks the very thing it says to tap would be broken). Auto-dismisses. */
-.coach.is-in{ animation: coachGenieIn .52s cubic-bezier(.2,1.25,.3,1) both; pointer-events:none; }
+.coach.is-in{ animation: coachGenieIn .52s cubic-bezier(.2,1.25,.3,1) both, coachBreathe 2.8s ease-in-out .62s infinite; pointer-events:none; }
 .coach.is-out{ animation: coachGenieOut .46s cubic-bezier(.5,0,.75,.25) both; pointer-events:none; }
 @keyframes coachGenieIn{
   0%{ opacity:0; transform: translate(var(--gx,0), var(--gy,0)) scale(.12); filter:blur(1.5px); }
@@ -291,6 +291,8 @@ body.cursor-label .cursor__label{ opacity:1; }
   75%{ border-color: rgba(199,146,234,.92); } }     /* violet */
 @keyframes coachColorB{
   0%,100%{ color:#f5b642; } 25%{ color:#5ee6c0; } 50%{ color:#62b6ff; } 75%{ color:#c792ea; } }
+/* breathe: gently grow + settle back while the bubble is active (after the genie-in) */
+@keyframes coachBreathe{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.035); } }
 .coach.is-in b{ animation: coachColorB 5.5s linear .12s 1; }
 
 /* =====================  SECTION PRIMITIVES  ===================== */
