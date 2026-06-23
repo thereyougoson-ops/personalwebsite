@@ -77,7 +77,7 @@ function initConsole(){
     const dim = 'color:#a9a39a;font:400 12px ui-monospace,monospace';
     const ok  = 'color:#5ee6c0;font:500 12px ui-monospace,monospace';
     console.log('%c> philip toulinov', big);
-    console.log('%crelease & devops engineer · you opened the console — respect.', dim);
+    console.log('%csoftware engineer & builder · you opened the console — respect.', dim);
     console.log('%c✓ hiring? toulinov.philip@yahoo.com  (mention you found this in DevTools)', ok);
     console.log('%ctry the Konami code on the page. ↑↑↓↓←→←→ b a', dim);
   } catch(e){}
@@ -1810,26 +1810,30 @@ function makeShell(cfg){
   }
 
   const SKILLS = {
-    'ci/cd & devops': ['Jenkins','GitHub Actions','GitLab CI/CD','Release Engineering','GitOps','Kubernetes','AWS','Cloud-Native'],
+    'ci/cd & release': ['Jenkins','GitHub Actions','GitLab CI/CD','Release Engineering','GitOps','Kubernetes','AWS','Cloud-Native'],
     'languages': ['Python','Java','JavaScript','C++'],
-    'testing': ['Selenium','Mabl','Pytest','JUnit'],
-    'build & infra': ['Docker','Terraform','Gradle','Maven','Git','GitHub','GitLab','SQL']
+    'testing': ['Playwright','Selenium','Pytest','JUnit'],
+    'build & infra': ['Flask','React','Docker','MongoDB','TON Blockchain','Terraform','Gradle','Maven','Git','GitHub','GitLab','SQL'],
+    'fintech & web3': ['TON','Solana','USDC/USDT','on-chain monitoring','P2P lending','Hyperliquid']
   };
   // career as git history
   const COMMITS = [
-    { h:'a1c2d3e', when:'2024-01', msg:'release: close out LendingClub — 2yr of shipping', body:'LendingClub · Release Engineer · Dec 2021–Jan 2024\nCI/CD pipelines (−30% deploy time), Mabl release gate,\ninternal GitHub platform, monitoring + incident-response automation.' },
+    { h:'e0f1a2b', when:'2025-10', msg:'feat: go independent — 13 apps shipped', body:'Independent Full-Stack Developer · Oct 2025–Present\nFintech P2P platform, algo trading (Hyperliquid), civic AI agent,\nMV3 Chrome extensions, on-chain payment monitoring (USDC/USDT/TON/Solana).' },
+    { h:'a1c2d3e', when:'2025-10', msg:'release: close out LendingClub — 4yr of shipping', body:'LendingClub · Release Engineer · Dec 2021–Oct 2025\nBiweekly releases (dry runs on off-weeks), CI/CD pipelines (−30% deploy time),\nPlaywright self-healing tests, EC2 redundancy + failover, team onboarding.' },
     { h:'b4f5a6c', when:'2021-12', msg:'feat(release): join LendingClub release engineering', body:'Owned releases end to end on AWS + Kubernetes.\nJenkins / GitHub Actions / GitLab CI/CD pipelines.' },
     { h:'c7d8e9f', when:'2021-09', msg:'test: 5G/LTE conformance @ Tech Mahindra', body:'Tech Mahindra · Software & Device Engineer · Sep–Dec 2021\nLTE/5G NR + RF RRM conformance on Keysight E7515B,\nAnritsu MD8430A. Trace32 on Snapdragon. −25% rig setup.' },
-    { h:'d1a2b3c', when:'2021-05', msg:'build: B.S. Computer Science, Humboldt State', body:'Education / source checkout. Bilingual EN/FR (Lycée Français).' },
+    { h:'d1a2b3c', when:'2021-05', msg:'build: B.S. Computer Science, Cal Poly Humboldt', body:'Education / source checkout. Bilingual EN/FR (Lycée Français).' },
     { h:'e4f5a6b', when:'2020-06', msg:'build: SWE intern @ Catalina USA', body:'Selenium, Jenkins CD, Docker-ized build envs, JIRA.' },
     { h:'f0000001', when:'2020-01', msg:'init: hello, world', body:'Started the pipeline.' }
   ];
   const FILES = {
-    'lendingclub.md': `# LendingClub — Release Engineer (Dec 2021–Jan 2024)\n- CI/CD pipelines, cut deploy time ~30%\n- Mabl end-to-end tests as a release gate\n- internal GitHub platform admin\n- monitoring + incident-response automation\nstack: Jenkins · GitHub Actions · Mabl · Kubernetes · AWS`,
+    'lendingclub.md': `# LendingClub — Release Engineer (Dec 2021–Oct 2025)\n- led biweekly production releases end-to-end; dry runs on off-weeks\n- CI/CD pipelines (GitHub Actions, Jenkins), cut deploy time ~30%\n- Playwright self-healing test automation (replaced Mabl)\n- AWS EC2 redundancy + failover → zero-downtime deploys\n- onboarded new engineering teams onto CI/CD workflows\n- company-level deployment checks + release governance\nstack: Jenkins · GitHub Actions · Playwright · Kubernetes · AWS EC2`,
     'techmahindra.md': `# Tech Mahindra — Software & Device Engineer (Sep–Dec 2021)\n- LTE/5G NR + RF RRM conformance\n- Keysight E7515B · Anritsu MD8430A · R&S CMW500 · Keysight Nemo\n- Lauterbach Trace32 on Qualcomm Snapdragon\n- automated test rigs → −25% setup time`,
     'catalina.md': `# Catalina USA — SWE Intern (Jun–Sep 2020)\n- Selenium WebDriver test suite\n- Jenkins Continuous Delivery builds, wired to JIRA\n- Docker-ized build environments`,
-    'education.md': `# Education\n- B.S. Computer Science — Humboldt State University (2021)\n- Lycée Français La Pérouse — bilingual EN / FR`,
-    'about.txt': `Release & software engineer, San Francisco Bay Area.\nCI/CD, test automation, cloud-native deploys. Comfortable in a\nJenkinsfile and on a 5G RF test bench. Bilingual EN/FR.`,
+    'education.md': `# Education\n- B.S. Computer Science — Cal Poly Humboldt (2021)\n- Lycée Français La Pérouse — bilingual EN / FR`,
+    'about.txt': `Software engineer & independent builder, San Francisco.\nShipped 13 production apps across fintech, civic AI, and trading.\nFormer Release Engineer at LendingClub.\nFluent in English, French, and Russian.`,
+    'independent.md': `# Independent Full-Stack Developer (Oct 2025–Present)\n13 production apps shipped solo, end-to-end:\n- Loansy — P2P lending platform: full loan lifecycle, multi-role users\n- on-chain payment monitor (Python) — credits USDC/USDT on Solana/TON\n- React/JSX admin dashboard — IP intel, risk ops, identity graph (Flask + MongoDB)\n- multi-provider AI infra monitor — 11 providers → Postgres, 99.90% uptime\n- algo trading stack on Hyperliquid — REST/WS UI, 65% win rate / 26 dry runs\n- real-time odds reconciliation — two live feeds over CDP, 30 ticks/min\n- installable art-catalogue PWA — 150+ works + AI cinemagraph pipeline\n- 5 civic-data apps over live DataSF — 198K+ trees, 2,118 film locations, +LLM agent\n- MV3 Chrome userscript manager — full GM_* compat, AI copilot, trust scoring\n- MV3 cookie/tracker inspector — 79 sites, 1,228 trackers, local-only\nstack: Flask · React · MongoDB · Postgres · TON · Solana · Hyperliquid · DataSF`,
+    'loansy.md': `# Loansy — P2P Lending Platform\n- full loan lifecycle: borrower/lender matching, issuance, repayment, defaults\n- multi-role user system across borrowers, lenders, and admins\n- real-time on-chain payment monitoring credits USDC/USDT on Solana/TON\n- React/JSX admin dashboard: IP intelligence, risk ops, identity-graph + wallet analysis\n- fraud detection + user risk scoring\nstack: Flask REST API · MongoDB · React/JSX · Python on-chain monitor`,
     'contact.txt': `email    toulinov.philip@yahoo.com\nphone    +1 (415) 823-7537\nlinkedin linkedin.com/in/ptoulinov`,
     'resume.pdf': `__OPEN__assets/philip-toulinov-resume.pdf`
   };
@@ -1837,7 +1841,7 @@ function makeShell(cfg){
   const esc = escapeHtml;   // single source of truth — escapes & < > " (the local 3-char esc dropped the quote)
   const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);   // own-prop only: 'constructor'/'toString' must not resolve up the prototype chain
   const skillsBlock = () => {
-    const SCOL={'ci/cd & devops':'#5ec8ff','languages':'#5ee6c0','testing':'#b89cff','build & infra':'#f5b642'};
+    const SCOL={'ci/cd & release':'#5ec8ff','languages':'#5ee6c0','testing':'#b89cff','build & infra':'#f5b642','fintech & web3':'#ff8a6b'};
     return `<div class="sc">`+Object.keys(SKILLS).map((k)=>{
       const units=SKILLS[k].map((s)=>`<div class="sc-unit"><span class="sc-led led-on"></span><span class="sc-name">${s}<span class="svc">.service</span></span><span class="sc-state st-on">active</span></div>`).join('');
       return `<div class="sc-group"><div class="sc-gtitle" style="color:${SCOL[k]||'#7c6cff'}">${k}.target</div>${units}</div>`;
@@ -1863,28 +1867,28 @@ function makeShell(cfg){
     ls: () => { var ff=Object.keys(FILES); return '<div class="tree"><div class="tree-folder">▾ ~/philip/</div>'+ff.map(function(f,i){var last=i===ff.length-1;var cls=f.endsWith('.md')?'c':f.endsWith('.txt')?'a':'g';var nm=f.endsWith('.pdf')?'<a href="assets/philip-toulinov-resume.pdf" target="_blank">'+f+'</a>':'<span class="'+cls+'">'+f+'</span>';return '<div class="tree-leaf"><span class="tree-pipe">'+(last?'└── ':'├── ')+'</span>'+nm+'</div>';}).join('')+'</div>'; },
     'ls -la': () => COMMANDS.ls(),
     pwd: () => `<span class="d">/home/philip/</span><span class="a">stack</span>`,
-    whoami: () => { var KV=[['name','Philip Toulinov'],['role','Release & Software Engineer'],['based','San Francisco Bay Area'],['speaks','English · Français · Русский'],['focus','CI/CD · test automation · cloud-native']]; return '<div class="boxes"><div class="box" style="--bc:#7c6cff"><div class="box-top">~/philip · whoami<span class="bn">id card</span></div><div class="box-body"><div class="nf-info">'+KV.map(function(x){return '<div class="kvr"><span class="kvk">'+x[0]+'</span><span class="kvv">'+x[1]+'</span></div>';}).join('')+'</div></div></div></div><span class="row d">I automate the parts of shipping that page people at 2am — comfortable in a <span class="a">Jenkinsfile</span> and on a <span class="m">5G RF test bench</span>.</span>'; },
+    whoami: () => { var KV=[['name','Philip Toulinov'],['role','Software Engineer & Independent Developer'],['based','San Francisco'],['speaks','English · Français · Русский'],['focus','fintech · CI/CD · full-stack · blockchain']]; return '<div class="boxes"><div class="box" style="--bc:#7c6cff"><div class="box-top">~/philip · whoami<span class="bn">id card</span></div><div class="box-body"><div class="nf-info">'+KV.map(function(x){return '<div class="kvr"><span class="kvk">'+x[0]+'</span><span class="kvv">'+x[1]+'</span></div>';}).join('')+'</div></div></div></div><span class="row d">I build production systems end-to-end — from <span class="a">CI/CD pipelines</span> at LendingClub to <span class="m">fintech platforms, trading stacks, and civic AI tools</span> shipped independently.</span>'; },
     skills: skillsBlock, stack: skillsBlock,
     experience: () => {
-      var R=[['LendingClub','#7c6cff','Release Engineer','Dec 2021 – Jan 2024','CI/CD pipelines · −30% deploy time · Mabl release gates'],['Tech Mahindra','#5ec8ff','Software & Device Engineer','Sep – Dec 2021','LTE / 5G NR conformance · automated RF test rigs'],['Catalina USA','#5ee6c0','SWE Intern','Jun – Sep 2020','Selenium suites · Jenkins CD · Dockerized envs']];
+      var R=[['Independent','#ff8a6b','Full-Stack Developer','Oct 2025 – Present','13 apps shipped solo · fintech · civic AI · algo trading'],['LendingClub','#7c6cff','Release Engineer','Dec 2021 – Oct 2025','biweekly releases · −30% deploy time · Playwright · EC2 failover'],['Tech Mahindra','#5ec8ff','Software & Device Engineer','Sep – Dec 2021','LTE / 5G NR conformance · automated RF test rigs'],['Catalina USA','#5ee6c0','SWE Intern','Jun – Sep 2020','Selenium suites · Jenkins CD · Dockerized envs']];
       return '<div class="boxes">'+R.map(function(x){return '<div class="box" style="--bc:'+x[1]+'"><div class="box-top">'+x[0]+'<span class="bn">'+x[3]+'</span></div><div class="box-body"><div class="box-row"><b>'+x[2]+'</b><span class="bd">'+x[4]+'</span></div></div></div>';}).join('')+'</div><span class="row d">tip: git show &lt;hash&gt; · or cat lendingclub.md</span>';
     },
-    education: () => '<div class="boxes"><div class="box" style="--bc:#5ee6c0"><div class="box-top">Humboldt State University<span class="bn">2021</span></div><div class="box-body"><div class="box-row"><b>B.S. Computer Science</b></div></div></div><div class="box" style="--bc:#b89cff"><div class="box-top">Lycée Français La Pérouse<span class="bn">EN · FR · RU</span></div><div class="box-body"><div class="box-row"><b>Bilingual schooling</b></div></div></div></div>',
+    education: () => '<div class="boxes"><div class="box" style="--bc:#5ee6c0"><div class="box-top">Cal Poly Humboldt<span class="bn">2021</span></div><div class="box-body"><div class="box-row"><b>B.S. Computer Science</b></div></div></div><div class="box" style="--bc:#b89cff"><div class="box-top">Lycée Français La Pérouse<span class="bn">EN · FR · RU</span></div><div class="box-body"><div class="box-row"><b>Bilingual schooling</b></div></div></div></div>',
     contact: () => `<span class="head">contact</span>` +
       `<span class="row">› <a href="mailto:toulinov.philip@yahoo.com">toulinov.philip@yahoo.com</a></span>` +
       `<span class="row">› <a href="tel:+14158237537">+1 (415) 823-7537</a></span>` +
       `<span class="row">› <a href="https://www.linkedin.com/in/ptoulinov" target="_blank" rel="noopener">linkedin.com/in/ptoulinov</a></span>`,
-    neofetch: () => { var L='██████╗ ████████╗\n██╔══██╗╚══██╔══╝\n██████╔╝   ██║\n██╔═══╝    ██║\n██║        ██║\n╚═╝        ╚═╝'; var KV=[['os','Release Engineer · SF Bay Area'],['uptime','shipping since 2020'],['shell','bash · zsh · Jenkinsfile'],['kernel','CI/CD · Kubernetes · AWS'],['langs','Python · Java · JS · C++'],['speaks','English · Français · Русский'],['status','<span class="g">● available</span>']]; return '<div class="nf"><pre class="nf-logo">'+L+'</pre><div class="nf-info">'+KV.map(function(x){return '<div class="kvr"><span class="kvk">'+x[0]+'</span><span class="kvv">'+x[1]+'</span></div>';}).join('')+'</div></div>'; },
+    neofetch: () => { var L='██████╗ ████████╗\n██╔══██╗╚══██╔══╝\n██████╔╝   ██║\n██╔═══╝    ██║\n██║        ██║\n╚═╝        ╚═╝'; var KV=[['os','Software Engineer · SF Bay Area'],['uptime','shipping since 2020'],['shell','bash · zsh · Jenkinsfile'],['kernel','CI/CD · Fintech · Full-Stack'],['langs','Python · Java · JS · C++ · Flask · React · TON'],['speaks','English · Français · Русский'],['status','<span class="g">● available</span>']]; return '<div class="nf"><pre class="nf-logo">'+L+'</pre><div class="nf-info">'+KV.map(function(x){return '<div class="kvr"><span class="kvk">'+x[0]+'</span><span class="kvv">'+x[1]+'</span></div>';}).join('')+'</div></div>'; },
     bonjour: () => `<span class="a">Salut</span> — merci d'être passé. Élevé et scolarisé en <span class="c">français</span> à San Francisco. On parle&nbsp;? <a href="mailto:toulinov.philip@yahoo.com">écris-moi</a>.`,
     sudo: () => `<span class="r">nice try.</span> <span class="d">this incident has been logged. 📟</span>`,
     'sudo hire philip': () => `<span class="g">✓</span> escalating privileges… <a href="mailto:toulinov.philip@yahoo.com">toulinov.philip@yahoo.com</a> — let's talk.`,
     hire: () => `<span class="head">// reverse job-req — what I'm looking for</span>` +
-      `<span class="row">› <span class="a">seeking</span>   Release Engineering · DevOps · SRE</span>` +
+      `<span class="row">› <span class="a">seeking</span>   Full-Stack · Fintech · Release Engineering · SRE</span>` +
       `<span class="row">› <span class="a">based</span>     San Francisco Bay Area</span>` +
       `<span class="row">› <span class="a">setup</span>     remote or hybrid</span>` +
-      `<span class="row">› <span class="a">langs</span>     English · Français</span>` +
+      `<span class="row">› <span class="a">langs</span>     English · Français · Русский</span>` +
       `<span class="row">› <span class="a">status</span>    <span class="g">● open to work — available now</span></span>` +
-      `<span class="row d">a fit? → <a href="mailto:toulinov.philip@yahoo.com?subject=${encodeURIComponent('[hire] release / devops / sre')}">toulinov.philip@yahoo.com</a> · or run <span class="a">contact</span></span>`,
+      `<span class="row d">a fit? → <a href="mailto:toulinov.philip@yahoo.com?subject=${encodeURIComponent('[hire] full-stack / fintech / release')}">toulinov.philip@yahoo.com</a> · or run <span class="a">contact</span></span>`,
     exit: () => `<span class="d">there's no exit — but there's a contact section. try: contact</span>`,
     clear: () => { bodyEl.innerHTML = ''; return ''; }
   };
@@ -1893,7 +1897,7 @@ function makeShell(cfg){
     if (/skills|pods/.test(arg) || arg === '') {
       const rows = [];
       rows.push(`<span class="d">NAME                 READY   STATUS    RESTARTS</span>`);
-      const pods = [['ci-cd-pipeline','5/5','Running'],['kubernetes-aws','4/4','Running'],['test-automation','3/3','Running'],['observability','2/2','Running'],['five-g-lte','1/1','Running']];
+      const pods = [['ci-cd-pipeline','5/5','Running'],['fintech-web3','4/4','Running'],['full-stack-dev','4/4','Running'],['test-automation','3/3','Running'],['kubernetes-aws','2/2','Running']];
       pods.forEach(([n,r,s]) => rows.push(`${n.padEnd(20)} ${r.padEnd(7)} <span class="g">${s}</span>     0`));
       return rows.join('\n');
     }
@@ -1901,8 +1905,8 @@ function makeShell(cfg){
   };
   const topCmd = () => {
     const procs = [
-      ['ci/cd & release','99'],['kubernetes / aws','94'],['test automation','88'],
-      ['observability','81'],['terraform / iac','76'],['5g/lte protocol','61']
+      ['ci/cd & release','99'],['fintech & blockchain','93'],['full-stack dev','90'],
+      ['test automation','86'],['kubernetes / aws','82'],['terraform / iac','74']
     ];
     const bar = (p) => { const w = 18, n = Math.round(w * p / 100); return `[<span class="bar">${'|'.repeat(n)}</span><span class="e">${'·'.repeat(w-n)}</span>]`; };
     let out = `<span class="d">PID  SKILL                LOAD                 %</span>\n`;
@@ -2173,7 +2177,7 @@ function initTerminal(){
     demo: ['help', 'whoami', 'git log', 'kubectl get skills', 'hire', 'top', 'cat lendingclub.md'],
     entice: ['whoami', 'hire', 'git log', 'skills', 'cat resume.pdf'],
     staticList: ['help', 'whoami', 'git log', 'kubectl get skills'],
-    welcome: `<span class='d'>release &amp; software engineer · ci/cd · cloud-native · 5g/lte. this is a real shell — watch the tour, or type <span class='a'>help</span> and take over.</span>`,
+    welcome: `<span class='d'>software engineer &amp; builder · full-stack · fintech · 13 shipped. this is a real shell — watch the tour, or type <span class='a'>help</span> and take over.</span>`,
     demoEndMsg: `<span class='d'>// that's the tour — your turn. type <span class='a'>help</span>, <span class='a'>git log</span>, <span class='a'>kubectl get skills</span>, or pick a chip ↑</span>` });
 
   // ---- mobile keyboard fit (iOS Safari): keep the focused terminal input above the
@@ -2581,11 +2585,11 @@ function initDagHover(){
   if (isTouch) return;
   const dag = document.getElementById('dag'); if (!dag) return;
   const DATA = [
-    { role: 'B.S. Computer Science', org: 'Humboldt State University', art: 'CS fundamentals · EN / FR', st: 'passed · 0.3s' },
+    { role: 'B.S. Computer Science', org: 'Cal Poly Humboldt', art: 'CS fundamentals · EN / FR', st: 'passed · 0.3s' },
     { role: 'Software Engineer Intern', org: 'Catalina USA', art: 'Selenium · Jenkins · Docker · JIRA', st: 'passed · 0.5s', logos: [['selenium.svg','#43B02A'],['jenkins.svg','#D24939'],['docker.svg','#2496ED'],['jira.svg','#2684FF']] },
     { role: 'Software · Device Engineer', org: 'Tech Mahindra', art: 'LTE/5G NR · Keysight · Anritsu · Trace32', st: 'passed · 0.8s', logos: [['git.svg','#F05032'],['jira.svg','#2684FF']] },
-    { role: 'Release Engineer', org: 'LendingClub', art: 'Jenkins · GitHub Actions · Mabl · K8s · AWS', st: 'passed · 1.1s', logos: [['jenkins.svg','#D24939'],['githubactions.svg','#2088FF'],['kubernetes.svg','#326CE5'],['amazonwebservices.svg','#FF9900'],['git.svg','#F05032']] },
-    { role: 'Open to the next deploy', org: 'Now', art: 'release eng · devops · SRE', st: 'monitoring · live' }
+    { role: 'Release Engineer', org: 'LendingClub', art: 'Jenkins · GitHub Actions · Playwright · K8s · AWS', st: 'passed · 1.1s', logos: [['jenkins.svg','#D24939'],['githubactions.svg','#2088FF'],['kubernetes.svg','#326CE5'],['amazonwebservices.svg','#FF9900'],['git.svg','#F05032']] },
+    { role: 'Independent Full-Stack Developer', org: 'Now', art: '13 shipped · fintech · civic AI · trading', st: 'monitoring · live' }
   ];
   const pop = document.createElement('div'); pop.className = 'dagpop mono'; pop.setAttribute('aria-hidden', 'true'); dag.appendChild(pop);
   let hideT = null;
