@@ -1034,7 +1034,10 @@ body.term-frozen{ overflow:hidden; }
    ========================================================================= */
 @media (pointer:coarse){
   .terminal__line{ min-height:40px; }                                  /* the input row: easy tap-to-focus */
-  .terminal__input{ min-height:34px; }
+  .terminal__input{ min-height:44px; font-size:16px; }                 /* 44px touch + 16px stops iOS Safari zoom-on-focus */
+  #tmLiveOpen,#tmLiveClose{ min-height:44px; display:inline-flex; align-items:center; }  /* live-app dock controls: real touch size */
+  #heroTerm .terminal__bar .pre__dot{ position:relative; }             /* dots double as a "jump to builds" button — give them a real hit area */
+  #heroTerm .terminal__bar .pre__dot::after{ content:''; position:absolute; inset:-16px -7px; }
   .fx-info{ width:30px; height:30px; }                                 /* was 20x20 → meets tap-target min */
   .nav__brand{ min-height:42px; min-width:42px; justify-content:center; }
   .ct-copy{ min-height:40px; display:inline-flex; align-items:center; justify-content:center; }
