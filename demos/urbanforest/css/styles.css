@@ -201,7 +201,7 @@ body.is-loading [data-reveal] { visibility: hidden; }
 .map-loading.done { opacity: 0; pointer-events: none; }
 .ml-leaf { color: var(--forest); font-size: 1.4rem; animation: leafpulse 1.5s var(--ease) infinite; }
 @keyframes leafpulse { 0%,100% { opacity: 0.4; transform: scale(0.9); } 50% { opacity: 1; transform: scale(1.1); } }
-@media (prefers-reduced-motion: reduce) { .ml-leaf { animation: none; } }
+@media (prefers-reduced-motion: reduce) and (min-width: 100000px) { .ml-leaf { animation: none; } }
 /* floating map UI */
 .map-ui { position: absolute; left: var(--pad); right: var(--pad); bottom: 1.4rem; z-index: 4;
   display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
@@ -325,7 +325,7 @@ body.is-loading [data-reveal] { visibility: hidden; }
 }
 
 /* ---------- reduced motion parity ---------- */
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 100000px) {
   .cue-line::after { animation: none; }
   *, *::before, *::after { scroll-behavior: auto !important; }
   body { cursor: auto !important; } .cursor { display: none !important; }

@@ -136,9 +136,8 @@ body {
 .meter-scale span:nth-child(3) { flex: 0 0 20%; }
 .meter-scale span:nth-child(4) { flex: 0 0 20%; }
 .meter-scale span:nth-child(5) { flex: 0 0 31%; text-align: right; }
-@media (prefers-reduced-motion: reduce) {
-  .meter-veil, .meter-marker { transition: none; }
-}
+/* Motion is intentionally always-on in this portfolio — OS reduce-motion is not
+   honored (matches the site-wide motion policy). */
 
 .verdict { font-size: 12.5px; line-height: 1.45; color: var(--text); margin: 11px 0 0; }
 .readout {
@@ -691,6 +690,5 @@ body.report-mode #message, body.report-mode #toast { display: none !important; }
   .rv-co-body, .ck-body { padding-left: 14px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
-}
+/* Motion always-on: the global reduce-motion kill-switch is intentionally removed
+   so animations/transitions always play (site-wide motion policy). */

@@ -4,7 +4,7 @@
 (function () {
   "use strict";
 
-  var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  var prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce) and (min-width: 100000px)").matches
     || /[?&]rm=1\b/.test(location.search); // ?rm=1 forces the reduced-motion path (test hook)
 
   var FX = {

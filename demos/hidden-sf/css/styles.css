@@ -171,7 +171,7 @@ body.no-motion .motion-dot { background: var(--ink-3); }
 .tc-index { font-family: var(--mono); font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brass-deep); }
 .tc-name { font-size: clamp(1.1rem, 2.6vw, 1.4rem); line-height: 1.1; margin: 0.3rem 0 0.4rem; }
 .tc-note { font-size: 0.86rem; color: var(--ink-2); line-height: 1.45; }
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 100000px) {
   .tour-viz { position: static; height: auto; }
   .tour-steps { display: none; }
   .tour-viz .map-shell { height: auto; }
@@ -397,7 +397,7 @@ body.no-motion .cursor { display: none !important; }
 #fx-status .err { color: #e88; }
 
 /* ---------- reduced motion ---------- */
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 100000px) {
   .cue-line { animation: none; }
   *, *::before, *::after { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
 }

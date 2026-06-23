@@ -6,7 +6,7 @@ import { initDetail, openTree, openSpecies } from "./detail.js";
 
 const gsap = window.gsap, ScrollTrigger = window.ScrollTrigger;
 const PREF = "uf-motion";
-const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const prefersReduced = matchMedia("(prefers-reduced-motion: reduce) and (min-width: 100000px)").matches;
 const $ = (id) => document.getElementById(id);
 const setText = (id, v) => { const el = $(id); if (el) el.textContent = v; };
 

@@ -9,7 +9,7 @@
   var _stored = null;
   try { _stored = localStorage.getItem("sfos-motion"); } catch (e) {}
   var prefersReduced = (_stored === "off")
-    || (_stored !== "on" && (window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    || (_stored !== "on" && (window.matchMedia("(prefers-reduced-motion: reduce) and (min-width: 100000px)").matches
         || /[?&]rm=1\b/.test(location.search)));
 
   var FX = {

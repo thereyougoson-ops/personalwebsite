@@ -41,7 +41,7 @@
 /* ---- Reset / base ---- */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+@media (prefers-reduced-motion: reduce) and (min-width: 100000px) { html { scroll-behavior: auto; } }
 body {
   margin: 0;
   background: var(--ground);
@@ -404,7 +404,7 @@ a:focus-visible, button:focus-visible, input:focus-visible {
 }
 
 /* ---- Reduced-motion / Motion-off parity ---- */
-@media (prefers-reduced-motion: reduce) {
+@media (prefers-reduced-motion: reduce) and (min-width: 100000px) {
   .grain, .scroll-cue span { animation: none !important; }
   .grain { opacity: 0.04; }
 }

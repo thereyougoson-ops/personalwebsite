@@ -6,7 +6,7 @@ import { initTable } from "./table.js";
 const gsap = window.gsap;
 const ScrollTrigger = window.ScrollTrigger;
 const PREF_KEY = "rw-motion";
-const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce) and (min-width: 100000px)").matches;
 let lenis = null;
 
 const REVEAL = ".section-title, .section-intro, .step, .map-controls, .table-tools, .method-col, .footer p";
