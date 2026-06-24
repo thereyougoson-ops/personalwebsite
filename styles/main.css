@@ -252,7 +252,7 @@ html.over-iframe, html.over-iframe body, html.over-iframe iframe{ cursor:auto !i
   .kbtn{ color:var(--text); border-color:var(--text-3); padding:.34rem .6rem; }
 }
 /* first-visit coach-mark pointing at the menu/palette button (one-time, localStorage-gated) */
-.navhint{ position:fixed; z-index:70; max-width:min(72vw,260px); padding:.5rem .7rem; border-radius:9px;
+.navhint{ position:fixed; z-index:7700; max-width:min(72vw,260px); /* above .termdock (7600) so the genie never pops out behind the minimized terminal */ padding:.5rem .7rem; border-radius:9px;
   background:var(--card,#15140f); border:1px solid var(--text-3); color:var(--text);
   font-family:var(--mono); font-size:.74rem; line-height:1.35; box-shadow:0 10px 30px rgba(0,0,0,.4);
   opacity:0; transform:translateY(-4px); transition:opacity .35s var(--ease-out,ease), transform .35s var(--ease-out,ease); pointer-events:none; }

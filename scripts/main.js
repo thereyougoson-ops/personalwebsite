@@ -2529,12 +2529,12 @@ function initThesisAutoScroll(){
   // "only works once / gets stuck" bug). `lock:true` below keeps the ride immune to scroll input anyway.
   window.addEventListener('keydown', (e) => { if (running && (e.key === 'Escape' || e.metaKey || e.ctrlKey)) stop(); });
   const workY = () => Math.round(target.getBoundingClientRect().top + window.scrollY - 64);
-  const ride = (endY, doneZone) => {
+  const ride = (endY, doneZone, fixedDur) => {
     if (running) return;
     running = true;
     if (rideGuard) clearTimeout(rideGuard);
     if (Math.abs(endY - window.scrollY) < 80){ running = false; zone = doneZone; cooldownUntil = nowT() + 500; return; }
-    const dur = Math.min(5, Math.max(2.6, Math.abs(endY - window.scrollY) / 640));
+    const dur = fixedDur || Math.min(5, Math.max(2.6, Math.abs(endY - window.scrollY) / 640));
     let fin = false;
     const finish = () => { if (fin) return; fin = true; running = false; zone = doneZone; cooldownUntil = nowT() + 600; };
     try { lenis.scrollTo(endY, { duration: dur, easing: easeInOutCubic, lock: true, force: true, onComplete: finish }); }
@@ -2550,7 +2550,7 @@ function initThesisAutoScroll(){
     const vh = window.innerHeight;
     if (zone === 'home'){
       // scrolled down 20% of the viewport from the home landing → run the sequence into Experience
-      if (window.scrollY >= vh * 0.20) ride(wy, 'work');
+      if (window.scrollY >= vh * 0.20) ride(wy, 'work', 6);   // fixed 6s so the 3 thesis beats are readable
     } else {
       // scrolled up 20% of the viewport from the Experience landing → reverse the sequence back home
       if (window.scrollY <= wy - vh * 0.20) ride(0, 'home');
