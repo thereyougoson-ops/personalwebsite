@@ -1975,7 +1975,7 @@ function makeShell(cfg){
   const revealRow = (d) => {
     const full = d.scrollHeight;                                   // measured BEFORE we collapse it (still height:auto)
     const lines = (d.textContent.match(/\n/g) || []).length + 1;
-    const dur = Math.min(650, Math.max(200, lines * 55));
+    const dur = Math.min(2600, Math.max(800, lines * 220));        // ~4x slower (300%): deliberate, readable line-by-line stream
     d.style.overflow = 'hidden'; d.style.height = '0px';           // collapse synchronously — no paint between, so no flash
     void d.offsetHeight;
     d.style.transition = 'height ' + dur + 'ms linear';

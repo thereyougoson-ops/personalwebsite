@@ -190,7 +190,7 @@ const send = await sendPage.evaluate(async () => {
   const flashWhenTyped = line.classList.contains('has-text');                 // should be true
   const filled = getComputedStyle(btn).backgroundColor;                       // light-blue fill when has-text
   const before = body.innerText.length;
-  btn.click(); await nap(900);                                                // user output reveals line-by-line (≤650ms) — assert SETTLED state
+  btn.click(); await nap(2900);                                               // user output reveals line-by-line (≤2600ms) — assert SETTLED state
   const submitted = body.innerText.length > before && /Toulinov/i.test(body.innerText);
   const clearedAfter = !line.classList.contains('has-text');
   return { exists, flashWhenEmpty, flashWhenTyped, submitted, clearedAfter, filled };
