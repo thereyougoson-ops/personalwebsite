@@ -80,7 +80,7 @@
   // Cross-origin iframes still fire `load` on the parent (content stays opaque),
   // so a load event = reachable; a timeout with no load = treat as unreachable.
   frame.addEventListener('load', function () { loaded = true; fail.classList.remove('show'); });
-  var TIMEOUT = 14000;
+  var TIMEOUT = 30000;
   function arm() {
     loaded = false; fail.classList.remove('show');
     frame.src = LIVE_URL;
