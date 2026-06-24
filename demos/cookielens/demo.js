@@ -29,6 +29,7 @@
       $("run-badge").textContent = "demo · " + sites.length + " captured runs";
       buildPicker(sites);
       buildAggregate(sites);
+      wirePicks();
       // Auto-select the worst-graded site (sites already sorted by score desc).
       if (sites.length) selectSite(sites[0].slug);
     })
@@ -61,22 +62,38 @@
     buildPicker._paint = paint;
   }
 
+  function wirePicks() {
+    document.querySelectorAll(".pick-btn[data-pick]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        selectSite(btn.dataset.pick);
+        // Scroll the site into view in the list
+        var row = document.querySelector('.site-row[data-slug="' + btn.dataset.pick + '"]');
+        if (row) row.scrollIntoView({ block: "nearest" });
+      });
+    });
+  }
+
   function markActive(slug) {
     document.querySelectorAll(".site-row").forEach(function (el) {
       el.classList.toggle("active", el.dataset.slug === slug);
+    });
+    document.querySelectorAll(".pick-btn[data-pick]").forEach(function (btn) {
+      btn.classList.toggle("active", btn.dataset.pick === slug);
     });
   }
 
   // ---- select + render a fixture in the real popup ----
   function selectSite(slug) {
     showStage();
+    var gen = ++renderGen;               // cancel any in-flight retry for old site
     loadFixture(slug).then(function (fx) {
+      if (gen !== renderGen) return;     // user already clicked another site
       // Deep clone so Clear can mutate without corrupting the cached fixture.
       var analysis = JSON.parse(JSON.stringify(fx.analysis));
       current = { slug: slug, site: fx.site, url: fx.url, analysis: analysis };
       markActive(slug);
       $("device-where").textContent = fx.site;
-      renderInPopup(analysis, fx.url);
+      renderInPopup(analysis, fx.url, gen, 0);
     });
   }
 
@@ -91,11 +108,22 @@
     try { return iframe.contentWindow.__cookielens; } catch (e) { return null; }
   }
 
-  function renderInPopup(analysis, url) {
+  // Generation counter — each selectSite() call increments this so stale retries
+  // from a previous selection abort immediately when a new site is chosen.
+  var renderGen = 0;
+
+  function renderInPopup(analysis, url, gen, attempts) {
+    if (gen !== renderGen) return;          // superseded by a newer selectSite()
+    attempts = attempts || 0;
     var api = popupApi();
-    if (!api) { // iframe not ready yet — retry shortly
-      return void setTimeout(function () { renderInPopup(analysis, url); }, 80);
+    if (!api) {
+      if (attempts > 100) {               // ~8 s timeout
+        showPopupError("The popup couldn't initialize. Try opening the demo directly: <a href='.' target='_blank'>open ↗</a>");
+        return;
+      }
+      return void setTimeout(function () { renderInPopup(analysis, url, gen, attempts + 1); }, 80);
     }
+    hidePopupError();
     try {
       var st = api.state;
       st.tabUrl = url || "";
@@ -111,6 +139,22 @@
       api.render(analysis, {});      // the REAL render path
       wireClearIntercept();
     } catch (e) { console.error("render failed:", e); }
+  }
+
+  function showPopupError(html) {
+    var el = $("popup-error");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "popup-error";
+      el.style.cssText = "position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center;font-size:13px;color:var(--dim);line-height:1.6;background:var(--bg);border-radius:14px;";
+      iframe.parentNode.style.position = "relative";
+      iframe.parentNode.appendChild(el);
+    }
+    el.innerHTML = html;
+    el.style.display = "flex";
+  }
+  function hidePopupError() {
+    var el = $("popup-error"); if (el) el.style.display = "none";
   }
 
   // ---- Clear actions operate on the fixture clone ----

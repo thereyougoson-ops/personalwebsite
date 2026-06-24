@@ -77,6 +77,17 @@
     .g-F { background: rgba(255,45,107,.18); color: var(--severe); }
     .site-row .meta { font-size: 11px; color: var(--faint); flex-shrink: 0; }
 
+    /* ---- Featured picks ---- */
+    .picks { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px 12px 0; }
+    .pick-btn {
+      font-family: var(--mono); font-size: 11px; color: var(--dim);
+      background: var(--bg); border: 1px solid var(--border); border-radius: 20px;
+      padding: 4px 9px; cursor: pointer; transition: border-color .15s, color .15s;
+    }
+    .pick-btn:hover { color: var(--accent); border-color: rgba(52,225,200,.45); }
+    .pick-btn.active { color: var(--accent); border-color: rgba(52,225,200,.45); background: rgba(52,225,200,.07); }
+    .picks-label { font-size: 10.5px; color: var(--faint); font-family: var(--mono); padding: 8px 12px 0; letter-spacing: .04em; text-transform: uppercase; }
+
     .tabsel { display: flex; gap: 6px; padding: 12px 12px 0; }
     .tabsel button {
       flex: 1; background: var(--bg); border: 1px solid var(--border); color: var(--dim);
@@ -152,6 +163,19 @@
         <div class="tabsel">
           <button id="tab-sites" class="active">Sites</button>
           <button id="tab-agg">Aggregate</button>
+        </div>
+        <div class="picks-label">Quick picks</div>
+        <div class="picks" id="picks">
+          <button class="pick-btn" data-pick="aljazeera-com" title="140 cookies, 54 trackers">Al Jazeera 🔴</button>
+          <button class="pick-btn" data-pick="nfl-com" title="103 cookies, 54 trackers">NFL 🔴</button>
+          <button class="pick-btn" data-pick="imdb-com" title="121 cookies, 71 trackers">IMDb 🔴</button>
+          <button class="pick-btn" data-pick="creditkarma-com" title="66 cookies, 17 trackers">Credit Karma 🔴</button>
+          <button class="pick-btn" data-pick="fidelity-com" title="84 cookies, 23 trackers">Fidelity 🔴</button>
+          <button class="pick-btn" data-pick="github-com" title="6 cookies, 1 tracker">GitHub ✅</button>
+          <button class="pick-btn" data-pick="wikipedia-org" title="7 cookies, 0 trackers">Wikipedia ✅</button>
+          <button class="pick-btn" data-pick="amazon-com" title="12 cookies, 15 trackers">Amazon</button>
+          <button class="pick-btn" data-pick="reddit-com" title="9 cookies, 3 trackers">Reddit</button>
+          <button class="pick-btn" data-pick="nytimes-com" title="49 cookies, 21 trackers">NY Times</button>
         </div>
         <div class="picker-wrap">
           <input id="search" class="picker-search" type="search" placeholder="Filter sites…" aria-label="Filter sites" />
