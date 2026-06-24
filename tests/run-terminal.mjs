@@ -1,16 +1,17 @@
 /* Terminal-fix regression test — runs under WEBKIT (iOS Safari engine) + iPhone emulation,
    because all four bugs are mobile/Safari-specific. Covers:
 
-     1+3. Auto-ride (home→Experience) is SUPPRESSED while the terminal input is focused
-          (chip tap focuses the input first), and STILL fires when it isn't — the deliberate glide.
+     1+3. Auto-ride (home→Experience) is GESTURE-GATED: a focus/layout/programmatic scroll never
+          rides (so a chip tap can't yank the page), but a REAL wheel/touch gesture does — even with
+          the terminal focused — and the reverse (wheel-up → home) works too.
      2.   Inline vs collapsed/floating terminal produce the SAME output / focus / scroll-to-bottom.
      4.   Re-opening the minimised terminal lands the body at the BOTTOM (latest output + input),
           not the top.
 
    Caveat: no headless engine (Chromium or WebKit) opens a real iOS soft keyboard, so the
    keyboard→visualViewport shrink that originally *triggered* the bug can't be summoned here.
-   The fixes don't depend on it: Fix A keys off the `is-typing` class set on input focus, Fix C
-   is an unconditional scroll-pin on re-open — both fully exercised below under WebKit.
+   The fixes don't depend on it: Fix A keys off whether a real scroll gesture was just made (focus
+   alone never arms it), Fix C is an unconditional scroll-pin on re-open — both exercised below.
 
    Local:  npm run serve   (port 8099)
            node tests/run-terminal.mjs
@@ -34,29 +35,69 @@ page.on('console', (m) => { if (m.type() === 'error') errors.push('console.error
 const fresh = async () => { await page.goto(BASE + '/index.html', { waitUntil: 'load' }); await sleep(page, 1600); };
 await fresh();
 
-// ── 1+3. ride suppressed while terminal focused; still fires when not ────────────
+// ── 1+3. gesture-gated auto-ride: a focus/programmatic scroll never rides; a REAL wheel gesture
+//    does — even with the terminal focused — and the reverse (wheel-up → home) works too. ──────
+//    A synthetic WheelEvent faithfully simulates "user scrolled": focusing the input or tapping a
+//    chip dispatches no wheel/touchmove, so only a true scroll gesture arms the ride.
 const ride = await page.evaluate(async () => {
   const nap = ms => new Promise(r => setTimeout(r, ms));
   const work = document.getElementById('work');
   const input = document.getElementById('heroTermInput');
-  const term = document.getElementById('heroTerm');
   const vh = window.innerHeight;
   const workTop = work.getBoundingClientRect().top + window.scrollY;
   const near = y => y > workTop - vh;          // within a viewport of #work = "rode down"
-  // (a) focused → no ride
-  window.scrollTo(0, 0); input.focus(); await nap(60);
-  const typing = term.classList.contains('is-typing');
+  const wheel = dy => window.dispatchEvent(new WheelEvent('wheel', { deltaY: dy, bubbles: true }));
+  // (a) focus the terminal, cross the trigger with a PROGRAMMATIC scroll (no gesture) → must NOT ride
+  window.scrollTo(0, 0); input.focus(); await nap(80);
   window.scrollTo(0, Math.round(vh * 0.25)); await nap(2600);
-  const focusedRode = near(window.scrollY);
-  // (b) un-focused → ride fires
-  window.scrollTo(0, 0); input.blur(); document.body.focus && document.body.focus(); await nap(1800);
-  window.scrollTo(0, Math.round(vh * 0.25)); await nap(3600);
-  const unfocusedRode = near(window.scrollY);
-  return { typing, focusedRode, unfocusedRode, workTop, vh };
+  const focusNoGestureRode = near(window.scrollY);
+  // (b) a real wheel gesture, terminal STILL focused → rides into Experience (the headline fix)
+  window.scrollTo(0, 0); input.focus(); await nap(800);
+  wheel(240); window.scrollTo(0, Math.round(vh * 0.25)); await nap(3800);
+  const gestureRode = near(window.scrollY);
+  await nap(2600);                              // let the ride fully settle before testing the reverse
+  // (c) reverse: from Experience, a wheel-up gesture rides back home
+  let reverseRode = false;
+  if (gestureRode) {
+    input.blur(); await nap(400);
+    wheel(-240); window.scrollTo(0, Math.round(workTop - vh * 0.30)); await nap(3800);
+    reverseRode = window.scrollY < vh;
+  }
+  return { focusNoGestureRode, gestureRode, reverseRode, workTop, vh };
 });
-ok('focus sets is-typing (chip taps focus too → covers Issue 1)', ride.typing);
-ok('Issue 3: ride SUPPRESSED while terminal focused', ride.focusedRode === false, JSON.stringify(ride));
-ok('deliberate glide still fires when terminal NOT focused', ride.unfocusedRode === true, JSON.stringify(ride));
+ok('gate: focus/programmatic scroll (no gesture) does NOT auto-ride', ride.focusNoGestureRode === false, JSON.stringify(ride));
+ok('gate: a real wheel gesture rides even with the terminal focused', ride.gestureRode === true, JSON.stringify(ride));
+ok('gate: wheel-up from Experience rides back home', ride.reverseRode === true, JSON.stringify(ride));
+
+// ── real-flick proof (DESKTOP webkit — mobile WebKit has no mouse.wheel): a TRUSTED wheel with NO
+//    programmatic scroll must ride via Lenis MOMENTUM — the headline path the gate exists for (one
+//    flick coasts past the 20% trigger hundreds of ms later with NO new wheel event; the ~1s armed
+//    window must cover that coast). Both directions. The ride machinery is identical on desktop.
+{
+  const fctx = await browser.newContext({ viewport: { width: 1280, height: 860 } });
+  const fp = await fctx.newPage();
+  fp.on('dialog', d => d.dismiss().catch(() => {}));
+  await fp.goto(BASE + '/index.html', { waitUntil: 'load' });
+  await fp.waitForTimeout(1600);
+  await fp.evaluate(() => window.__abortDemo && window.__abortDemo());
+  const fd = await fp.evaluate(() => ({
+    workTop: document.getElementById('work').getBoundingClientRect().top + window.scrollY,
+    vh: window.innerHeight, w: window.innerWidth,
+  }));
+  await fp.mouse.move(Math.round(fd.w / 2), 6);   // top of hero, clear of the terminal's own scroller
+  await fp.mouse.wheel(0, 700);                     // ONE downward flick — momentum must carry past the 20% trigger
+  await fp.waitForTimeout(4600);
+  const flickDownY = await fp.evaluate(() => Math.round(window.scrollY));
+  ok('real flick (trusted wheel, momentum-only) rides home→Experience',
+     flickDownY > fd.workTop - fd.vh, JSON.stringify({ flickDownY, ...fd }));
+  await fp.waitForTimeout(1200);                    // settle + cooldown clear
+  await fp.mouse.move(Math.round(fd.w / 2), 6);
+  await fp.mouse.wheel(0, -700);                    // flick back up
+  await fp.waitForTimeout(4600);
+  const flickUpY = await fp.evaluate(() => Math.round(window.scrollY));
+  ok('real flick (trusted wheel) rides Experience→home', flickUpY < fd.vh, JSON.stringify({ flickUpY }));
+  await fctx.close();
+}
 
 // chip path end-to-end on a CLEAN landing: TRUSTED tap runs the command + does not scroll the page
 await fresh();

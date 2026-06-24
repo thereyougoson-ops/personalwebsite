@@ -470,7 +470,7 @@ function initHeroLinks(){
   if (!resume) return;
   resume.addEventListener('click', (e) => {
     e.preventDefault();
-    const open = () => { try { window.open('assets/philip-toulinov-resume.pdf?v=20260624', '_blank', 'noopener'); } catch(_){ location.href = 'assets/philip-toulinov-resume.pdf?v=20260624'; } };
+    const open = () => { try { window.open('assets/philip-toulinov-resume.pdf?v=20260624b', '_blank', 'noopener'); } catch(_){ location.href = 'assets/philip-toulinov-resume.pdf?v=20260624b'; } };
     const t = document.getElementById('contact');
     if (!t){ open(); return; }
     const y = Math.max(0, Math.round(t.getBoundingClientRect().top + window.scrollY - 68));
@@ -569,6 +569,7 @@ function initLenis(){
       // messages into Experience — don't park/short-circuit it (that's what read "too fast").
       if (a.classList.contains('hero__scroll')){
         e.preventDefault();
+        if (window.__armRide) window.__armRide();   // a deliberate click on the cue counts as a gesture → let the ride fire
         lenis.scrollTo(Math.round(window.innerHeight * 0.26), { duration: 0.5 });
         return;
       }
@@ -1621,7 +1622,7 @@ function buildPaletteItems(){
     { ico:'⌘', t:'Run ./deploy --prod', d:'demo', run:() => deployOverlay() },
     { ico:'@', t:'Copy email address', d:'copy', run:() => { if (navigator.clipboard){ navigator.clipboard.writeText('toulinov.philip@yahoo.com').then(()=>toast('email copied')).catch(()=>toast('email: toulinov.philip@yahoo.com')); } else { toast('email: toulinov.philip@yahoo.com'); } } },
     { ico:'↗', t:'Open LinkedIn', d:'in/ptoulinov', run:() => window.open('https://www.linkedin.com/in/ptoulinov','_blank','noopener') },
-    { ico:'⬇', t:'Download résumé (PDF)', d:'pdf', run:() => window.open('assets/philip-toulinov-resume.pdf?v=20260624','_blank') },
+    { ico:'⬇', t:'Download résumé (PDF)', d:'pdf', run:() => window.open('assets/philip-toulinov-resume.pdf?v=20260624b','_blank') },
     { ico:'☎', t:'Call +1 (415) 823-7537', d:'tel', run:() => { location.href = 'tel:+14158237537'; } },
     { ico:'◆', t:'Env: production (amber)', d:'theme', run:() => setEnv('production') },
     { ico:'◆', t:'Env: staging (cyan)', d:'theme', run:() => setEnv('staging') },
@@ -1847,7 +1848,7 @@ function makeShell(cfg){
     'independent.md': `# Independent Full-Stack Developer (Oct 2025–Present)\n13 production apps shipped solo, end-to-end:\n- Loansy — P2P lending platform: full loan lifecycle, multi-role users\n- on-chain payment monitor (Python) — credits USDC/USDT on Solana/TON\n- React/JSX admin dashboard — IP intel, risk ops, identity graph (Flask + MongoDB)\n- multi-provider AI infra monitor — 11 providers → Postgres, 99.90% uptime\n- algo trading stack on Hyperliquid — REST/WS UI, 65% win rate / 26 dry runs\n- real-time odds reconciliation — two live feeds over CDP, 30 ticks/min\n- installable art-catalogue PWA — 150+ works + AI cinemagraph pipeline\n- 5 civic-data apps over live DataSF — 198K+ trees, 2,118 film locations, +LLM agent\n- MV3 Chrome userscript manager — full GM_* compat, AI copilot, trust scoring\n- MV3 cookie/tracker inspector — 79 sites, 1,228 trackers, local-only\nstack: Flask · React · MongoDB · Postgres · TON · Solana · Hyperliquid · DataSF`,
     'loansy.md': `# Loansy — P2P Lending Platform\n- full loan lifecycle: borrower/lender matching, issuance, repayment, defaults\n- multi-role user system across borrowers, lenders, and admins\n- real-time on-chain payment monitoring credits USDC/USDT on Solana/TON\n- React/JSX admin dashboard: IP intelligence, risk ops, identity-graph + wallet analysis\n- fraud detection + user risk scoring\nstack: Flask REST API · MongoDB · React/JSX · Python on-chain monitor`,
     'contact.txt': `email    toulinov.philip@yahoo.com\nphone    +1 (415) 823-7537\nlinkedin linkedin.com/in/ptoulinov`,
-    'resume.pdf': `__OPEN__assets/philip-toulinov-resume.pdf?v=20260624`
+    'resume.pdf': `__OPEN__assets/philip-toulinov-resume.pdf?v=20260624b`
   };
 
   const esc = escapeHtml;   // single source of truth — escapes & < > " (the local 3-char esc dropped the quote)
@@ -1876,7 +1877,7 @@ function makeShell(cfg){
         `</div><div class="tui-foot"><b>click</b> a row to run · <b>⌘K</b> palette · <b>?</b> shortcuts · <b>Tab</b> completes</div></div>`;
     },
     menu: () => COMMANDS.help(),
-    ls: () => { var ff=Object.keys(FILES); return '<div class="tree"><div class="tree-folder">▾ ~/philip/</div>'+ff.map(function(f,i){var last=i===ff.length-1;var cls=f.endsWith('.md')?'c':f.endsWith('.txt')?'a':'g';var nm=f.endsWith('.pdf')?'<a href="assets/philip-toulinov-resume.pdf?v=20260624" target="_blank">'+f+'</a>':'<span class="'+cls+'">'+f+'</span>';return '<div class="tree-leaf"><span class="tree-pipe">'+(last?'└── ':'├── ')+'</span>'+nm+'</div>';}).join('')+'</div>'; },
+    ls: () => { var ff=Object.keys(FILES); return '<div class="tree"><div class="tree-folder">▾ ~/philip/</div>'+ff.map(function(f,i){var last=i===ff.length-1;var cls=f.endsWith('.md')?'c':f.endsWith('.txt')?'a':'g';var nm=f.endsWith('.pdf')?'<a href="assets/philip-toulinov-resume.pdf?v=20260624b" target="_blank">'+f+'</a>':'<span class="'+cls+'">'+f+'</span>';return '<div class="tree-leaf"><span class="tree-pipe">'+(last?'└── ':'├── ')+'</span>'+nm+'</div>';}).join('')+'</div>'; },
     'ls -la': () => COMMANDS.ls(),
     pwd: () => `<span class="d">/home/philip/</span><span class="a">stack</span>`,
     whoami: () => { var KV=[['name','Philip Toulinov'],['role','Software Engineer & Independent Developer'],['based','San Francisco'],['speaks','English · Français · Русский'],['focus','fintech · CI/CD · full-stack · blockchain']]; return '<div class="boxes"><div class="box" style="--bc:#7c6cff"><div class="box-top">~/philip · whoami<span class="bn">id card</span></div><div class="box-body"><div class="nf-info">'+KV.map(function(x){return '<div class="kvr"><span class="kvk">'+x[0]+'</span><span class="kvv">'+x[1]+'</span></div>';}).join('')+'</div></div></div></div><span class="row d">I build production systems end-to-end — from <span class="a">CI/CD pipelines</span> at LendingClub to <span class="m">fintech platforms, trading stacks, and civic AI tools</span> shipped independently.</span>'; },
@@ -2510,8 +2511,16 @@ function initThesisAutoScroll(){
   const thesis = document.getElementById('thesis');
   const target = document.getElementById('work') || (document.querySelector('#fluxStage') && document.querySelector('#fluxStage').closest('section'));
   if (!thesis || !target || !lenis || reduceQuery.matches || !motionOn) return;
-  let running = false, zone = 'home', cooldownUntil = 0, rideGuard = 0;   // zone: 'home' (above) ⇄ 'work' (parked in Experience)
+  let running = false, zone = 'home', cooldownUntil = 0, rideGuard = 0, gestureUntil = 0;   // zone: 'home' (above) ⇄ 'work' (parked in Experience)
   const nowT = () => (window.performance && performance.now) ? performance.now() : Date.now();
+  // Gesture-gate: the ride only fires if a REAL scroll gesture (wheel / touchmove) happened in the last
+  // ~1s. A focus/layout nudge or a chip tap produces no gesture → never auto-rides (kills the "tapping a
+  // chip yanks you to Experience" bug at the root). A single flick coasts via Lenis momentum hundreds of
+  // ms after the wheel event with no new event — the 1s armed window covers the coast so a flick still rides.
+  const arm = () => { gestureUntil = nowT() + 1000; };
+  window.addEventListener('wheel', arm, { passive: true });
+  window.addEventListener('touchmove', arm, { passive: true });
+  window.__armRide = arm;   // the hero scroll-cue (a deliberate click) arms the ride too — see initHeroLinks
   const easeInOutCubic = (t) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
   // release the lock + settle, used by both the keyboard bail and the safety backstop
   const release = () => { try { lenis.scrollTo(window.scrollY, { immediate: true, force: true }); } catch (e) {} };
@@ -2535,9 +2544,7 @@ function initThesisAutoScroll(){
   };
   const begin = () => {
     if (running || nowT() < cooldownUntil) return;
-    // ponytail: don't yank the page out from under the user while they're in the terminal —
-    // chip taps focus the input first (sets is-typing) so this covers Issue 1 + Issue 3. Blur re-arms.
-    if (document.getElementById('heroTerm')?.classList.contains('is-typing')) return;
+    if (nowT() > gestureUntil) return;     // only ride on a real, recent scroll gesture (see arm/gesture-gate above)
     const wy = workY();
     if (wy < 200) return;                  // layout not ready yet
     const vh = window.innerHeight;
