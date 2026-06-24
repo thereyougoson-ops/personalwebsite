@@ -470,7 +470,7 @@ function initHeroLinks(){
   if (!resume) return;
   resume.addEventListener('click', (e) => {
     e.preventDefault();
-    const open = () => { try { window.open('assets/philip-toulinov-resume.pdf', '_blank', 'noopener'); } catch(_){ location.href = 'assets/philip-toulinov-resume.pdf'; } };
+    const open = () => { try { window.open('assets/philip-toulinov-resume.pdf?v=20260624', '_blank', 'noopener'); } catch(_){ location.href = 'assets/philip-toulinov-resume.pdf?v=20260624'; } };
     const t = document.getElementById('contact');
     if (!t){ open(); return; }
     const y = Math.max(0, Math.round(t.getBoundingClientRect().top + window.scrollY - 68));
@@ -1615,7 +1615,7 @@ function buildPaletteItems(){
     { ico:'⌘', t:'Run ./deploy --prod', d:'demo', run:() => deployOverlay() },
     { ico:'@', t:'Copy email address', d:'copy', run:() => { if (navigator.clipboard){ navigator.clipboard.writeText('toulinov.philip@yahoo.com').then(()=>toast('email copied')).catch(()=>toast('email: toulinov.philip@yahoo.com')); } else { toast('email: toulinov.philip@yahoo.com'); } } },
     { ico:'↗', t:'Open LinkedIn', d:'in/ptoulinov', run:() => window.open('https://www.linkedin.com/in/ptoulinov','_blank','noopener') },
-    { ico:'⬇', t:'Download résumé (PDF)', d:'pdf', run:() => window.open('assets/philip-toulinov-resume.pdf','_blank') },
+    { ico:'⬇', t:'Download résumé (PDF)', d:'pdf', run:() => window.open('assets/philip-toulinov-resume.pdf?v=20260624','_blank') },
     { ico:'☎', t:'Call +1 (415) 823-7537', d:'tel', run:() => { location.href = 'tel:+14158237537'; } },
     { ico:'◆', t:'Env: production (amber)', d:'theme', run:() => setEnv('production') },
     { ico:'◆', t:'Env: staging (cyan)', d:'theme', run:() => setEnv('staging') },
@@ -1839,7 +1839,7 @@ function makeShell(cfg){
     'independent.md': `# Independent Full-Stack Developer (Oct 2025–Present)\n13 production apps shipped solo, end-to-end:\n- Loansy — P2P lending platform: full loan lifecycle, multi-role users\n- on-chain payment monitor (Python) — credits USDC/USDT on Solana/TON\n- React/JSX admin dashboard — IP intel, risk ops, identity graph (Flask + MongoDB)\n- multi-provider AI infra monitor — 11 providers → Postgres, 99.90% uptime\n- algo trading stack on Hyperliquid — REST/WS UI, 65% win rate / 26 dry runs\n- real-time odds reconciliation — two live feeds over CDP, 30 ticks/min\n- installable art-catalogue PWA — 150+ works + AI cinemagraph pipeline\n- 5 civic-data apps over live DataSF — 198K+ trees, 2,118 film locations, +LLM agent\n- MV3 Chrome userscript manager — full GM_* compat, AI copilot, trust scoring\n- MV3 cookie/tracker inspector — 79 sites, 1,228 trackers, local-only\nstack: Flask · React · MongoDB · Postgres · TON · Solana · Hyperliquid · DataSF`,
     'loansy.md': `# Loansy — P2P Lending Platform\n- full loan lifecycle: borrower/lender matching, issuance, repayment, defaults\n- multi-role user system across borrowers, lenders, and admins\n- real-time on-chain payment monitoring credits USDC/USDT on Solana/TON\n- React/JSX admin dashboard: IP intelligence, risk ops, identity-graph + wallet analysis\n- fraud detection + user risk scoring\nstack: Flask REST API · MongoDB · React/JSX · Python on-chain monitor`,
     'contact.txt': `email    toulinov.philip@yahoo.com\nphone    +1 (415) 823-7537\nlinkedin linkedin.com/in/ptoulinov`,
-    'resume.pdf': `__OPEN__assets/philip-toulinov-resume.pdf`
+    'resume.pdf': `__OPEN__assets/philip-toulinov-resume.pdf?v=20260624`
   };
 
   const esc = escapeHtml;   // single source of truth — escapes & < > " (the local 3-char esc dropped the quote)
@@ -1868,7 +1868,7 @@ function makeShell(cfg){
         `</div><div class="tui-foot"><b>click</b> a row to run · <b>⌘K</b> palette · <b>?</b> shortcuts · <b>Tab</b> completes</div></div>`;
     },
     menu: () => COMMANDS.help(),
-    ls: () => { var ff=Object.keys(FILES); return '<div class="tree"><div class="tree-folder">▾ ~/philip/</div>'+ff.map(function(f,i){var last=i===ff.length-1;var cls=f.endsWith('.md')?'c':f.endsWith('.txt')?'a':'g';var nm=f.endsWith('.pdf')?'<a href="assets/philip-toulinov-resume.pdf" target="_blank">'+f+'</a>':'<span class="'+cls+'">'+f+'</span>';return '<div class="tree-leaf"><span class="tree-pipe">'+(last?'└── ':'├── ')+'</span>'+nm+'</div>';}).join('')+'</div>'; },
+    ls: () => { var ff=Object.keys(FILES); return '<div class="tree"><div class="tree-folder">▾ ~/philip/</div>'+ff.map(function(f,i){var last=i===ff.length-1;var cls=f.endsWith('.md')?'c':f.endsWith('.txt')?'a':'g';var nm=f.endsWith('.pdf')?'<a href="assets/philip-toulinov-resume.pdf?v=20260624" target="_blank">'+f+'</a>':'<span class="'+cls+'">'+f+'</span>';return '<div class="tree-leaf"><span class="tree-pipe">'+(last?'└── ':'├── ')+'</span>'+nm+'</div>';}).join('')+'</div>'; },
     'ls -la': () => COMMANDS.ls(),
     pwd: () => `<span class="d">/home/philip/</span><span class="a">stack</span>`,
     whoami: () => { var KV=[['name','Philip Toulinov'],['role','Software Engineer & Independent Developer'],['based','San Francisco'],['speaks','English · Français · Русский'],['focus','fintech · CI/CD · full-stack · blockchain']]; return '<div class="boxes"><div class="box" style="--bc:#7c6cff"><div class="box-top">~/philip · whoami<span class="bn">id card</span></div><div class="box-body"><div class="nf-info">'+KV.map(function(x){return '<div class="kvr"><span class="kvk">'+x[0]+'</span><span class="kvv">'+x[1]+'</span></div>';}).join('')+'</div></div></div></div><span class="row d">I build production systems end-to-end — from <span class="a">CI/CD pipelines</span> at LendingClub to <span class="m">fintech platforms, trading stacks, and civic AI tools</span> shipped independently.</span>'; },
@@ -1980,7 +1980,9 @@ function makeShell(cfg){
     void d.offsetHeight;
     d.style.transition = 'height ' + dur + 'ms linear';
     d.style.height = full + 'px';
-    const tick = () => { if (scroll) scroll.scrollTop = scroll.scrollHeight; };
+    // follow the growing output ONLY while the reader is at the bottom — if they (or a wipe/abort) scrolled
+    // away, stop yanking them back so a user can read earlier output mid-reveal (and the tick can't fight scroll).
+    const tick = () => { if (scroll && (scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight) < 120) scroll.scrollTop = scroll.scrollHeight; };
     const iv = setInterval(tick, 16);
     let finished = false;
     const done = () => { if (finished) return; finished = true; clearInterval(iv); d.style.height = ''; d.style.overflow = ''; d.style.transition = ''; tick(); updMore(); };
@@ -2218,7 +2220,7 @@ function initTerminal(){
   // so the hero always shows a live, fully-populated terminal that invites you to take over.
   makeShell({ rootId:'heroTerm', bodyId:'heroTermBody', inputId:'heroTermInput', scrollId:'heroTermScroll', chipsId:'heroTermChips',
     heroStatic: true, clearAfterDemo: false,
-    demo: ['help', 'whoami', 'git log', 'kubectl get skills', 'hire', 'top', 'cat lendingclub.md'],
+    demo: ['whoami', 'help', 'git log'],   // short tour only — long outputs (kubectl/top/cat) overflowed the scroll mid-reveal
     entice: ['whoami', 'hire', 'git log', 'skills', 'cat resume.pdf'],
     staticList: ['help', 'whoami', 'git log', 'kubectl get skills'],
     welcome: `<span class='d'>software engineer &amp; builder · full-stack · fintech · 13 shipped. this is a real shell — watch the tour, or type <span class='a'>help</span> and take over.</span>`,
