@@ -182,7 +182,7 @@ An interactive personal site for **Philip Toulinov**, framed as **"a career rend
 
 ## Subject (verified from the resume PDF, char-by-char)
 - **Philip Toulinov** — Release & Software Engineer, San Francisco Bay Area
-- Phone **+1 (415) 823-7537** · Email **toulinov.philip@yahoo.com** · LinkedIn **linkedin.com/in/ptoulinov**
+- Phone **+1 (415) 823-7537** · Email **ptoulinov@gmail.com** · LinkedIn **linkedin.com/in/ptoulinov**
 - **LendingClub** — Release Engineer · Hybrid · Dec 2021 – Jan 2024 (cut deploy times 30%, Mabl test automation, GitHub platform, monitoring/incident response)
 - **Tech Mahindra** — Software & Device Engineer · On-site · Sep 2021 – Dec 2021 (LTE/5G NR Layer-1 + RF RRM conformance; Keysight E7515B, Anritsu MD8430A, R&S CMW500, Keysight Nemo; Lauterbach Trace32 on Qualcomm Snapdragon; −25% setup time)
 - **Catalina USA** — Software Engineer Intern · Remote · Jun 2020 – Sep 2020 (Selenium, Jenkins CD, Docker IaC, JIRA)

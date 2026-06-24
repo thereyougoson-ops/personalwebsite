@@ -123,7 +123,7 @@
   "@type": "Person",
   "name": "Philip Toulinov",
   "jobTitle": "Software Engineer & Independent Developer",
-  "email": "mailto:toulinov.philip@yahoo.com",
+  "email": "mailto:ptoulinov@gmail.com",
   "telephone": "+1-415-823-7537",
   "url": "https://philiptoulinov.com/",
   "sameAs": ["https://www.linkedin.com/in/ptoulinov"],
@@ -353,9 +353,9 @@
             <span style="width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:rgba(124,108,255,.12);border:1px solid rgba(124,108,255,.26);color:#a99cff;font-family:'Geist Mono',monospace;font-size:15px;flex:none;">@</span>
             <span style="min-width:0;display:flex;flex-direction:column;gap:1px;">
               <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7a7a90;">email</span>
-              <a class="ct-val" href="mailto:toulinov.philip@yahoo.com" style="font-family:'Geist',sans-serif;font-weight:500;font-size:clamp(15px,1.5vw,19px);letter-spacing:-.01em;color:#f2f2f7;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:transform .3s cubic-bezier(.16,1,.3,1);">toulinov.philip@yahoo.com</a>
+              <a class="ct-val" href="mailto:ptoulinov@gmail.com" style="font-family:'Geist',sans-serif;font-weight:500;font-size:clamp(15px,1.5vw,19px);letter-spacing:-.01em;color:#f2f2f7;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;transition:transform .3s cubic-bezier(.16,1,.3,1);">ptoulinov@gmail.com</a>
             </span>
-            <button class="ct-copy" type="button" data-copy="toulinov.philip@yahoo.com" data-mag style="font-family:'Geist Mono',monospace;font-size:11px;color:#3fe0d0;flex:none;letter-spacing:.04em;border:1px solid rgba(63,224,208,.3);border-radius:7px;padding:7px 12px;background:rgba(63,224,208,.06);">copy</button>
+            <button class="ct-copy" type="button" data-copy="ptoulinov@gmail.com" data-mag style="font-family:'Geist Mono',monospace;font-size:11px;color:#3fe0d0;flex:none;letter-spacing:.04em;border:1px solid rgba(63,224,208,.3);border-radius:7px;padding:7px 12px;background:rgba(63,224,208,.06);">copy</button>
           </div>
 
           <a class="ct-row" href="https://www.linkedin.com/in/ptoulinov" target="_blank" rel="noopener" data-mag style="position:relative;display:grid;grid-template-columns:38px 1fr auto;gap:15px;align-items:center;padding:15px 16px;border-bottom:1px solid rgba(230,230,255,.07);z-index:1;text-decoration:none;">
@@ -367,7 +367,7 @@
             <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#3fe0d0;flex:none;letter-spacing:.04em;">open &#8599;</span>
           </a>
 
-          <a class="ct-row" href="assets/philip-toulinov-resume.pdf?v=20260624b" download="philip-toulinov-resume.pdf" data-mag style="position:relative;display:grid;grid-template-columns:38px 1fr auto;gap:15px;align-items:center;padding:15px 16px;z-index:1;text-decoration:none;">
+          <a class="ct-row" href="assets/philip-toulinov-resume.pdf?v=20260624c" download="philip-toulinov-resume.pdf" data-mag style="position:relative;display:grid;grid-template-columns:38px 1fr auto;gap:15px;align-items:center;padding:15px 16px;z-index:1;text-decoration:none;">
             <span style="width:36px;height:36px;border-radius:9px;display:grid;place-items:center;background:rgba(124,108,255,.12);border:1px solid rgba(124,108,255,.26);color:#a99cff;font-family:'Geist Mono',monospace;font-size:14px;flex:none;">&#8595;</span>
             <span style="min-width:0;display:flex;flex-direction:column;gap:1px;">
               <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#7a7a90;">r&eacute;sum&eacute; &middot; pdf</span>
@@ -501,7 +501,7 @@
         const ins=Math.max(1,body.split(/\s+/).filter(Boolean).length);
         const lines=['$ git commit -m "'+subj+'"','[contact '+sha+'] '+subj,' 1 file changed, '+ins+' insertions(+)','$ git push origin contact','Enumerating objects: 3, done.','To philip:~/inbox — pushing…','✓ opening your mail client…'];
         let i=0; out.textContent='';
-        const mail='mailto:toulinov.philip@yahoo.com?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body+(email?'\n\n— '+email:''));
+        const mail='mailto:ptoulinov@gmail.com?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body+(email?'\n\n— '+email:''));
         const iv=setInterval(()=>{ out.textContent+=(i?'\n':'')+lines[i]; i++; if(i>=lines.length){ clearInterval(iv); setTimeout(()=>{ window.location.href=mail; },450); } }, reduce?1:230);
       }); }
 

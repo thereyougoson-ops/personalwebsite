@@ -78,7 +78,7 @@ function initConsole(){
     const ok  = 'color:#5ee6c0;font:500 12px ui-monospace,monospace';
     console.log('%c> philip toulinov', big);
     console.log('%csoftware engineer & builder · you opened the console — respect.', dim);
-    console.log('%c✓ hiring? toulinov.philip@yahoo.com  (mention you found this in DevTools)', ok);
+    console.log('%c✓ hiring? ptoulinov@gmail.com  (mention you found this in DevTools)', ok);
     console.log('%ctry the Konami code on the page. ↑↑↓↓←→←→ b a', dim);
   } catch(e){}
 }
@@ -129,7 +129,7 @@ function initCommit(){
       const subject = encodeURIComponent('[portfolio] ' + subj);
       const mailBody = encodeURIComponent((body || '') + (email ? `\n\n— ${email}` : '') + '\n\n(sent from philiptoulinov.com)');
       out.innerHTML += `\n <span class="d">no inbox endpoint here — opening your mail client…</span>`;
-      try { window.location.href = `mailto:toulinov.philip@yahoo.com?subject=${subject}&body=${mailBody}`; } catch(err){}
+      try { window.location.href = `mailto:ptoulinov@gmail.com?subject=${subject}&body=${mailBody}`; } catch(err){}
     };
     const deliver = () => {
       const data = new URLSearchParams();
@@ -470,7 +470,7 @@ function initHeroLinks(){
   if (!resume) return;
   resume.addEventListener('click', (e) => {
     e.preventDefault();
-    const open = () => { try { window.open('assets/philip-toulinov-resume.pdf?v=20260624b', '_blank', 'noopener'); } catch(_){ location.href = 'assets/philip-toulinov-resume.pdf?v=20260624b'; } };
+    const open = () => { try { window.open('assets/philip-toulinov-resume.pdf?v=20260624c', '_blank', 'noopener'); } catch(_){ location.href = 'assets/philip-toulinov-resume.pdf?v=20260624c'; } };
     const t = document.getElementById('contact');
     if (!t){ open(); return; }
     const y = Math.max(0, Math.round(t.getBoundingClientRect().top + window.scrollY - 68));
@@ -1509,7 +1509,7 @@ function initCursor(){
 
   const email = document.querySelector('a[href^="mailto:"]');
   if (email) email.addEventListener('click', () => {
-    if (navigator.clipboard){ navigator.clipboard.writeText('toulinov.philip@yahoo.com').catch(()=>{}); if (label) label.textContent = 'copied'; setTimeout(()=>{ if (label && document.body.classList.contains('cursor-label')) label.textContent='copy'; },1100); }
+    if (navigator.clipboard){ navigator.clipboard.writeText('ptoulinov@gmail.com').catch(()=>{}); if (label) label.textContent = 'copied'; setTimeout(()=>{ if (label && document.body.classList.contains('cursor-label')) label.textContent='copy'; },1100); }
   });
 }
 
@@ -1620,9 +1620,9 @@ function buildPaletteItems(){
     { ico:'→', t:'Go to Builds', d:'03', run:() => scrollToId('#transitMap') },
     { ico:'→', t:'Go to Contact', d:'04', run:() => scrollToId('#contact') },
     { ico:'⌘', t:'Run ./deploy --prod', d:'demo', run:() => deployOverlay() },
-    { ico:'@', t:'Copy email address', d:'copy', run:() => { if (navigator.clipboard){ navigator.clipboard.writeText('toulinov.philip@yahoo.com').then(()=>toast('email copied')).catch(()=>toast('email: toulinov.philip@yahoo.com')); } else { toast('email: toulinov.philip@yahoo.com'); } } },
+    { ico:'@', t:'Copy email address', d:'copy', run:() => { if (navigator.clipboard){ navigator.clipboard.writeText('ptoulinov@gmail.com').then(()=>toast('email copied')).catch(()=>toast('email: ptoulinov@gmail.com')); } else { toast('email: ptoulinov@gmail.com'); } } },
     { ico:'↗', t:'Open LinkedIn', d:'in/ptoulinov', run:() => window.open('https://www.linkedin.com/in/ptoulinov','_blank','noopener') },
-    { ico:'⬇', t:'Download résumé (PDF)', d:'pdf', run:() => window.open('assets/philip-toulinov-resume.pdf?v=20260624b','_blank') },
+    { ico:'⬇', t:'Download résumé (PDF)', d:'pdf', run:() => window.open('assets/philip-toulinov-resume.pdf?v=20260624c','_blank') },
     { ico:'☎', t:'Call +1 (415) 823-7537', d:'tel', run:() => { location.href = 'tel:+14158237537'; } },
     { ico:'◆', t:'Env: production (amber)', d:'theme', run:() => setEnv('production') },
     { ico:'◆', t:'Env: staging (cyan)', d:'theme', run:() => setEnv('staging') },
@@ -1847,8 +1847,8 @@ function makeShell(cfg){
     'about.txt': `Software engineer & independent builder, San Francisco.\nShipped 13 production apps across fintech, civic AI, and trading.\nFormer Release Engineer at LendingClub.\nFluent in English, French, and Russian.`,
     'independent.md': `# Independent Full-Stack Developer (Oct 2025–Present)\n13 production apps shipped solo, end-to-end:\n- Loansy — P2P lending platform: full loan lifecycle, multi-role users\n- on-chain payment monitor (Python) — credits USDC/USDT on Solana/TON\n- React/JSX admin dashboard — IP intel, risk ops, identity graph (Flask + MongoDB)\n- multi-provider AI infra monitor — 11 providers → Postgres, 99.90% uptime\n- algo trading stack on Hyperliquid — REST/WS UI, 65% win rate / 26 dry runs\n- real-time odds reconciliation — two live feeds over CDP, 30 ticks/min\n- installable art-catalogue PWA — 150+ works + AI cinemagraph pipeline\n- 5 civic-data apps over live DataSF — 198K+ trees, 2,118 film locations, +LLM agent\n- MV3 Chrome userscript manager — full GM_* compat, AI copilot, trust scoring\n- MV3 cookie/tracker inspector — 79 sites, 1,228 trackers, local-only\nstack: Flask · React · MongoDB · Postgres · TON · Solana · Hyperliquid · DataSF`,
     'loansy.md': `# Loansy — P2P Lending Platform\n- full loan lifecycle: borrower/lender matching, issuance, repayment, defaults\n- multi-role user system across borrowers, lenders, and admins\n- real-time on-chain payment monitoring credits USDC/USDT on Solana/TON\n- React/JSX admin dashboard: IP intelligence, risk ops, identity-graph + wallet analysis\n- fraud detection + user risk scoring\nstack: Flask REST API · MongoDB · React/JSX · Python on-chain monitor`,
-    'contact.txt': `email    toulinov.philip@yahoo.com\nphone    +1 (415) 823-7537\nlinkedin linkedin.com/in/ptoulinov`,
-    'resume.pdf': `__OPEN__assets/philip-toulinov-resume.pdf?v=20260624b`
+    'contact.txt': `email    ptoulinov@gmail.com\nphone    +1 (415) 823-7537\nlinkedin linkedin.com/in/ptoulinov`,
+    'resume.pdf': `__OPEN__assets/philip-toulinov-resume.pdf?v=20260624c`
   };
 
   const esc = escapeHtml;   // single source of truth — escapes & < > " (the local 3-char esc dropped the quote)
@@ -1877,7 +1877,7 @@ function makeShell(cfg){
         `</div><div class="tui-foot"><b>click</b> a row to run · <b>⌘K</b> palette · <b>?</b> shortcuts · <b>Tab</b> completes</div></div>`;
     },
     menu: () => COMMANDS.help(),
-    ls: () => { var ff=Object.keys(FILES); return '<div class="tree"><div class="tree-folder">▾ ~/philip/</div>'+ff.map(function(f,i){var last=i===ff.length-1;var cls=f.endsWith('.md')?'c':f.endsWith('.txt')?'a':'g';var nm=f.endsWith('.pdf')?'<a href="assets/philip-toulinov-resume.pdf?v=20260624b" target="_blank">'+f+'</a>':'<span class="'+cls+'">'+f+'</span>';return '<div class="tree-leaf"><span class="tree-pipe">'+(last?'└── ':'├── ')+'</span>'+nm+'</div>';}).join('')+'</div>'; },
+    ls: () => { var ff=Object.keys(FILES); return '<div class="tree"><div class="tree-folder">▾ ~/philip/</div>'+ff.map(function(f,i){var last=i===ff.length-1;var cls=f.endsWith('.md')?'c':f.endsWith('.txt')?'a':'g';var nm=f.endsWith('.pdf')?'<a href="assets/philip-toulinov-resume.pdf?v=20260624c" target="_blank">'+f+'</a>':'<span class="'+cls+'">'+f+'</span>';return '<div class="tree-leaf"><span class="tree-pipe">'+(last?'└── ':'├── ')+'</span>'+nm+'</div>';}).join('')+'</div>'; },
     'ls -la': () => COMMANDS.ls(),
     pwd: () => `<span class="d">/home/philip/</span><span class="a">stack</span>`,
     whoami: () => { var KV=[['name','Philip Toulinov'],['role','Software Engineer & Independent Developer'],['based','San Francisco'],['speaks','English · Français · Русский'],['focus','fintech · CI/CD · full-stack · blockchain']]; return '<div class="boxes"><div class="box" style="--bc:#7c6cff"><div class="box-top">~/philip · whoami<span class="bn">id card</span></div><div class="box-body"><div class="nf-info">'+KV.map(function(x){return '<div class="kvr"><span class="kvk">'+x[0]+'</span><span class="kvv">'+x[1]+'</span></div>';}).join('')+'</div></div></div></div><span class="row d">I build production systems end-to-end — from <span class="a">CI/CD pipelines</span> at LendingClub to <span class="m">fintech platforms, trading stacks, and civic AI tools</span> shipped independently.</span>'; },
@@ -1888,20 +1888,20 @@ function makeShell(cfg){
     },
     education: () => '<div class="boxes"><div class="box" style="--bc:#5ee6c0"><div class="box-top">Cal Poly Humboldt<span class="bn">2021</span></div><div class="box-body"><div class="box-row"><b>B.S. Computer Science</b></div></div></div><div class="box" style="--bc:#b89cff"><div class="box-top">Lycée Français La Pérouse<span class="bn">EN · FR · RU</span></div><div class="box-body"><div class="box-row"><b>Bilingual schooling</b></div></div></div></div>',
     contact: () => `<span class="head">contact</span>` +
-      `<span class="row">› <a href="mailto:toulinov.philip@yahoo.com">toulinov.philip@yahoo.com</a></span>` +
+      `<span class="row">› <a href="mailto:ptoulinov@gmail.com">ptoulinov@gmail.com</a></span>` +
       `<span class="row">› <a href="tel:+14158237537">+1 (415) 823-7537</a></span>` +
       `<span class="row">› <a href="https://www.linkedin.com/in/ptoulinov" target="_blank" rel="noopener">linkedin.com/in/ptoulinov</a></span>`,
     neofetch: () => { var L='██████╗ ████████╗\n██╔══██╗╚══██╔══╝\n██████╔╝   ██║\n██╔═══╝    ██║\n██║        ██║\n╚═╝        ╚═╝'; var KV=[['os','Software Engineer · SF Bay Area'],['uptime','shipping since 2020'],['shell','bash · zsh · Jenkinsfile'],['kernel','CI/CD · Fintech · Full-Stack'],['langs','Python · Java · JS · C++ · Flask · React · TON'],['speaks','English · Français · Русский'],['status','<span class="g">● available</span>']]; return '<div class="nf"><pre class="nf-logo">'+L+'</pre><div class="nf-info">'+KV.map(function(x){return '<div class="kvr"><span class="kvk">'+x[0]+'</span><span class="kvv">'+x[1]+'</span></div>';}).join('')+'</div></div>'; },
-    bonjour: () => `<span class="a">Salut</span> — merci d'être passé. Élevé et scolarisé en <span class="c">français</span> à San Francisco. On parle&nbsp;? <a href="mailto:toulinov.philip@yahoo.com">écris-moi</a>.`,
+    bonjour: () => `<span class="a">Salut</span> — merci d'être passé. Élevé et scolarisé en <span class="c">français</span> à San Francisco. On parle&nbsp;? <a href="mailto:ptoulinov@gmail.com">écris-moi</a>.`,
     sudo: () => `<span class="r">nice try.</span> <span class="d">this incident has been logged. 📟</span>`,
-    'sudo hire philip': () => `<span class="g">✓</span> escalating privileges… <a href="mailto:toulinov.philip@yahoo.com">toulinov.philip@yahoo.com</a> — let's talk.`,
+    'sudo hire philip': () => `<span class="g">✓</span> escalating privileges… <a href="mailto:ptoulinov@gmail.com">ptoulinov@gmail.com</a> — let's talk.`,
     hire: () => `<span class="head">// reverse job-req — what I'm looking for</span>` +
       `<span class="row">› <span class="a">seeking</span>   Full-Stack · Fintech · Release Engineering · SRE</span>` +
       `<span class="row">› <span class="a">based</span>     San Francisco Bay Area</span>` +
       `<span class="row">› <span class="a">setup</span>     remote or hybrid</span>` +
       `<span class="row">› <span class="a">langs</span>     English · Français · Русский</span>` +
       `<span class="row">› <span class="a">status</span>    <span class="g">● open to work — available now</span></span>` +
-      `<span class="row d">a fit? → <a href="mailto:toulinov.philip@yahoo.com?subject=${encodeURIComponent('[hire] full-stack / fintech / release')}">toulinov.philip@yahoo.com</a> · or run <span class="a">contact</span></span>`,
+      `<span class="row d">a fit? → <a href="mailto:ptoulinov@gmail.com?subject=${encodeURIComponent('[hire] full-stack / fintech / release')}">ptoulinov@gmail.com</a> · or run <span class="a">contact</span></span>`,
     exit: () => `<span class="d">there's no exit — but there's a contact section. try: contact</span>`,
     clear: () => { bodyEl.innerHTML = ''; return ''; }
   };
