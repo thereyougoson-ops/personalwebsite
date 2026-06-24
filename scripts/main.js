@@ -2031,8 +2031,9 @@ function makeShell(cfg){
   });
   function abortDemo(){
     bodyEl.setAttribute('aria-live', 'polite');   // user is taking over — their command output should be announced
-    if (!demoOn) return;
-    demoAborted = true; demoOn = false;
+    demoAborted = true;                            // latch FIRST: blocks any raced/pending wipe() and stops the demo
+    if (!demoOn) return;                           // …even if a chip is tapped before runDemo() flips demoOn on
+    demoOn = false;
     demoTimers.forEach(clearTimeout); demoTimers = [];
     input.value = '';
     if (hintEl) hintEl.innerHTML = hintOrig;
@@ -2047,7 +2048,7 @@ function makeShell(cfg){
     const check = () => { if (demoAborted || demoVisible()) return res(); setTimeout(check, 400); };
     check();
   });
-  const wipe = () => { bodyEl.innerHTML = ''; };
+  const wipe = () => { if (demoAborted) return; bodyEl.innerHTML = ''; };   // never wipe once the user has taken over
   // erase the input one character at a time (the "un-type" half of the attract animation)
   const deleteInput = () => new Promise((res) => {
     const step = () => {
@@ -2323,7 +2324,11 @@ function initHeroDock(){
       setTimeout(() => { if (state !== 'expanded') backdrop.hidden = true; }, reduceQuery.matches ? 0 : 320);
     }
   };
-  const focusInput = () => setTimeout(() => { if (input && state !== 'closed') input.focus({ preventScroll: true }); }, reduceQuery.matches ? 0 : 90);
+  const focusInput = () => setTimeout(() => {
+    if (input && state !== 'closed') input.focus({ preventScroll: true });
+    // Issue 4: on re-open/expand, land on the latest output (reparenting resets scrollTop to the top)
+    const sc = document.getElementById('heroTermScroll'); if (sc) sc.scrollTop = sc.scrollHeight;
+  }, reduceQuery.matches ? 0 : 90);
 
   // dock → small, NON-modal docked window (page stays scrollable + usable underneath)
   function openMini(focus){
@@ -2461,6 +2466,9 @@ function initThesisAutoScroll(){
   };
   const begin = () => {
     if (running || nowT() < cooldownUntil) return;
+    // ponytail: don't yank the page out from under the user while they're in the terminal —
+    // chip taps focus the input first (sets is-typing) so this covers Issue 1 + Issue 3. Blur re-arms.
+    if (document.getElementById('heroTerm')?.classList.contains('is-typing')) return;
     const wy = workY();
     if (wy < 200) return;                  // layout not ready yet
     const vh = window.innerHeight;
