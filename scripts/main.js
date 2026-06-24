@@ -2522,6 +2522,7 @@ function initThesisAutoScroll(){
   window.addEventListener('touchmove', arm, { passive: true });
   window.__armRide = arm;   // the hero scroll-cue (a deliberate click) arms the ride too — see initHeroLinks
   const easeInOutCubic = (t) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
   // release the lock + settle, used by both the keyboard bail and the safety backstop
   const release = () => { try { lenis.scrollTo(window.scrollY, { immediate: true, force: true }); } catch (e) {} };
   const stop = () => { if (!running) return; running = false; if (rideGuard) clearTimeout(rideGuard); cooldownUntil = nowT() + 1200; release(); };
@@ -2529,18 +2530,34 @@ function initThesisAutoScroll(){
   // "only works once / gets stuck" bug). `lock:true` below keeps the ride immune to scroll input anyway.
   window.addEventListener('keydown', (e) => { if (running && (e.key === 'Escape' || e.metaKey || e.ctrlKey)) stop(); });
   const workY = () => Math.round(target.getBoundingClientRect().top + window.scrollY - 64);
-  const ride = (endY, doneZone, fixedDur) => {
+  const ride = (endY, doneZone, opts) => {
     if (running) return;
     running = true;
     if (rideGuard) clearTimeout(rideGuard);
     if (Math.abs(endY - window.scrollY) < 80){ running = false; zone = doneZone; cooldownUntil = nowT() + 500; return; }
-    const dur = fixedDur || Math.min(5, Math.max(2.6, Math.abs(endY - window.scrollY) / 640));
+    const dur = (opts && opts.dur) || Math.min(5, Math.max(2.6, Math.abs(endY - window.scrollY) / 640));
+    const ease = (opts && opts.ease) || easeInOutCubic;
+    const legs = opts && opts.legs;   // [{y,dur,ease}...] chained scrollTos (each leg can pace a different stretch)
     let fin = false;
     const finish = () => { if (fin) return; fin = true; running = false; zone = doneZone; cooldownUntil = nowT() + 600; };
-    try { lenis.scrollTo(endY, { duration: dur, easing: easeInOutCubic, lock: true, force: true, onComplete: finish }); }
+    try {
+      if (legs){
+        let i = 0;
+        const next = () => {
+          if (fin) return;
+          if (i >= legs.length){ finish(); return; }
+          const lg = legs[i++];
+          lenis.scrollTo(lg.y, { duration: lg.dur, easing: lg.ease || ((t) => t), lock: true, force: true, onComplete: next });
+        };
+        next();
+      } else {
+        lenis.scrollTo(endY, { duration: dur, easing: ease, lock: true, force: true, onComplete: finish });
+      }
+    }
     catch(e){ try { window.scrollTo(0, endY); } catch(_){} finish(); }
     // safety backstop: if onComplete never fires, release the lock and settle so the page can NEVER freeze
-    rideGuard = setTimeout(() => { if (fin) return; release(); finish(); }, dur * 1000 + 700);
+    const totDur = legs ? legs.reduce((s, l) => s + l.dur, 0) : dur;
+    rideGuard = setTimeout(() => { if (fin) return; release(); finish(); }, totDur * 1000 + 900);
   };
   const begin = () => {
     if (running || nowT() < cooldownUntil) return;
@@ -2550,7 +2567,21 @@ function initThesisAutoScroll(){
     const vh = window.innerHeight;
     if (zone === 'home'){
       // scrolled down 20% of the viewport from the home landing → run the sequence into Experience
-      if (window.scrollY >= vh * 0.20) ride(wy, 'work', 6);   // fixed 6s so the 3 thesis beats are readable
+      if (window.scrollY >= vh * 0.20){
+        // The 3 commit-beats scrub across the thesis pin (exact scroll range from the ScrollTrigger).
+        // 3 legs: (1) catch up to the pin start at normal speed, (2) crawl the beats linearly at ~2s
+        // each so they're actually readable, (3) soft-land into Experience. Fallback: plain slow glide.
+        const pin = window.__thesisPin && window.__thesisPin();
+        if (pin && pin.end > window.scrollY + 200){
+          const pinStart = Math.max(window.scrollY, Math.round(pin.start));
+          const pinEnd = Math.min(Math.round(pin.end), wy - 40);
+          ride(wy, 'work', { legs: [
+            { y: pinStart, dur: Math.max(0.3, Math.min(1.0, (pinStart - window.scrollY) / 1100)), ease: easeOutCubic },
+            { y: pinEnd, dur: 3.4, ease: (t) => t },
+            { y: wy, dur: 1.0, ease: easeOutCubic },
+          ] });
+        } else ride(wy, 'work', { dur: 8, ease: (t) => t });
+      }
     } else {
       // scrolled up 20% of the viewport from the Experience landing → reverse the sequence back home
       if (window.scrollY <= wy - vh * 0.20) ride(0, 'home');
@@ -2583,7 +2614,7 @@ function initThesis(){
   gsap.set([b1, b2], { autoAlpha: 0, y: 24 });
   gsap.set(b0, { autoAlpha: 1 });
   w0.forEach((w, i) => gsap.set(w, { x: (sa[i].x * SCAT) + 'vw', y: (sa[i].y * SCAT) + 'vh', rotation: sa[i].r, autoAlpha: 0.12, filter: isTouch ? 'none' : 'blur(8px)' }));
-  gsap.timeline({ scrollTrigger: { trigger: sec, start: 'top top', end: '+=176%', pin: true, scrub: 0.5, anticipatePin: 1,
+  const tl = gsap.timeline({ scrollTrigger: { trigger: sec, start: 'top top', end: '+=176%', pin: true, scrub: 0.5, anticipatePin: 1,
     onUpdate: (self) => {
       const p = self.progress;
       if (barFill) barFill.style.width = (p*100).toFixed(1) + '%';
@@ -2601,6 +2632,9 @@ function initThesis(){
       gsap.set(b2, { autoAlpha: cIn, scale: 0.965 + cIn*0.035 });
     }
   }});
+  // expose the exact scroll positions where the pin starts/ends so the auto-ride can crawl the
+  // beats at a readable pace (offsetTop is useless once GSAP wraps the section in a pin-spacer).
+  window.__thesisPin = () => tl.scrollTrigger ? { start: tl.scrollTrigger.start, end: tl.scrollTrigger.end } : null;
 }
 
 /* =====================  HERO STATUSPAGE — 90-day uptime bars  ===================== */
