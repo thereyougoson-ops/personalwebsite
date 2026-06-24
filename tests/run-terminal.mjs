@@ -152,11 +152,13 @@ const kb = await kbPage.evaluate(async () => {
   const nap = ms => new Promise(r => setTimeout(r, ms));
   document.getElementById('heroTermMin').click(); await nap(350);
   document.getElementById('termDock').click(); await nap(500);
+  window.__abortDemo();   // user has taken over → demo stops wiping, real output persists (the real scenario)
   for (const c of ['help', 'skills', 'git log', 'whoami', 'git log']) window.__heroRun(c);
   await nap(300);
   const input = document.getElementById('heroTermInput'), sc = document.getElementById('heroTermScroll');
   const KB = 336, visBottom = window.innerHeight - KB;
-  const visNow = () => { const r = input.getBoundingClientRect(); return r.bottom <= visBottom + 4 && r.top >= -4; };
+  // visible AND near the keyboard line (not floating mid-shell): within 80px of the keyboard
+  const visNow = () => { const r = input.getBoundingClientRect(); return r.bottom <= visBottom + 4 && r.bottom >= visBottom - 80; };
   input.focus(); await nap(80);
   for (const px of [120, 220, 300, KB]) { window.__setKeyboard(px); await nap(60); }   // keyboard slides up in steps
   await nap(450);
@@ -169,8 +171,32 @@ const kb = await kbPage.evaluate(async () => {
   return { visibleOnOpen, visibleScrolledUp, sticky, inputBottom, visBottom, scrolledTo: Math.round(sc.scrollTop) };
 });
 await kbCtx.close();
-ok('Issue 4 (iOS keyboard): input visible above the keyboard on open', kb.visibleOnOpen && kb.sticky, JSON.stringify(kb));
+ok('Issue 4 (iOS keyboard): input visible & near the keyboard line on open', kb.visibleOnOpen && kb.sticky, JSON.stringify(kb));
 ok('iOS keyboard: input STAYS visible while scrolling output up (sticky, no race)', kb.visibleScrolledUp, JSON.stringify(kb));
+
+// ── send button: flashes only on real keystrokes (not the attract demo) and submits the command ──
+const sendCtx = await browser.newContext({ ...devices['iPhone 13'] });
+const sendPage = await sendCtx.newPage();
+await sendPage.goto(BASE + '/index.html', { waitUntil: 'load' });
+await sendPage.waitForTimeout(1500);
+const send = await sendPage.evaluate(async () => {
+  const nap = ms => new Promise(r => setTimeout(r, ms));
+  window.__abortDemo();
+  const input = document.getElementById('heroTermInput'), btn = document.getElementById('heroTermSend');
+  const line = input.closest('.terminal__line'), body = document.getElementById('heroTermBody');
+  const exists = !!btn;
+  const flashWhenEmpty = line.classList.contains('has-text');                 // should be false
+  input.value = 'whoami'; input.dispatchEvent(new Event('input', { bubbles: true })); await nap(40);
+  const flashWhenTyped = line.classList.contains('has-text');                 // should be true
+  const filled = getComputedStyle(btn).backgroundColor;                       // accent fill when has-text
+  const before = body.innerText.length;
+  btn.click(); await nap(200);
+  const submitted = body.innerText.length > before && /Toulinov/i.test(body.innerText);
+  const clearedAfter = !line.classList.contains('has-text');
+  return { exists, flashWhenEmpty, flashWhenTyped, submitted, clearedAfter, filled };
+});
+await sendCtx.close();
+ok('#4 send button: present, flashes only with text, submits, clears', send.exists && !send.flashWhenEmpty && send.flashWhenTyped && send.submitted && send.clearedAfter, JSON.stringify(send));
 
 ok('no console / page errors', errors.length === 0, errors.join(' | '));
 

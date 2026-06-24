@@ -1784,6 +1784,10 @@ function makeShell(cfg){
   const input = document.getElementById(cfg.inputId);
   const scroll = document.getElementById(cfg.scrollId);
   if (!term || !bodyEl || !input) return null;
+  // the mobile send button flashes only while the user has typed something (real keystrokes, not the
+  // attract demo which sets input.value programmatically without firing 'input').
+  const sendLine = input.closest('.terminal__line');
+  const syncSend = () => { if (sendLine) sendLine.classList.toggle('has-text', !!input.value.trim()); };
 
   // Keep wheel/touch scrolling INSIDE the terminal output. Lenis binds wheel/touchstart/touchmove on
   // window in the BUBBLE phase ({passive:false}) and preventDefaults to drive the page — so without this
@@ -2144,7 +2148,7 @@ function makeShell(cfg){
     if (e.key === 'Enter'){
       const v = input.value;
       abortDemo();
-      run(v); if (v.trim()){ hist.push(v); } hi = hist.length; input.value = '';
+      run(v); if (v.trim()){ hist.push(v); } hi = hist.length; input.value = ''; syncSend();
       return;
     }
     abortDemo();
@@ -2162,6 +2166,15 @@ function makeShell(cfg){
     const cmd = b.dataset.cmd; if (!cmd) return;
     abortDemo(); input.focus({ preventScroll: true }); run(cmd); hist.push(cmd); hi = hist.length;
   }));
+
+  // send button: tap-to-run alternative to Enter (mobile); flashes while there's text to send
+  input.addEventListener('input', syncSend);
+  const sendBtn = sendLine && sendLine.querySelector('.terminal__send');
+  if (sendBtn) sendBtn.addEventListener('click', () => {
+    const v = input.value; if (!v.trim()) return;
+    abortDemo(); run(v); hist.push(v); hi = hist.length; input.value = ''; syncSend();
+    input.focus({ preventScroll: true });
+  });
 
   // register this shell's demo-abort so the nav motion toggle halts EVERY tour, not just the last
   (window.__shellAborts || (window.__shellAborts = [])).push(abortDemo);

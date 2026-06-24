@@ -265,7 +265,12 @@
               <div class="terminal__body mono" id="heroTermBody" role="log" aria-live="off" aria-label="terminal output"></div>
               <div class="terminal__line mono">
                 <span class="terminal__prompt">philip@toulinov <span class="ok">$</span></span>
-                <input class="terminal__input" id="heroTermInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="terminal command input" />
+                <span class="terminal__field">
+                  <input class="terminal__input" id="heroTermInput" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="terminal command input" />
+                  <button class="terminal__send" id="heroTermSend" type="button" aria-label="Run command" title="Run command (or press Enter)">
+                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h13M12 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  </button>
+                </span>
               </div>
             </div>
           </div>
