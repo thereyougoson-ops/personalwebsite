@@ -134,6 +134,41 @@ for (const delay of [700, 1500, 2300, 3100]) {          // sample across the dem
 await deskCtx.close();
 ok('Issue 1 (desktop): chip output persists at every demo phase (no wipe race)', deskFails === 0, `${4 - deskFails}/4 click delays persisted`);
 
+// ── 4 (iOS keyboard): with the soft keyboard open, the input (LAST child inside #heroTermScroll) must
+// stay visible above the keyboard, not hidden below it. Headless can't open a real keyboard, so install
+// a controllable fake visualViewport (the exact API termKeyboardFit watches) to drive the keyboard reflow.
+const kbCtx = await browser.newContext({ ...devices['iPhone 13'] });
+await kbCtx.addInitScript(() => {
+  const vv = window.visualViewport; let fake = null;
+  Object.defineProperty(vv, 'height', { configurable: true, get(){ return fake == null ? window.innerHeight : fake; } });
+  Object.defineProperty(vv, 'offsetTop', { configurable: true, get(){ return 0; } });
+  window.__setKeyboard = (px) => { fake = px == null ? null : (window.innerHeight - px); vv.dispatchEvent(new Event('resize')); };
+});
+const kbPage = await kbCtx.newPage();
+await kbPage.goto(BASE + '/index.html', { waitUntil: 'load' });
+await kbPage.waitForTimeout(1500);
+const kb = await kbPage.evaluate(async () => {
+  const nap = ms => new Promise(r => setTimeout(r, ms));
+  document.getElementById('heroTermMin').click(); await nap(350);
+  document.getElementById('termDock').click(); await nap(500);
+  for (const c of ['help', 'skills', 'git log', 'whoami', 'git log']) window.__heroRun(c);
+  await nap(300);
+  const input = document.getElementById('heroTermInput'), sc = document.getElementById('heroTermScroll');
+  const KB = 336, visBottom = window.innerHeight - KB;
+  input.focus(); await nap(80);
+  for (const px of [120, 220, 300, KB]) { window.__setKeyboard(px); await nap(60); }   // keyboard slides up in steps
+  await nap(400);
+  const ir = input.getBoundingClientRect();
+  const visible = ir.bottom <= visBottom + 4 && ir.top >= -4;
+  // now the user scrolls up to read history — a later keyboard resize must NOT yank them back down
+  sc.scrollTop = 0; await nap(80); window.__setKeyboard(300); await nap(300);
+  const stayedUp = sc.scrollTop < 200;
+  return { visible, inputBottom: Math.round(ir.bottom), visBottom, stayedUp, scrollTop: Math.round(sc.scrollTop) };
+});
+await kbCtx.close();
+ok('Issue 4 (iOS keyboard): input stays visible above the keyboard, not hidden below', kb.visible, JSON.stringify(kb));
+ok('iOS keyboard: scrolling up to read history is respected (no forced re-pin)', kb.stayedUp, JSON.stringify(kb));
+
 ok('no console / page errors', errors.length === 0, errors.join(' | '));
 
 await browser.close();
