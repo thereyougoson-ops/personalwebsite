@@ -1486,6 +1486,12 @@ function initCursor(){
     px = e.clientX; py = e.clientY; pt = now;
   });
 
+  // over a live-app iframe the parent stops receiving mousemove, so the custom dot freezes at the edge.
+  // Hand off to the native cursor (the iframe's own) while the pointer is inside, so live apps / embedded
+  // demos always have a real, working pointer instead of a dead frozen dot.
+  document.addEventListener('mouseover', (e) => { if (e.target.tagName === 'IFRAME') document.documentElement.classList.add('over-iframe'); });
+  document.addEventListener('mouseout',  (e) => { if (e.target.tagName === 'IFRAME') document.documentElement.classList.remove('over-iframe'); });
+
   const bind = (el) => {
     const t = el.getAttribute('data-cursor');
     el.addEventListener('mouseenter', () => { document.body.classList.add('cursor-hover'); if (t){ document.body.classList.add('cursor-label'); label.textContent = t; } });
@@ -1742,15 +1748,17 @@ function coachMark(opts){
 }
 
 function initCoachMarks(){
-  // 1 · type-to-take-over the shell — shows FIRST on the home page
-  coachMark({ id:'pt_typehint', delay:1100,
+  // 1 · type-to-take-over the shell — wait until the attract demo has actually RUN its first command
+  //     (whoami renders ~3.8s, then holds), so "take over" makes sense with real output on screen and
+  //     doesn't pop up over an empty/just-starting terminal.
+  coachMark({ id:'pt_typehint', delay:4200,
     getTarget: () => document.getElementById('heroTermInput'),
     getTrigger: () => document.getElementById('heroTerm'),
     html: `<b>↳ type to take over</b> — try <b>help</b>, <b>whoami</b>, or tap a chip.` });
   // 2 · Menu / palette (BOTH viewports) — appears only AFTER the terminal bubble's full
-  //     genie cycle (fire ~1.1s + ~6s on screen + minimise), so the two never overlap.
+  //     genie cycle (fire ~4.2s + ~6s on screen + minimise ≈ 10.7s), so the two never overlap.
   const navTouch = isTouch || window.matchMedia('(max-width:760px)').matches;
-  coachMark({ id:'pt_navhint', delay:7800,
+  coachMark({ id:'pt_navhint', delay:11000,
     getTarget: () => document.getElementById('paletteOpen'),
     getTrigger: () => document.getElementById('hero'),
     html: navTouch ? `<b>☰ Menu</b> — tap to navigate &amp; search the site.`
@@ -2185,7 +2193,16 @@ function makeShell(cfg){
     else if (e.key === 'Tab'){ e.preventDefault(); complete(); }
     else if (e.key === 'l' && e.ctrlKey){ e.preventDefault(); bodyEl.innerHTML=''; }
   });
-  term.addEventListener('click', (e) => { if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON'){ abortDemo(); input.focus({ preventScroll: true }); } });
+  // help-menu rows ("click a row to run") — delegated so it covers dynamically-printed output. Must go
+  // through abortDemo (else the attract demo's wipe() erases the clicked command's output = "nothing happens")
+  // + revealNext, exactly like the chips. mousedown preventDefault so the row can't blur/reflow before mouseup.
+  term.addEventListener('mousedown', (e) => { if (e.target.closest('.tui-item[data-cmd]')) e.preventDefault(); });
+  term.addEventListener('click', (e) => {
+    const row = e.target.closest('.tui-item[data-cmd]');
+    if (row){ const cmd = row.getAttribute('data-cmd');
+      abortDemo(); input.focus({ preventScroll: true }); revealNext = true; run(cmd); hist.push(cmd); hi = hist.length; return; }
+    if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON'){ abortDemo(); input.focus({ preventScroll: true }); }
+  });
 
   // quick-command chips (discoverability for visitors who won't type)
   const chips = cfg.chipsId ? document.getElementById(cfg.chipsId) : null;

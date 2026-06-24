@@ -584,8 +584,5 @@
   document.readyState!=='loading'?init():document.addEventListener('DOMContentLoaded',init);
 })();
 </script>
-<script>
-(function(){ document.addEventListener('click',function(e){ var it=e.target.closest&&e.target.closest('.tui-item[data-cmd]'); if(it&&typeof window.__heroRun==='function'){ window.__heroRun(it.getAttribute('data-cmd')); } }); })();
-</script>
 </body>
 </html>

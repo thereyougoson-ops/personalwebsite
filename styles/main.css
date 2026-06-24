@@ -170,6 +170,10 @@ body.cursor-hover .cursor__ring{ width:54px; height:54px; }
 body.cursor-label .cursor__ring{ width:66px; height:66px; }
 body.cursor-label .cursor__label{ opacity:1; }
 @media (hover:hover) and (pointer:fine){ body{ cursor:none; } body a,body button,body input{ cursor:none; } }
+/* while the pointer is inside a live-app iframe, hand off to the native cursor (the dot can't track across
+   the iframe boundary) so embedded demos always show a real, working pointer instead of a frozen dot */
+html.over-iframe .cursor{ opacity:0 !important; }
+html.over-iframe, html.over-iframe body, html.over-iframe iframe{ cursor:auto !important; }
 @media (hover:none){ .cursor{ display:none; } }
 
 /* =====================  BUILD / SCROLL BAR  ===================== */
