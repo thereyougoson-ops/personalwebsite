@@ -60,9 +60,11 @@ ok('deliberate glide still fires when terminal NOT focused', ride.unfocusedRode 
 
 // chip path end-to-end on a CLEAN landing: TRUSTED tap runs the command + does not scroll the page
 await fresh();
+// abort + clear so the demo timeline can't race the measurement (chip output now reveals slowly, ≤2600ms)
+await page.evaluate(() => { window.__abortDemo(); document.getElementById('heroTermBody').innerHTML = ''; });
 const before = await page.evaluate(() => document.getElementById('heroTermBody').innerText.length);
 await page.locator('#heroTermChips button', { hasText: 'git log' }).click();
-await sleep(page, 2500);
+await sleep(page, 3000);
 const chip = await page.evaluate((b) => ({
   grew: document.getElementById('heroTermBody').innerText.length > b,
   hasGit: /init: hello/i.test(document.getElementById('heroTermBody').innerText),

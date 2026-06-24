@@ -2123,8 +2123,8 @@ function makeShell(cfg){
           await waitVisible(); if (demoAborted) break;
           await typeInto(tour[k]); if (demoAborted) break;     // type the command, character by character
           await dsleep(360); if (demoAborted) break;           // a beat, as if reaching for Enter
-          run(tour[k]); input.value = '';                       // run it → its output / banner appears
-          await dsleep(2300); if (demoAborted) break;           // hold so a visitor can actually read it
+          revealNext = true; run(tour[k]); input.value = '';   // run it → output STREAMS in line-by-line (same reveal as user commands)
+          await dsleep(3300); if (demoAborted) break;           // hold PAST the reveal (≤2600ms) so the wipe never cuts it mid-stream
           wipe(); await dsleep(300);                            // clean slate for the next command
         }
         if (demoAborted) break;
