@@ -746,12 +746,22 @@ body.rollback::before{ content:"⟲ rollback mode · git revert HEAD~1 — press
   align-items:start; margin-top:clamp(1.4rem,3.4vw,2.4rem); }
 .hero__termslot{ min-width:0; }
 .heroterm{ max-width:none; width:100%; margin:0; }
-.heroterm .terminal__scroll{ height:clamp(300px, 42vh, 460px); }   /* floored so browser zoom (smaller vh) can't collapse it and clip the banner/output */
+/* fit-to-viewport: one bounded flex column so the docked terminal never spills past the fold —
+   chrome rows stay fixed, the live scroll absorbs whatever height is left, and it reflows on
+   resize/zoom for free (svh + flex). The banner shrinks (below) rather than getting clipped. */
+/* applies at ALL widths so the docked terminal never clips on any display size; #heroTermSlot scope =
+   docked only (the expanded view is re-parented into .termoverlay, which sizes itself). The
+   #heroTermSlot specificity also out-ranks the mobile `min(30vh,230px)` scroll rule below. */
+#heroTermSlot .heroterm{ display:flex; flex-direction:column; max-height:min(680px, calc(100svh - 11rem)); }
+#heroTermSlot .terminal__bar,
+#heroTermSlot .term-chips,
+#heroTermSlot .heroterm__banner{ flex:0 0 auto; }
+#heroTermSlot .terminal__scroll{ flex:1 1 auto; min-height:0; height:auto; }
 
 /* the name, figlet-rendered, gradient-filled amber→mint (running→passed) with a one-shot compile sweep */
 .terminal__body .row.is-banner{ overflow-x:auto; overflow-y:hidden; margin:0 0 .35em; padding-bottom:3px; scrollbar-width:none; }
 .terminal__body .row.is-banner::-webkit-scrollbar{ height:0; }
-.term-banner{ margin:0; font-family:var(--term); font-size:clamp(5px,1.5vw,10.5px); line-height:1.04; letter-spacing:0; white-space:pre;
+.term-banner{ margin:0; font-family:var(--term); font-size:clamp(5px,min(1.5vw,1.4vh),10.5px); line-height:1.04; letter-spacing:0; white-space:pre;
   background:linear-gradient(112deg,var(--amber) 8%, var(--amber-soft) 34%, var(--green) 92%); background-size:230% 100%;
   -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; color:transparent;
   filter:drop-shadow(0 0 13px rgba(var(--accent-rgb),.16)); animation:bannerSweep 2.6s var(--ease-out) .15s 1 both; }
