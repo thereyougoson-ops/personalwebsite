@@ -1982,8 +1982,11 @@ function makeShell(cfg){
     d.style.height = full + 'px';
     const tick = () => { if (scroll) scroll.scrollTop = scroll.scrollHeight; };
     const iv = setInterval(tick, 16);
-    const done = () => { clearInterval(iv); d.style.height = ''; d.style.overflow = ''; d.style.transition = ''; tick(); updMore(); };
-    d.addEventListener('transitionend', done, { once: true });
+    let finished = false;
+    const done = () => { if (finished) return; finished = true; clearInterval(iv); d.style.height = ''; d.style.overflow = ''; d.style.transition = ''; tick(); updMore(); };
+    // ONLY end on d's own height transition — a child's transitionend bubbles to d and would otherwise
+    // cut the reveal short on the very first command (it'd just snap to full instead of animating).
+    d.addEventListener('transitionend', (e) => { if (e.target === d && e.propertyName === 'height') done(); });
     setTimeout(done, dur + 150);                                   // safety net if transitionend is missed
   };
   const print = (html, cls, reveal) => {
@@ -2184,10 +2187,15 @@ function makeShell(cfg){
 
   // quick-command chips (discoverability for visitors who won't type)
   const chips = cfg.chipsId ? document.getElementById(cfg.chipsId) : null;
-  if (chips) chips.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
-    const cmd = b.dataset.cmd; if (!cmd) return;
-    abortDemo(); input.focus({ preventScroll: true }); revealNext = true; run(cmd); hist.push(cmd); hi = hist.length;
-  }));
+  if (chips) chips.querySelectorAll('button').forEach((b) => {
+    // don't let the chip steal focus from the input: a mousedown-blur un-sets .is-typing, which re-shows
+    // the ASCII banner and reflows the chip out from under the pointer before mouseup → the click misses.
+    b.addEventListener('mousedown', (e) => e.preventDefault());
+    b.addEventListener('click', () => {
+      const cmd = b.dataset.cmd; if (!cmd) return;
+      abortDemo(); input.focus({ preventScroll: true }); revealNext = true; run(cmd); hist.push(cmd); hi = hist.length;
+    });
+  });
 
   // send button: tap-to-run alternative to Enter (mobile); flashes while there's text to send
   input.addEventListener('input', syncSend);

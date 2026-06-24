@@ -73,6 +73,14 @@ const chip = await page.evaluate((b) => ({
 ok('Issue 1: chip runs its command (output appears)', chip.grew && chip.hasGit, JSON.stringify(chip));
 ok('Issue 1: chip does NOT scroll the page away', chip.sy < 50, JSON.stringify(chip));
 
+// regression: a SECOND chip (after the first focused the input) must still run — a mousedown-blur used to
+// re-show the banner and reflow the chip out from under the click, so every chip after the first did nothing.
+const cmds1 = await page.evaluate(() => document.querySelectorAll('#heroTermBody .cmd').length);
+await page.locator('#heroTermChips button', { hasText: 'skills' }).click();
+await sleep(page, 3000);
+const cmds2 = await page.evaluate(() => document.querySelectorAll('#heroTermBody .cmd').length);
+ok('Issue 2: a SECOND chip still runs (no focus-steal reflow)', cmds2 > cmds1, JSON.stringify({ cmds1, cmds2 }));
+
 // ── 2. inline vs collapsed parity ────────────────────────────────────────────
 await fresh();
 const parity = await page.evaluate(async () => {
