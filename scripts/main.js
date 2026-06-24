@@ -2198,21 +2198,16 @@ function initTerminal(){
     // a soft keyboard shrinks visualViewport — but so does pinch-zoom; only treat it as the
     // keyboard when NOT pinch-zoomed (scale ~1), so zooming can't false-trigger keyboard mode.
     var kbOpen = function(){ return (vv.scale || 1) <= 1.05 && (window.innerHeight - vv.height) > 120; };
-    // the input is the LAST child INSIDE #heroTermScroll, so it's only visible at the bottom. The soft
-    // keyboard shrinks the shell in several resize steps, each undoing an earlier scroll — so keep the
-    // input pinned to the bottom while the keyboard is up. `stickKbd` releases the moment the user
-    // scrolls up to read history (and re-engages when they return to the bottom). rAF so scrollHeight is
-    // read after the new height lays out.
-    var stickKbd = false;
-    // rAF handles the settled case; the short timeout re-pins after the keyboard's RAPID multi-step
-    // resize animation finishes laying out (a single rAF reads a stale scrollHeight mid-animation).
-    var pinBottom = function(){ if (!scroll || !stickKbd) return;
-      requestAnimationFrame(function(){ if (stickKbd) scroll.scrollTop = scroll.scrollHeight; });
-      setTimeout(function(){ if (stickKbd) scroll.scrollTop = scroll.scrollHeight; }, 140); };
-    function size(){ term.style.top = (vv.offsetTop || 0) + 'px'; term.style.height = vv.height + 'px'; pinBottom(); }
-    function activate(){ active = true; stickKbd = true; root.classList.add('kbd-term');
-      try { if (typeof lenis !== 'undefined' && lenis) lenis.stop(); } catch (e) {} size(); }
-    function deactivate(){ active = false; stickKbd = false; root.classList.remove('kbd-term');
+    function size(){ term.style.top = (vv.offsetTop || 0) + 'px'; term.style.height = vv.height + 'px'; }
+    // the input row is CSS-stuck to the bottom of #heroTermScroll (see .terminal__line), so it stays
+    // visible above the keyboard no matter what. On open, also nudge the OUTPUT to the bottom so the
+    // latest lines sit just above the input (rAF + a settle timeout for the keyboard's reflow).
+    var pinOutput = function(){ if (!scroll) return;
+      requestAnimationFrame(function(){ scroll.scrollTop = scroll.scrollHeight; });
+      setTimeout(function(){ scroll.scrollTop = scroll.scrollHeight; }, 180); };
+    function activate(){ active = true; root.classList.add('kbd-term');
+      try { if (typeof lenis !== 'undefined' && lenis) lenis.stop(); } catch (e) {} size(); pinOutput(); }
+    function deactivate(){ active = false; root.classList.remove('kbd-term');
       term.style.top = ''; term.style.height = '';
       try { if (typeof lenis !== 'undefined' && lenis) lenis.start(); } catch (e) {} }
     function update(){
@@ -2223,8 +2218,6 @@ function initTerminal(){
     input.addEventListener('blur', function(){ want = false; deactivate(); });
     vv.addEventListener('resize', update);
     vv.addEventListener('scroll', update);
-    // release the keyboard-stick when the user scrolls up to read; re-engage at the bottom
-    if (scroll) scroll.addEventListener('scroll', function(){ if (active) stickKbd = (scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight) < 60; }, { passive: true });
   })();
 
   // collapse the big ASCII name banner while the visitor is typing — clearer view of the live shell

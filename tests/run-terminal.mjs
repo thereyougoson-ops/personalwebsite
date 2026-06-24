@@ -135,8 +135,9 @@ await deskCtx.close();
 ok('Issue 1 (desktop): chip output persists at every demo phase (no wipe race)', deskFails === 0, `${4 - deskFails}/4 click delays persisted`);
 
 // ── 4 (iOS keyboard): with the soft keyboard open, the input (LAST child inside #heroTermScroll) must
-// stay visible above the keyboard, not hidden below it. Headless can't open a real keyboard, so install
-// a controllable fake visualViewport (the exact API termKeyboardFit watches) to drive the keyboard reflow.
+// stay visible above the keyboard — and STAY visible even when the user scrolls the output up (it's
+// CSS position:sticky, not a JS pin). Headless can't open a real keyboard, so install a controllable
+// fake visualViewport (the exact API termKeyboardFit watches) to drive the keyboard reflow.
 const kbCtx = await browser.newContext({ ...devices['iPhone 13'] });
 await kbCtx.addInitScript(() => {
   const vv = window.visualViewport; let fake = null;
@@ -155,19 +156,21 @@ const kb = await kbPage.evaluate(async () => {
   await nap(300);
   const input = document.getElementById('heroTermInput'), sc = document.getElementById('heroTermScroll');
   const KB = 336, visBottom = window.innerHeight - KB;
+  const visNow = () => { const r = input.getBoundingClientRect(); return r.bottom <= visBottom + 4 && r.top >= -4; };
   input.focus(); await nap(80);
   for (const px of [120, 220, 300, KB]) { window.__setKeyboard(px); await nap(60); }   // keyboard slides up in steps
-  await nap(400);
-  const ir = input.getBoundingClientRect();
-  const visible = ir.bottom <= visBottom + 4 && ir.top >= -4;
-  // now the user scrolls up to read history — a later keyboard resize must NOT yank them back down
-  sc.scrollTop = 0; await nap(80); window.__setKeyboard(300); await nap(300);
-  const stayedUp = sc.scrollTop < 200;
-  return { visible, inputBottom: Math.round(ir.bottom), visBottom, stayedUp, scrollTop: Math.round(sc.scrollTop) };
+  await nap(450);
+  const visibleOnOpen = visNow();
+  const sticky = getComputedStyle(input.closest('.terminal__line')).position === 'sticky';
+  const inputBottom = Math.round(input.getBoundingClientRect().bottom);
+  // user scrolls the OUTPUT up to read history — the sticky input must STAY visible above the keyboard
+  sc.scrollTop = 0; await nap(150);
+  const visibleScrolledUp = visNow();
+  return { visibleOnOpen, visibleScrolledUp, sticky, inputBottom, visBottom, scrolledTo: Math.round(sc.scrollTop) };
 });
 await kbCtx.close();
-ok('Issue 4 (iOS keyboard): input stays visible above the keyboard, not hidden below', kb.visible, JSON.stringify(kb));
-ok('iOS keyboard: scrolling up to read history is respected (no forced re-pin)', kb.stayedUp, JSON.stringify(kb));
+ok('Issue 4 (iOS keyboard): input visible above the keyboard on open', kb.visibleOnOpen && kb.sticky, JSON.stringify(kb));
+ok('iOS keyboard: input STAYS visible while scrolling output up (sticky, no race)', kb.visibleScrolledUp, JSON.stringify(kb));
 
 ok('no console / page errors', errors.length === 0, errors.join(' | '));
 

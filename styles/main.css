@@ -861,6 +861,12 @@ body.rollback::before{ content:"⟲ rollback mode · git revert HEAD~1 — press
 .heroterm.is-floating .term-chips,
 .heroterm.is-floating .heroterm__banner{ flex:0 0 auto; }
 .heroterm.is-floating .terminal__scroll{ height:auto; flex:1 1 auto; min-height:64px; }
+/* the input is the last child INSIDE the scroll, so when the shell is height-constrained (floating
+   overlay, or the soft keyboard via .kbd-term) stick it to the bottom of the scroll viewport — it
+   stays visible above the keyboard regardless of scroll position, with no JS pin to race the reflow. */
+.heroterm.is-floating .terminal__line,
+html.kbd-term #heroTerm .terminal__line{ position:sticky; bottom:0; z-index:1; margin-top:0;
+  padding-top:.5em; background:linear-gradient(to top, var(--card) 78%, transparent); }
 @media (max-height:430px){ .heroterm.is-floating .heroterm__banner{ display:none; } }   /* tiny landscape — name banner yields to the shell */
 body.term-frozen{ overflow:hidden; }
 
