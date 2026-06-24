@@ -186,11 +186,11 @@ const send = await sendPage.evaluate(async () => {
   const line = input.closest('.terminal__line'), body = document.getElementById('heroTermBody');
   const exists = !!btn;
   const flashWhenEmpty = line.classList.contains('has-text');                 // should be false
-  input.value = 'whoami'; input.dispatchEvent(new Event('input', { bubbles: true })); await nap(40);
+  input.value = 'whoami'; input.dispatchEvent(new Event('input', { bubbles: true })); await nap(220);   // let the 150ms fill transition settle
   const flashWhenTyped = line.classList.contains('has-text');                 // should be true
-  const filled = getComputedStyle(btn).backgroundColor;                       // accent fill when has-text
+  const filled = getComputedStyle(btn).backgroundColor;                       // light-blue fill when has-text
   const before = body.innerText.length;
-  btn.click(); await nap(200);
+  btn.click(); await nap(900);                                                // user output reveals line-by-line (≤650ms) — assert SETTLED state
   const submitted = body.innerText.length > before && /Toulinov/i.test(body.innerText);
   const clearedAfter = !line.classList.contains('has-text');
   return { exists, flashWhenEmpty, flashWhenTyped, submitted, clearedAfter, filled };

@@ -1966,17 +1966,39 @@ function makeShell(cfg){
     return `<span class='d'># schema.org/Person — the JSON-LD this page ships to crawlers. yes, it's real.</span>` + String.fromCharCode(10) + `<span class='g'>` + j + `</span>`;
   };
 
-  const hist = []; let hi = 0;
-  const print = (html, cls) => {
+  const hist = []; let hi = 0; let revealNext = false;
+  // top-edge "more above" cue: fade the top when output is scrolled past the start (set on print/scroll)
+  const updMore = () => { if (scroll) scroll.classList.toggle('more-up', scroll.scrollTop > 8); };
+  if (scroll) scroll.addEventListener('scroll', updMore, { passive: true });
+  // reveal a multi-line output row line-by-line: grow its height 0→full while pinning to the bottom, so
+  // lines roll in from the bottom (span-safe — no string splitting) and it's obvious there's more to scroll.
+  const revealRow = (d) => {
+    const full = d.scrollHeight;                                   // measured BEFORE we collapse it (still height:auto)
+    const lines = (d.textContent.match(/\n/g) || []).length + 1;
+    const dur = Math.min(650, Math.max(200, lines * 55));
+    d.style.overflow = 'hidden'; d.style.height = '0px';           // collapse synchronously — no paint between, so no flash
+    void d.offsetHeight;
+    d.style.transition = 'height ' + dur + 'ms linear';
+    d.style.height = full + 'px';
+    const tick = () => { if (scroll) scroll.scrollTop = scroll.scrollHeight; };
+    const iv = setInterval(tick, 16);
+    const done = () => { clearInterval(iv); d.style.height = ''; d.style.overflow = ''; d.style.transition = ''; tick(); updMore(); };
+    d.addEventListener('transitionend', done, { once: true });
+    setTimeout(done, dur + 150);                                   // safety net if transitionend is missed
+  };
+  const print = (html, cls, reveal) => {
     // stick to the latest line only if the reader is already at the bottom — if they scrolled up to
     // re-read earlier output, don't yank them back down on the next print (the attract loop keeps printing).
     const stick = !scroll || (scroll.scrollHeight - scroll.scrollTop - scroll.clientHeight) < 40;
     const d = document.createElement('div'); d.className = 'row' + (cls ? ' ' + cls : '');
     d.innerHTML = html; bodyEl.appendChild(d);
-    if (scroll && stick) scroll.scrollTop = scroll.scrollHeight;
+    if (reveal) revealRow(d);
+    else if (scroll && stick) scroll.scrollTop = scroll.scrollHeight;
+    updMore();
     if (window.__bindCursor){ d.querySelectorAll('a').forEach(window.__bindCursor); }
   };
   const run = (raw) => {
+    const reveal = revealNext; revealNext = false;   // only user-typed commands reveal line-by-line (not the attract demo)
     const line = raw.trim(); const low = line.toLowerCase();
     print(`<span class="cmd">${esc(raw)}</span>`);
     if (!line) return;
@@ -1997,7 +2019,7 @@ function makeShell(cfg){
     else if (c === 'whoami' && /--?json/.test(low)) out = whoamiJson();
     else if (has(COMMANDS, c)) out = COMMANDS[c]();
     else out = `command not found: ${esc(c)} — try <span class="a">help</span>`;
-    if (out) print(out);
+    if (out) print(out, null, reveal);
   };
   try{ window.__heroRun = run; }catch(e){}
 
@@ -2148,7 +2170,7 @@ function makeShell(cfg){
     if (e.key === 'Enter'){
       const v = input.value;
       abortDemo();
-      run(v); if (v.trim()){ hist.push(v); } hi = hist.length; input.value = ''; syncSend();
+      revealNext = true; run(v); if (v.trim()){ hist.push(v); } hi = hist.length; input.value = ''; syncSend();
       return;
     }
     abortDemo();
@@ -2164,7 +2186,7 @@ function makeShell(cfg){
   const chips = cfg.chipsId ? document.getElementById(cfg.chipsId) : null;
   if (chips) chips.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => {
     const cmd = b.dataset.cmd; if (!cmd) return;
-    abortDemo(); input.focus({ preventScroll: true }); run(cmd); hist.push(cmd); hi = hist.length;
+    abortDemo(); input.focus({ preventScroll: true }); revealNext = true; run(cmd); hist.push(cmd); hi = hist.length;
   }));
 
   // send button: tap-to-run alternative to Enter (mobile); flashes while there's text to send
@@ -2172,7 +2194,7 @@ function makeShell(cfg){
   const sendBtn = sendLine && sendLine.querySelector('.terminal__send');
   if (sendBtn) sendBtn.addEventListener('click', () => {
     const v = input.value; if (!v.trim()) return;
-    abortDemo(); run(v); hist.push(v); hi = hist.length; input.value = ''; syncSend();
+    abortDemo(); revealNext = true; run(v); hist.push(v); hi = hist.length; input.value = ''; syncSend();
     input.focus({ preventScroll: true });
   });
 
