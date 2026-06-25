@@ -470,7 +470,7 @@ function initHeroLinks(){
   if (!resume) return;
   resume.addEventListener('click', (e) => {
     e.preventDefault();
-    const open = () => { try { window.open('assets/philip-toulinov-resume.pdf?v=20260624c', '_blank', 'noopener'); } catch(_){ location.href = 'assets/philip-toulinov-resume.pdf?v=20260624c'; } };
+    const open = () => { try { window.open('Philip-Toulinov-Résumé.pdf?v=20260625', '_blank', 'noopener'); } catch(_){ location.href = 'Philip-Toulinov-Résumé.pdf?v=20260625'; } };
     const t = document.getElementById('contact');
     if (!t){ open(); return; }
     const y = Math.max(0, Math.round(t.getBoundingClientRect().top + window.scrollY - 68));
@@ -1622,7 +1622,7 @@ function buildPaletteItems(){
     { ico:'⌘', t:'Run ./deploy --prod', d:'demo', run:() => deployOverlay() },
     { ico:'@', t:'Copy email address', d:'copy', run:() => { if (navigator.clipboard){ navigator.clipboard.writeText('ptoulinov@gmail.com').then(()=>toast('email copied')).catch(()=>toast('email: ptoulinov@gmail.com')); } else { toast('email: ptoulinov@gmail.com'); } } },
     { ico:'↗', t:'Open LinkedIn', d:'in/ptoulinov', run:() => window.open('https://www.linkedin.com/in/ptoulinov','_blank','noopener') },
-    { ico:'⬇', t:'Download résumé (PDF)', d:'pdf', run:() => window.open('assets/philip-toulinov-resume.pdf?v=20260624c','_blank') },
+    { ico:'⬇', t:'Download résumé (PDF)', d:'pdf', run:() => window.open('Philip-Toulinov-Résumé.pdf?v=20260625','_blank') },
     { ico:'☎', t:'Call +1 (415) 823-7537', d:'tel', run:() => { location.href = 'tel:+14158237537'; } },
     { ico:'◆', t:'Env: production (amber)', d:'theme', run:() => setEnv('production') },
     { ico:'◆', t:'Env: staging (cyan)', d:'theme', run:() => setEnv('staging') },
@@ -1848,7 +1848,7 @@ function makeShell(cfg){
     'independent.md': `# Independent Full-Stack Developer (Oct 2025–Present)\n13 production apps shipped solo, end-to-end:\n- Loansy — P2P lending platform: full loan lifecycle, multi-role users\n- on-chain payment monitor (Python) — credits USDC/USDT on Solana/TON\n- React/JSX admin dashboard — IP intel, risk ops, identity graph (Flask + MongoDB)\n- multi-provider AI infra monitor — 11 providers → Postgres, 99.90% uptime\n- algo trading stack on Hyperliquid — REST/WS UI, 65% win rate / 26 dry runs\n- real-time odds reconciliation — two live feeds over CDP, 30 ticks/min\n- installable art-catalogue PWA — 150+ works + AI cinemagraph pipeline\n- 5 civic-data apps over live DataSF — 198K+ trees, 2,118 film locations, +LLM agent\n- MV3 Chrome userscript manager — full GM_* compat, AI copilot, trust scoring\n- MV3 cookie/tracker inspector — 79 sites, 1,228 trackers, local-only\nstack: Flask · React · MongoDB · Postgres · TON · Solana · Hyperliquid · DataSF`,
     'loansy.md': `# Loansy — P2P Lending Platform\n- full loan lifecycle: borrower/lender matching, issuance, repayment, defaults\n- multi-role user system across borrowers, lenders, and admins\n- real-time on-chain payment monitoring credits USDC/USDT on Solana/TON\n- React/JSX admin dashboard: IP intelligence, risk ops, identity-graph + wallet analysis\n- fraud detection + user risk scoring\nstack: Flask REST API · MongoDB · React/JSX · Python on-chain monitor`,
     'contact.txt': `email    ptoulinov@gmail.com\nphone    +1 (415) 823-7537\nlinkedin linkedin.com/in/ptoulinov`,
-    'resume.pdf': `__OPEN__assets/philip-toulinov-resume.pdf?v=20260624c`
+    'resume.pdf': `__OPEN__Philip-Toulinov-Résumé.pdf?v=20260625`
   };
 
   const esc = escapeHtml;   // single source of truth — escapes & < > " (the local 3-char esc dropped the quote)
