@@ -1176,16 +1176,17 @@ body.term-frozen{ overflow:hidden; }
 
 /* ░░ BOOT SEQUENCE ░░ */
 #bootSeq{position:fixed;inset:0;z-index:9999;background:#050507;overflow:hidden;
-  transition:opacity .45s ease;font-family:'Geist Mono',ui-monospace,monospace}
+  transition:opacity .45s ease;will-change:opacity;font-family:'Geist Mono',ui-monospace,monospace}
 #bootSeq.is-gone{opacity:0;pointer-events:none}
-#bsGrid{position:absolute;inset:0;z-index:2}
-#bsGrid i{position:absolute;background:#0c0c14;opacity:0;will-change:opacity,transform}
+#bsGrid{position:absolute;inset:0;z-index:2;display:block}
 #bsShock{position:absolute;left:50%;top:46%;width:14px;height:14px;border-radius:30%;
   transform:translate(-50%,-50%) scale(0);opacity:0;z-index:3;
   border:2px solid rgba(94,230,192,.9);
   box-shadow:0 0 30px rgba(94,230,192,.55),inset 0 0 22px rgba(124,108,255,.5)}
 #bsCoreR,#bsCoreB{position:absolute;left:50%;top:46%;width:130px;height:130px;border-radius:50%;
-  transform:translate(-50%,-50%);z-index:3;mix-blend-mode:screen}
+  transform:translate(-50%,-50%);z-index:3;mix-blend-mode:screen;opacity:0}
+#bsCoreR{background:radial-gradient(circle,rgba(248,85,63,.25),transparent 62%)}
+#bsCoreB{background:radial-gradient(circle,rgba(63,224,208,.3),transparent 62%)}
 #bsCore{position:absolute;left:50%;top:46%;width:120px;height:120px;border-radius:26%;
   transform:translate(-50%,-50%) scale(.2);opacity:0;z-index:3;
   background:radial-gradient(circle,#eafff9 0%,#5ee6c0 22%,#7c6cff 48%,transparent 72%);
