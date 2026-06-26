@@ -718,7 +718,7 @@ body.rollback::before{ content:"⟲ rollback mode · git revert HEAD~1 — press
 /* =====================  PRINT — clean single-doc résumé (Ctrl/⌘+P)  ===================== */
 @media print{
   @page{ margin:1.4cm; }
-  .codefield,.cursor,.buildbar,.palette,.sheet,.nav,.hero__scroll,.term-chips,#preloader,
+  .codefield,.cursor,.buildbar,.palette,.sheet,.nav,.hero__scroll,.term-chips,#bootSeq,
   .hero__cta,.motion-toggle,.kbtn,.status,.dag,.terminal__bar,.terminal__line,.hero__grid,
   .obs__grid .tile__spark,.tile__gauge,.contact__arrow{ display:none!important; }
   html,body{ background:#fff!important; }
@@ -1173,3 +1173,30 @@ body.term-frozen{ overflow:hidden; }
 @media (pointer:coarse){
   .thesis__line .tw{ will-change:transform; }
 }
+
+/* ░░ BOOT SEQUENCE ░░ */
+#bootSeq{position:fixed;inset:0;z-index:9999;background:#050507;overflow:hidden;
+  transition:opacity .45s ease;font-family:'Geist Mono',ui-monospace,monospace}
+#bootSeq.is-gone{opacity:0;pointer-events:none}
+#bsGrid{position:absolute;inset:0;z-index:2}
+#bsGrid i{position:absolute;background:#0c0c14;opacity:0;will-change:opacity,transform}
+#bsShock{position:absolute;left:50%;top:46%;width:14px;height:14px;border-radius:30%;
+  transform:translate(-50%,-50%) scale(0);opacity:0;z-index:3;
+  border:2px solid rgba(94,230,192,.9);
+  box-shadow:0 0 30px rgba(94,230,192,.55),inset 0 0 22px rgba(124,108,255,.5)}
+#bsCoreR,#bsCoreB{position:absolute;left:50%;top:46%;width:130px;height:130px;border-radius:50%;
+  transform:translate(-50%,-50%);z-index:3;mix-blend-mode:screen}
+#bsCore{position:absolute;left:50%;top:46%;width:120px;height:120px;border-radius:26%;
+  transform:translate(-50%,-50%) scale(.2);opacity:0;z-index:3;
+  background:radial-gradient(circle,#eafff9 0%,#5ee6c0 22%,#7c6cff 48%,transparent 72%);
+  box-shadow:0 0 60px 12px rgba(94,230,192,.5)}
+#bsCore span{position:absolute;inset:0;display:grid;place-items:center;
+  color:rgba(4,16,12,.78);font-size:42px;font-weight:700;line-height:1}
+#bsVig{position:absolute;inset:0;z-index:4;pointer-events:none;
+  background:radial-gradient(circle at 50% 46%,transparent 14%,rgba(0,0,0,.5) 62%,rgba(0,0,0,.92) 100%)}
+#bsGrain{position:absolute;inset:0;z-index:5;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+  background-image:radial-gradient(rgba(255,255,255,.6) .5px,transparent .5px);background-size:3px 3px}
+#bsSkip{position:absolute;right:18px;bottom:16px;z-index:6;background:none;border:none;cursor:pointer;
+  color:#5b5b6e;font:inherit;font-size:11px;letter-spacing:.04em}
+#bsSkip:hover{color:#9a9aae}
+#heroTerm{transform-origin:center center}
