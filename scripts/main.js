@@ -307,6 +307,8 @@ function afterLoad(){
   setTimeout(() => { try { consoleValidation(); } catch(e){} }, 3000);   // and auto-report once the page has settled
   initHeroLinks();                                                       // hero CTAs (resume jump) — no-ops when absent; runs on both paths
   initContactHeadline();                                                 // "compile by sweep" on the contact headline (#ctHead)
+  const ctTerm = document.getElementById('ctTerm');
+  if (ctTerm) setupHeroInteractive(ctTerm, ctTerm.closest('section'));
   if (!motionOn || !hasGSAP){ initBuildbar(); initCounters(); initSparklines(); initPipelineStatic(); return; }
   initLenis();
   revealHero();
@@ -440,9 +442,9 @@ function startHeroTagline(){
 /* live interactive layer on the in-page hero shell: cursor spotlight wash, a subtle 3D tilt,
    and an occasional chromatic-aberration glitch on a fast flick. Bails while the shell is docked
    (is-floating) and on touch. */
-function setupHeroInteractive(term){
+function setupHeroInteractive(term, section){
   if (isTouch) return;
-  const hero = document.querySelector('.hero');
+  const listenEl = section || document.querySelector('.hero') || term;
   if (getComputedStyle(term).position === 'static') term.style.position = 'relative';
   const sp = document.createElement('div');
   sp.style.cssText = 'position:absolute;inset:0;z-index:6;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(220px 220px at var(--sx,50%) var(--sy,40%),rgba(245,182,66,.13),transparent 70%);';
@@ -465,8 +467,8 @@ function setupHeroInteractive(term){
     if (!raf) raf = requestAnimationFrame(apply);
   };
   const reset = () => { sp.style.opacity = '0'; term.style.transform = 'perspective(900px) rotateY(0) rotateX(0)'; };
-  (hero || term).addEventListener('pointermove', onMove);
-  (hero || term).addEventListener('pointerleave', reset);
+  listenEl.addEventListener('pointermove', onMove);
+  listenEl.addEventListener('pointerleave', reset);
 }
 
 /* Hero CTAs: "Get in touch" → contact (handled by the anchor handler); "résumé" → scroll to contact, THEN open the PDF. */
