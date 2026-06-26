@@ -2606,10 +2606,6 @@ function initThesis(){
   const cl = (p,a,b) => Math.max(0, Math.min(1, (p-a)/(b-a)));
   const sm = motionOn ? 1 : 0;
   const SCAT = isTouch ? 0.45 : 1;   // tighter scatter on phones — the vw/vh fly-in overlapped badly on narrow screens
-  // pre-compute px-per-vw/vh once — avoids viewport-unit resolution inside the scroll handler
-  // (vw/vh in CSS transforms force a layout recalc every frame; on iOS the URL bar shrinking
-  //  changes vh mid-scroll, making the values jump → jitter)
-  const pvw = innerWidth / 100, pvh = innerHeight / 100;
   const sa = w0.map((_, i) => {
     const ang = (i / w0.length) * Math.PI * 2 + 1.7;
     const dist = 58 + ((i*53 + 29) % 38);
@@ -2617,15 +2613,15 @@ function initThesis(){
   });
   gsap.set([b1, b2], { autoAlpha: 0, y: 24 });
   gsap.set(b0, { autoAlpha: 1 });
-  w0.forEach((w, i) => gsap.set(w, { x: sa[i].x * SCAT * pvw, y: sa[i].y * SCAT * pvh, rotation: sa[i].r, autoAlpha: 0.12, filter: isTouch ? 'none' : 'blur(8px)' }));
-  const tl = gsap.timeline({ scrollTrigger: { trigger: sec, start: 'top top', end: '+=176%', pin: true, scrub: isTouch ? 1.0 : 0.5, anticipatePin: 1,
+  w0.forEach((w, i) => gsap.set(w, { x: (sa[i].x * SCAT) + 'vw', y: (sa[i].y * SCAT) + 'vh', rotation: sa[i].r, autoAlpha: 0.12, filter: isTouch ? 'none' : 'blur(8px)' }));
+  const tl = gsap.timeline({ scrollTrigger: { trigger: sec, start: 'top top', end: '+=176%', pin: true, scrub: 0.5, anticipatePin: 1,
     onUpdate: (self) => {
       const p = self.progress;
       if (barFill) barFill.style.width = (p*100).toFixed(1) + '%';
       if (pctEl) pctEl.textContent = Math.round(p*100) + '% compiled';
       const aIn = cl(p, 0, 0.32), aOut = cl(p, 0.40, 0.50), ak = (1 - back(aIn)) * sm;
       w0.forEach((w, i) => { const s = sa[i];
-        w.style.transform = `translate(${(s.x*ak*SCAT*pvw).toFixed(1)}px,${(s.y*ak*SCAT*pvh).toFixed(1)}px) rotate(${(s.r*ak).toFixed(2)}deg)`;
+        w.style.transform = `translate(${(s.x*ak*SCAT).toFixed(2)}vw, ${(s.y*ak*SCAT).toFixed(2)}vh) rotate(${(s.r*ak).toFixed(2)}deg)`;
         w.style.opacity = String(Math.min(1, 0.14 + aIn*1.6));
         if (!isTouch) w.style.filter = `blur(${((1-aIn)*7*sm).toFixed(2)}px)`;
       });
