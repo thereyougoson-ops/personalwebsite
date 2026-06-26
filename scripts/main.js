@@ -15,7 +15,12 @@ const hasGSAP = typeof window.gsap !== 'undefined' && typeof window.ScrollTrigge
 let motionOn = true;   // always animate, never auto-off
 let lenis = null;
 
-if (hasGSAP) gsap.registerPlugin(ScrollTrigger);
+if (hasGSAP) {
+  gsap.registerPlugin(ScrollTrigger);
+  // On mobile the iOS URL bar hides/shows during scroll, triggering viewport resize → ScrollTrigger.refresh()
+  // which briefly shifts the spacer element and makes sections jump. ignoreMobileResize suppresses that.
+  if (isTouch) ScrollTrigger.config({ ignoreMobileResize: true });
+}
 
 /* cross-document deploy-handoff to projects.html removed: projects.html and the #bdGrid demo-card
    grid (.pj-build / .pj-case cards) no longer exist — the Transit Map is the sole builds surface. */
@@ -2520,6 +2525,11 @@ function initThesisAutoScroll(){
   const arm = () => { gestureUntil = nowT() + 1000; };
   window.addEventListener('wheel', arm, { passive: true });
   window.addEventListener('touchmove', arm, { passive: true });
+  // Inertia gate (touch only): iOS momentum scroll continues ~300-500ms after touchend. If the auto-ride
+  // fires during that window it calls lenis.scrollTo(lock:true) which fights the compositor-level inertia
+  // → visible jitter through the thesis section. Wait 400ms after finger lift before allowing the ride.
+  let inertiaUntil = 0;
+  if (isTouch) window.addEventListener('touchend', () => { inertiaUntil = nowT() + 400; }, { passive: true });
   window.__armRide = arm;   // the hero scroll-cue (a deliberate click) arms the ride too — see initHeroLinks
   const easeInOutCubic = (t) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
   const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
@@ -2562,6 +2572,7 @@ function initThesisAutoScroll(){
   const begin = () => {
     if (running || nowT() < cooldownUntil) return;
     if (nowT() > gestureUntil) return;     // only ride on a real, recent scroll gesture (see arm/gesture-gate above)
+    if (isTouch && nowT() < inertiaUntil) return;   // don't ride during iOS momentum (400ms after touchend)
     const wy = workY();
     if (wy < 200) return;                  // layout not ready yet
     const vh = window.innerHeight;
