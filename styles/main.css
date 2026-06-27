@@ -451,6 +451,44 @@ section{ position:relative; padding:clamp(4.5rem,10vw,9rem) var(--pad); }
 .terminal__body .bar{ color:var(--green); } .terminal__body .bar .e{ color:var(--text-3); }
 .terminal__body a{ color:var(--green); text-decoration:underline; text-underline-offset:3px; }
 .terminal__body a:hover{ color:var(--accent); }
+
+/* =====================  MAGNETIC EXPERIENCE CARDS  ===================== */
+.tm-info-card,.terminal .box,.stage__card{
+  --card-rx:0deg;
+  --card-ry:0deg;
+  --card-tx:0px;
+  --card-ty:0px;
+  --card-glare-x:50%;
+  --card-glare-y:50%;
+  --card-glare-o:0;
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  transform-style:preserve-3d;
+  transform:perspective(900px) translate3d(var(--card-tx),var(--card-ty),0) rotateX(var(--card-rx)) rotateY(var(--card-ry));
+  transition:transform .22s var(--ease-out), border-color .22s var(--ease-out), box-shadow .22s var(--ease-out);
+  will-change:transform;
+}
+.tm-info-card{ background:var(--card); border:1px solid var(--line); border-radius:var(--r-lg); padding:clamp(18px,2.4vw,24px); box-shadow:0 24px 70px rgba(0,0,0,.26); }
+.tm-info-card::after,.terminal .box::after,.stage__card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  border-radius:inherit;
+  opacity:var(--card-glare-o);
+  background:radial-gradient(circle at var(--card-glare-x) var(--card-glare-y), rgba(255,255,255,.24), rgba(var(--accent-rgb),.13) 18%, transparent 52%);
+  mix-blend-mode:screen;
+  transition:opacity .18s var(--ease-out);
+}
+.tm-info-card:hover,.tm-info-card:focus-within,
+.terminal .box:hover,.terminal .box:focus-within,
+.stage__card:hover,.stage__card:focus-within{
+  border-color:rgba(var(--accent-rgb),.45);
+  box-shadow:0 22px 70px rgba(0,0,0,.42), 0 0 0 1px rgba(var(--accent-rgb),.10);
+}
+
 .terminal__line{ display:flex; align-items:center; gap:.5ch; font-size:13px; margin-top:.5em; }
 .terminal__prompt{ color:var(--text); white-space:nowrap; }
 .terminal__input{ flex:1; min-width:2ch; background:none; border:none; outline:none; color:var(--text); font-family:var(--mono); font-size:13px; caret-color:var(--accent); padding:0; }
@@ -1140,6 +1178,8 @@ body.term-frozen{ overflow:hidden; }
   html.kbd-term #heroTerm #heroTermChips{ display:none; }
   html.kbd-term #heroTerm .terminal__scroll{ flex:1 1 auto; height:auto !important; min-height:0; }
   .fx-info{ width:30px; height:30px; }                                 /* was 20x20 → meets tap-target min */
+  .tm-info-card,.terminal .box,.stage__card{ transform:none; will-change:auto; }
+  .tm-info-card::after,.terminal .box::after,.stage__card::after{ display:none; }
   .nav__brand{ min-height:42px; min-width:42px; justify-content:center; }
   .ct-copy{ min-height:40px; display:inline-flex; align-items:center; justify-content:center; }
   .heroterm__ctl{ min-height:36px; }

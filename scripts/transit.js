@@ -48,6 +48,7 @@
   function short(t) { return t.length > 16 ? t.slice(0, 15) + '…' : t; }
   function shortM(t) { return t.length > 11 ? t.slice(0, 11) + '…' : t; }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function cardHTML(html) { return '<div class="tm-info-card">' + html + '</div>'; }
 
   /* ---------- reader content (verbatim markup from the design) ---------- */
   function rolePanelHTML(r, withChips) {
@@ -177,8 +178,8 @@
       var t2 = mk('text', { x: x, y: ly + 58, fill: '#8b857b', 'font-size': 11, 'font-family': 'Geist Mono, monospace', 'text-anchor': 'middle', 'pointer-events': 'none' }); t2.textContent = r.num + ' · ' + r.yr; svg.appendChild(t2);
     });
     var stop = trainAnim(svg, mainLine, branches);
-    function showRole(r) { panel.innerHTML = rolePanelHTML(r, true); panel.querySelectorAll('[data-go]').forEach(function (btn) { btn.onclick = function () { sel(btn.dataset.go, 'build'); }; }); }
-    function showBuild(b) { panel.innerHTML = buildPanelHTML(b); var lb = panel.querySelector('[data-launch]'); if (lb) lb.onclick = function () { live.open(b); }; panel.querySelectorAll('[data-role2]').forEach(function (btn) { btn.onclick = function () { sel(+btn.dataset.role2, 'role'); }; }); }
+    function showRole(r) { panel.innerHTML = cardHTML(rolePanelHTML(r, true)); panel.querySelectorAll('[data-go]').forEach(function (btn) { btn.onclick = function () { sel(btn.dataset.go, 'build'); }; }); }
+    function showBuild(b) { panel.innerHTML = cardHTML(buildPanelHTML(b)); var lb = panel.querySelector('[data-launch]'); if (lb) lb.onclick = function () { live.open(b); }; panel.querySelectorAll('[data-role2]').forEach(function (btn) { btn.onclick = function () { sel(+btn.dataset.role2, 'role'); }; }); }
     function sel(id, type) {
       svg.querySelectorAll('[data-role]').forEach(function (n) { n.setAttribute('r', 13); });
       svg.querySelectorAll('circle[data-slug]').forEach(function (n) { n.setAttribute('r', 8); });
@@ -222,6 +223,7 @@
     if (!sheet) { sheet = el('div', 'position:fixed;left:0;right:0;bottom:0;z-index:9001;background:#14131a;border-top:1px solid rgba(237,232,224,.14);border-radius:20px 20px 0 0;box-shadow:0 -20px 50px -20px #000;padding:8px 20px 26px;max-height:74vh;overflow:auto;transform:translateY(105%);transition:transform .4s cubic-bezier(.16,1,.3,1);'); sheet.id = 'tmm-sheet'; document.body.appendChild(sheet); }
     function closeSheet() { sheet.style.transform = 'translateY(105%)'; }
     function openSheet(html) {
+      html = cardHTML(html);
       sheet.innerHTML = '<div style="width:42px;height:4px;border-radius:3px;background:#3a3942;margin:6px auto 14px;"></div><button data-close type="button" aria-label="Close" style="position:absolute;top:14px;right:18px;cursor:pointer;font-family:\'Geist Mono\',monospace;font-size:11px;color:#a9a39a;background:transparent;border:1px solid rgba(237,232,224,.18);border-radius:7px;padding:5px 9px;">✕</button>' + html;
       sheet.style.transform = 'translateY(0)';
       sheet.querySelector('[data-close]').onclick = closeSheet;

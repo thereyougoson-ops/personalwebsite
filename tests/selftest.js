@@ -81,6 +81,7 @@ window.runSelfTest = async function runSelfTest(){
   ok('transit map section + dock root present', !!q('#transitMap') && !!q('#tmRoot'));
   ok('transit map rendered into #tmRoot', !!q('#tmRoot') && q('#tmRoot').children.length > 0,
     q('#tmRoot') && (q('#tmRoot').children.length + ' nodes'));
+  ok('transit reader content is wrapped as a magnetic info card', !!q('#tmd-panel .tm-info-card'));
   ['#bdGrid', '#v8uStage', '#bdStage'].forEach(s =>
     ok('removed (builds grid / carousel) ' + s, !q(s)));
 
@@ -115,6 +116,8 @@ window.runSelfTest = async function runSelfTest(){
     run('git log');           ok('cmd git log → graph rail + hashes', had(/[0-9a-f]{7}/) && /LendingClub|commit/i.test(body.innerText));
     run('skills');            ok('cmd skills → systemctl units', /active|\.target|\.service|●/i.test(body.innerText));
     run('experience');        ok('cmd experience → role panels', /LendingClub|Tech Mahindra|Release/i.test(body.innerText));
+    const terminalCard = body.querySelector('.box');
+    ok('terminal experience cards expose magnetic card vars', !!terminalCard && getComputedStyle(terminalCard).getPropertyValue('--card-rx').trim() === '0deg');
     run('ls');                ok('cmd ls → directory tree', /philip|├──|└──|\.md|\.yml/i.test(body.innerText));
     run('help');              ok('cmd help → TUI launcher', body.innerText.length > 0);
     run('deploy');            ok('cmd deploy → horizontal flow rail', body.querySelectorAll('.flow').length >= 1);

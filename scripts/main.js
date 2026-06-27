@@ -701,17 +701,67 @@ function initSectionShells(){
   });
 }
 
-/* cursor-tracked "inspection" sheen on the build cards — a soft amber spotlight follows the pointer
-   across each card (pure CSS var + a screen-blended ::after; no transform, so no overflow/focus risk) */
+/* Magnetic hover for Experience card surfaces. Delegated so transit cards built later are covered. */
 function initCardFX(){
-  if (isTouch) return;
-  document.querySelectorAll('.bd-card').forEach((card) => {
-    card.addEventListener('pointermove', (e) => {
-      const r = card.getBoundingClientRect();
-      card.style.setProperty('--px', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%');
-      card.style.setProperty('--py', ((e.clientY - r.top) / r.height * 100).toFixed(1) + '%');
-    }, { passive: true });
-  });
+  const selector = '.tm-info-card, .terminal .box, .stage__card';
+  const mq = window.matchMedia ? window.matchMedia('(hover: hover) and (pointer: fine)') : null;
+  const cards = new Set();
+  let last = null, raf = 0;
+
+  const reset = (card) => {
+    if (!card) return;
+    card.style.setProperty('--card-rx', '0deg');
+    card.style.setProperty('--card-ry', '0deg');
+    card.style.setProperty('--card-tx', '0px');
+    card.style.setProperty('--card-ty', '0px');
+    card.style.setProperty('--card-glare-x', '50%');
+    card.style.setProperty('--card-glare-y', '50%');
+    card.style.setProperty('--card-glare-o', '0');
+    card.classList.remove('is-card-fx');
+  };
+  const resetAll = () => cards.forEach(reset);
+  const enabled = () => !isTouch && (!mq || mq.matches);
+  window.__cardFX = { selector, resetAll, enabled };
+  if (!enabled()) return;
+
+  const cardFor = (node) => node && node.closest && node.closest(selector);
+  const tick = () => {
+    raf = 0;
+    if (!last || !document.documentElement.contains(last.card)) return;
+    const card = last.card, r = card.getBoundingClientRect();
+    if (!r.width || !r.height) return;
+    const px = Math.max(0, Math.min(1, (last.x - r.left) / r.width));
+    const py = Math.max(0, Math.min(1, (last.y - r.top) / r.height));
+    const dx = px - .5, dy = py - .5;
+    card.style.setProperty('--card-rx', (-dy * 7).toFixed(2) + 'deg');
+    card.style.setProperty('--card-ry', (dx * 8).toFixed(2) + 'deg');
+    card.style.setProperty('--card-tx', (dx * 8).toFixed(2) + 'px');
+    card.style.setProperty('--card-ty', (dy * 6).toFixed(2) + 'px');
+    card.style.setProperty('--card-glare-x', (px * 100).toFixed(1) + '%');
+    card.style.setProperty('--card-glare-y', (py * 100).toFixed(1) + '%');
+    card.style.setProperty('--card-glare-o', '.42');
+  };
+
+  document.addEventListener('pointerover', (e) => {
+    const card = cardFor(e.target);
+    if (!card || !enabled()) return;
+    cards.add(card);
+    card.classList.add('is-card-fx');
+  }, { passive: true });
+  document.addEventListener('pointermove', (e) => {
+    const card = cardFor(e.target);
+    if (!card || !enabled()) return;
+    cards.add(card);
+    last = { card, x: e.clientX, y: e.clientY };
+    if (!raf) raf = requestAnimationFrame(tick);
+  }, { passive: true });
+  document.addEventListener('pointerout', (e) => {
+    const card = cardFor(e.target);
+    if (card && (!e.relatedTarget || !card.contains(e.relatedTarget))) reset(card);
+  }, { passive: true });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) resetAll(); });
+  window.addEventListener('blur', resetAll);
+  if (mq && mq.addEventListener) mq.addEventListener('change', resetAll);
 }
 
 /* In-browser self-validation — the site smoke-tests its own interactive contract and reports it
