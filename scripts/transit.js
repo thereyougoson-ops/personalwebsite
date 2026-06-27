@@ -49,6 +49,25 @@
   function shortM(t) { return t.length > 11 ? t.slice(0, 11) + '…' : t; }
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
   function cardHTML(html) { return '<div class="tm-info-card">' + html + '</div>'; }
+  function ensureStationFocusCSS() {
+    if (document.getElementById('tm-station-focus-css')) return;
+    var s = document.createElement('style');
+    s.id = 'tm-station-focus-css';
+    s.textContent = '@keyframes tmStationBeat{0%,100%{stroke-width:var(--tm-stroke,3px);filter:drop-shadow(0 0 5px var(--tm-active-color,#5ee6c0));}45%{stroke-width:calc(var(--tm-stroke,3px) + 2px);filter:drop-shadow(0 0 16px var(--tm-active-color,#5ee6c0));}}circle.tm-st-active{animation:tmStationBeat 1.28s ease-in-out infinite;}.no-motion circle.tm-st-active{animation:none!important;filter:drop-shadow(0 0 8px var(--tm-active-color,#5ee6c0));}';
+    document.head.appendChild(s);
+  }
+  function setActiveStation(svg, type, id, roleR, buildR, activeRoleR, activeBuildR) {
+    svg.querySelectorAll('circle[data-role]').forEach(function (n) { n.setAttribute('r', roleR); n.classList.remove('tm-st-active'); n.removeAttribute('data-active'); });
+    svg.querySelectorAll('circle[data-slug]').forEach(function (n) { n.setAttribute('r', buildR); n.classList.remove('tm-st-active'); n.removeAttribute('data-active'); });
+    var n = svg.querySelector(type === 'role' ? 'circle[data-role="' + id + '"]' : 'circle[data-slug="' + id + '"]');
+    if (!n) return;
+    n.setAttribute('r', type === 'role' ? activeRoleR : activeBuildR);
+    n.dataset.active = 'true';
+    n.classList.add('tm-st-active');
+    n.style.setProperty('--tm-active-color', n.getAttribute('stroke') || '#5ee6c0');
+    n.style.setProperty('--tm-stroke', (n.getAttribute('stroke-width') || 3) + 'px');
+    return n;
+  }
 
   /* ---------- reader content (verbatim markup from the design) ---------- */
   function rolePanelHTML(r, withChips) {
@@ -151,6 +170,7 @@
 
   /* ============ DESKTOP — horizontal line, builds branch up & down ============ */
   function makeDesktop(root, live) {
+    ensureStationFocusCSS();
     var W = 1280, H = 560, VW = W - 340;
     // Transparent — sits directly on the site's #codefield + flashlight like every other section
     // (no card veil). height:auto on the SVG removes the letterbox empty space that made the map look
@@ -181,10 +201,9 @@
     function showRole(r) { panel.innerHTML = cardHTML(rolePanelHTML(r, true)); panel.querySelectorAll('[data-go]').forEach(function (btn) { btn.onclick = function () { sel(btn.dataset.go, 'build'); }; }); }
     function showBuild(b) { panel.innerHTML = cardHTML(buildPanelHTML(b)); var lb = panel.querySelector('[data-launch]'); if (lb) lb.onclick = function () { live.open(b); }; panel.querySelectorAll('[data-role2]').forEach(function (btn) { btn.onclick = function () { sel(+btn.dataset.role2, 'role'); }; }); }
     function sel(id, type) {
-      svg.querySelectorAll('[data-role]').forEach(function (n) { n.setAttribute('r', 13); });
-      svg.querySelectorAll('circle[data-slug]').forEach(function (n) { n.setAttribute('r', 8); });
-      if (type === 'role') { var n = svg.querySelector('circle[data-role="' + id + '"]'); if (n) n.setAttribute('r', 17); showRole(ROLES[id]); }
-      else { var m = svg.querySelector('circle[data-slug="' + id + '"]'); if (m) m.setAttribute('r', 11); showBuild(bySlug(id)); }
+      setActiveStation(svg, type, id, 13, 8, 22, 14);
+      if (type === 'role') showRole(ROLES[id]);
+      else showBuild(bySlug(id));
     }
     svg.querySelectorAll('[data-role]').forEach(function (n) { n.addEventListener('mouseenter', function () { sel(+n.dataset.role, 'role'); }); n.addEventListener('click', function () { sel(+n.dataset.role, 'role'); }); });
     svg.querySelectorAll('[data-slug]').forEach(function (n) { n.addEventListener('mouseenter', function () { sel(n.dataset.slug, 'build'); }); n.addEventListener('click', function () { sel(n.dataset.slug, 'build'); }); });
@@ -194,6 +213,7 @@
 
   /* ============ MOBILE — same map, vertical; tap → bottom sheet ============ */
   function makeMobile(root, live) {
+    ensureStationFocusCSS();
     var VW = 392, H = 1400, lx = 196, y0 = 124, y1 = H - 120, ry = function (i) { return y0 + (y1 - y0) * (i / 4); };
     root.innerHTML = '<div style="max-width:min(640px,92vw);margin:0 auto;background:transparent;padding:2px 0;"><svg id="tmm-svg" viewBox="0 0 ' + VW + ' ' + H + '" role="img" aria-label="Career line with builds branching off" style="width:100%;height:auto;display:block;"></svg></div>';
     var svg = root.querySelector('#tmm-svg');
@@ -231,11 +251,21 @@
       sheet.querySelectorAll('[data-go]').forEach(function (b) { b.onclick = function () { selM(b.dataset.go, 'build'); }; });
       sheet.querySelectorAll('[data-role2]').forEach(function (b) { b.onclick = function () { selM(+b.dataset.role2, 'role'); }; });
     }
+    function scrollStationIntoView(n) {
+      if (!n) return;
+      var r = n.getBoundingClientRect(), sr = sheet.getBoundingClientRect();
+      var top = 92, bottom = Math.max(top + 140, window.innerHeight - sr.height - 28);
+      var y = r.top + r.height / 2;
+      if (y > top + 54 && y < bottom - 54) return;
+      var goal = top + (bottom - top) * 0.42;
+      try { window.scrollBy({ top: y - goal, behavior: document.body.classList.contains('no-motion') ? 'auto' : 'smooth' }); }
+      catch (e) { window.scrollBy(0, y - goal); }
+    }
     function selM(id, type) {
-      svg.querySelectorAll('[data-role]').forEach(function (n) { n.setAttribute('r', 14); });
-      svg.querySelectorAll('circle[data-slug]').forEach(function (n) { n.setAttribute('r', 8); });
-      if (type === 'role') { var n = svg.querySelector('circle[data-role="' + id + '"]'); if (n) n.setAttribute('r', 18); openSheet(rolePanelHTML(ROLES[id], true)); }
-      else { var m = svg.querySelector('circle[data-slug="' + id + '"]'); if (m) m.setAttribute('r', 11); openSheet(buildPanelHTML(bySlug(id))); }
+      var active = setActiveStation(svg, type, id, 14, 8, 23, 13.5);
+      if (type === 'role') openSheet(rolePanelHTML(ROLES[id], true));
+      else openSheet(buildPanelHTML(bySlug(id)));
+      scrollStationIntoView(active);
     }
     svg.querySelectorAll('[data-role]').forEach(function (n) { n.addEventListener('click', function () { selM(+n.dataset.role, 'role'); }); });
     svg.querySelectorAll('[data-slug]').forEach(function (n) { n.addEventListener('click', function () { selM(n.dataset.slug, 'build'); }); });
