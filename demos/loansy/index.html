@@ -1402,7 +1402,7 @@
       <h3><i class="bi bi-coin" style="color:var(--accent);font-size:12px;"></i> Recent loans</h3>
       <a href="#" class="btn-d xs">View all <span style="color:var(--ink-4);margin-left:2px;">→</span></a>
     </div>
-    <div style="overflow-x:auto;">
+    <div class="table-responsive">
       <table class="data">
         <thead><tr>
           <th>Borrower</th><th>Lender</th><th>Group</th>
@@ -1599,14 +1599,14 @@
 
   <!-- Volume trend view -->
   <div id="analyticsVolume" class="panel-body analytics-view">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-      <div style="height:300px;position:relative;">
+    <div class="analytics-chart-grid">
+      <div class="analytics-chart-card">
         <div style="font-size:11px;color:var(--ink-4);font-weight:600;margin-bottom:8px;">Loan Volume (7d)</div>
         <div style="height:calc(100% - 24px);">
           <canvas id="volumeTrendChart"></canvas>
         </div>
       </div>
-      <div style="height:300px;position:relative;">
+      <div class="analytics-chart-card">
         <div style="font-size:11px;color:var(--ink-4);font-weight:600;margin-bottom:8px;">Status Distribution</div>
         <div style="height:calc(100% - 24px);">
           <canvas id="statusDistChart"></canvas>
@@ -1617,14 +1617,14 @@
 
   <!-- Members view -->
   <div id="analyticsMembers" class="panel-body analytics-view" style="display:none;">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-      <div style="height:300px;position:relative;">
+    <div class="analytics-chart-grid">
+      <div class="analytics-chart-card">
         <div style="font-size:11px;color:var(--ink-4);font-weight:600;margin-bottom:8px;">Member Growth</div>
         <div style="height:calc(100% - 24px);">
           <canvas id="memberGrowthChart"></canvas>
         </div>
       </div>
-      <div style="height:300px;position:relative;">
+      <div class="analytics-chart-card">
         <div style="font-size:11px;color:var(--ink-4);font-weight:600;margin-bottom:8px;">Reputation Distribution</div>
         <div style="height:calc(100% - 24px);">
           <canvas id="reputationChart"></canvas>
@@ -1635,7 +1635,7 @@
 </div>
 
 <!-- Bottom row: volume sparkbar | loan health | top borrowers -->
-<div style="display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px;margin-bottom:20px;">
+<div class="dashboard-bottom-grid">
 
   <!-- Status split (replaces Chart.js donut with a clean panel) -->
   <div class="panel">
@@ -1750,7 +1750,7 @@
       <h3>Borrower Analytics</h3>
       <span class="mono muted" id="totalProfitBadge" style="font-size:11px;"></span>
     </div>
-    <div style="overflow-x:auto;">
+    <div class="table-responsive">
       <table class="data" id="topBorrowersTable" style="width:100%;">
         <thead><tr>
           <th style="width:40px;"></th>
@@ -2147,7 +2147,7 @@ async function loadAnalytics() {
         </tr>
         <tr class="borrower-details" data-borrower="${detail.telegram_id || n}" style="display:none;">
           <td colspan="6" style="padding:20px;background:var(--bg-soft);border-top:1px solid var(--line);">
-            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;">
+            <div class="analytics-chart-grid analytics-chart-grid-compact">
               <div>
                 <div style="font-size:11px;font-weight:600;color:var(--ink-4);text-transform:uppercase;margin-bottom:12px;">Daily Borrowed Amount</div>
                 <div style="height:180px;position:relative;">

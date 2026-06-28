@@ -23,7 +23,7 @@
       font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
       min-height: 100%;
     }
-    .wrap { max-width: 1240px; margin: 0 auto; padding: 22px clamp(14px, 4vw, 34px) 60px; }
+    .wrap { width: 100%; max-width: 1240px; margin: 0 auto; padding: 22px clamp(14px, 4vw, 34px) 60px; overflow-x: hidden; }
     header.top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
     .logo { display: flex; align-items: center; gap: 9px; font-size: 20px; font-weight: 600; letter-spacing: .2px; }
     .logo b { color: var(--accent); }
@@ -36,11 +36,11 @@
     .lead { color: var(--dim); font-size: 13.5px; max-width: 760px; margin: 4px 0 20px; line-height: 1.5; }
     .lead b { color: var(--text); font-weight: 600; }
 
-    .layout { display: grid; grid-template-columns: 300px 1fr; gap: 22px; align-items: start; }
+    .layout { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 22px; align-items: start; max-width: 100%; min-width: 0; }
     @media (max-width: 920px) { .layout { grid-template-columns: 1fr; } }
 
     .card {
-      background: var(--panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+      max-width: 100%; min-width: 0; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
     }
     .card-h {
       padding: 13px 15px; border-bottom: 1px solid var(--border);
@@ -56,7 +56,7 @@
     }
     .picker-search::placeholder { color: var(--faint); }
     .picker-wrap { padding: 0 12px 12px; }
-    .site-list { list-style: none; margin: 0; padding: 0; max-height: 560px; overflow-y: auto; }
+    .site-list { list-style: none; margin: 0; padding: 0; max-width: 100%; max-height: 560px; overflow-y: auto; }
     .site-list::-webkit-scrollbar { width: 8px; }
     .site-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
     .site-row {
@@ -64,6 +64,7 @@
       background: transparent; border: 1px solid transparent; border-radius: 8px;
       color: var(--text); padding: 7px 9px; font-size: 13px; cursor: pointer; margin-bottom: 2px;
     }
+    .site-row > * { min-width: 0; }
     .site-row:hover { background: var(--elev); }
     .site-row.active { background: var(--elev); border-color: rgba(52,225,200,.35); }
     .site-row .dom { flex: 1; font-family: var(--mono); font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -96,7 +97,7 @@
     .tabsel button.active { color: var(--accent); border-color: rgba(52,225,200,.4); background: rgba(52,225,200,.07); }
 
     /* ---- Popup frame ---- */
-    .stage { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    .stage { display: flex; flex-direction: column; align-items: center; max-width: 100%; min-width: 0; padding: 20px; }
     .device {
       width: 392px; max-width: 100%; border-radius: 16px; overflow: hidden;
       border: 1px solid var(--border); box-shadow: 0 24px 60px rgba(0,0,0,.5);
@@ -108,7 +109,7 @@
     }
     .dot { width: 9px; height: 9px; border-radius: 50%; background: #3a4250; }
     .device-bar .where { margin-left: 8px; font-family: var(--mono); font-size: 11px; color: var(--faint); }
-    iframe#popup { width: 392px; height: 600px; border: 0; display: block; background: var(--bg); }
+    iframe#popup { width: 100%; max-width: 100%; height: 600px; border: 0; display: block; background: var(--bg); }
     .stage .hint { color: var(--faint); font-size: 12px; margin-top: 14px; text-align: center; max-width: 392px; line-height: 1.5; }
 
     /* ---- Aggregate report ---- */
@@ -138,6 +139,18 @@
     .clearable code { font-family: var(--mono); color: var(--dim); }
     footer.foot { color: var(--faint); font-size: 11.5px; margin-top: 22px; line-height: 1.5; }
     footer.foot code { font-family: var(--mono); color: var(--dim); }
+    @media (max-width: 480px) {
+      .wrap { padding: 14px 10px 36px; }
+      .lead { margin-bottom: 14px; }
+      .layout { gap: 14px; }
+      .stage { padding: 10px 0; }
+      .device { width: 100%; border-radius: 12px; }
+      iframe#popup { height: min(600px, 72vh); }
+      .picker-wrap { padding: 0 10px 10px; }
+      .picks { padding-inline: 10px; }
+      .site-list { max-height: 320px; }
+      .rank .bar { flex-basis: 58px; }
+    }
   </style>
 </head>
 <body>

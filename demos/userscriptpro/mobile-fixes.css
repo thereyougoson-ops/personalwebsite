@@ -1,0 +1,101 @@
+@media (max-width: 899px) {
+  html,
+  body,
+  #root {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  #root > div,
+  #root div:has(> div > .usp-shell-nav-item) {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+
+  #root div:has(> div > .usp-shell-nav-item) {
+    flex-direction: column !important;
+  }
+
+  #root div:has(> .usp-shell-nav-item) {
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-direction: row !important;
+    gap: 6px !important;
+    padding: 8px !important;
+    overflow-x: auto !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--line) !important;
+  }
+
+  #root div:has(> .usp-shell-nav-item) > div:nth-last-child(-n + 2) {
+    display: none !important;
+  }
+
+  .usp-shell-nav-item {
+    flex: 0 0 auto !important;
+    border-left: 0 !important;
+    border-bottom: 2px solid transparent !important;
+    padding: 8px 10px !important;
+    white-space: nowrap !important;
+  }
+
+  #root div:has(> .usp-scripts-newbtn) {
+    flex-wrap: wrap !important;
+    align-items: stretch !important;
+  }
+
+  #root div:has(> .usp-scripts-newbtn) > div {
+    min-width: 0 !important;
+  }
+
+  #root div:has(> .usp-scripts-newbtn) > div:has(input) {
+    width: 100% !important;
+  }
+
+  #root div:has(> .usp-scripts-row) > div:first-child:not(.usp-scripts-row) {
+    display: none !important;
+  }
+
+  .usp-scripts-row {
+    display: grid !important;
+    grid-template-columns: 34px 34px minmax(0, 1fr);
+    align-items: center !important;
+    gap: 10px !important;
+    padding: 12px !important;
+  }
+
+  .usp-scripts-row > div {
+    min-width: 0 !important;
+  }
+
+  .usp-scripts-row > div:nth-child(3) {
+    grid-column: 3;
+  }
+
+  .usp-scripts-row > div:nth-child(3) > div:first-child {
+    flex-wrap: wrap !important;
+  }
+
+  .usp-scripts-row > div:nth-child(4),
+  .usp-scripts-row > div:nth-child(5),
+  .usp-scripts-row > div:nth-child(6),
+  .usp-scripts-row > div:nth-child(7),
+  .usp-scripts-row > div:nth-child(8) {
+    width: auto !important;
+    text-align: left !important;
+    justify-self: start;
+  }
+
+  .usp-scripts-row > div:nth-child(4) {
+    grid-column: 1 / -1;
+    color: var(--txt) !important;
+    overflow-wrap: anywhere;
+  }
+
+  .usp-scripts-row > div:nth-child(5),
+  .usp-scripts-row > div:nth-child(6),
+  .usp-scripts-row > div:nth-child(7),
+  .usp-scripts-row > div:nth-child(8) {
+    grid-column: auto;
+  }
+}
